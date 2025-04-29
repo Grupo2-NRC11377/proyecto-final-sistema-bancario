@@ -118,6 +118,8 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 		dispose();
 	}
 	protected void do_btnRegistrarse_actionPerformed(ActionEvent e) {
+		VentanaRegistrar ventanaRegistrar = new VentanaRegistrar(this);
+		ventanaRegistrar.setVisible(true);
 		limpiarCampos();
 	}
 	protected void do_btnSalir_actionPerformed(ActionEvent e) {

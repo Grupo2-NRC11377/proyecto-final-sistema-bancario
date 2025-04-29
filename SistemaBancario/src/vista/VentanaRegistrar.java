@@ -15,6 +15,7 @@ import java.awt.event.ActionEvent;
 
 public class VentanaRegistrar extends JDialog implements ActionListener {
 
+	private VentanaPrincipal ventanaPrincipal = null;
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
 	private JLabel lblNewLabel;
@@ -33,7 +34,8 @@ public class VentanaRegistrar extends JDialog implements ActionListener {
 	private JButton btnRegistrarse;
 	private JButton btnCerrar;
 
-	public VentanaRegistrar() {
+	public VentanaRegistrar(VentanaPrincipal ventanaPrincipal) {
+		this.ventanaPrincipal = ventanaPrincipal;
 		setModal(true);
 		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 410, 400);
@@ -154,6 +156,7 @@ public class VentanaRegistrar extends JDialog implements ActionListener {
 			JOptionPane.showMessageDialog(this, "Número de teléfono inválido.");
 			return;
 		}
+		if(ventanaPrincipal != null) ventanaPrincipal.dispose();
 		limpiarCampos();
 		dispose();
 	}
