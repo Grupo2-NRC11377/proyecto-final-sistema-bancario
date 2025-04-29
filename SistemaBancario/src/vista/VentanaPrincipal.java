@@ -6,10 +6,14 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import javax.swing.JTextField;
+import javax.swing.JPasswordField;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
-public class VentanaPrincipal extends JFrame {
+public class VentanaPrincipal extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -18,8 +22,9 @@ public class VentanaPrincipal extends JFrame {
 	private JTextField txtCorreoElectronico;
 	private JLabel lblCorreoElectrnico;
 	private JLabel lblNewLabel_1;
-	private JTextField txtContraseña;
 	private JButton btnRegistrarse;
+	private JPasswordField txtContraseña;
+	private JButton btnSalir;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -35,8 +40,8 @@ public class VentanaPrincipal extends JFrame {
 	}
 
 	public VentanaPrincipal() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 340);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		setBounds(100, 100, 450, 370);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -49,35 +54,77 @@ public class VentanaPrincipal extends JFrame {
 		}
 		{
 			btnIniciarSesion = new JButton("Iniciar Sesión");
-			btnIniciarSesion.setBounds(112, 179, 200, 35);
+			btnIniciarSesion.addActionListener(this);
+			btnIniciarSesion.setBounds(112, 166, 200, 35);
 			contentPane.add(btnIniciarSesion);
 		}
 		{
 			txtCorreoElectronico = new JTextField();
-			txtCorreoElectronico.setBounds(171, 83, 200, 25);
+			txtCorreoElectronico.setBounds(171, 77, 200, 25);
 			contentPane.add(txtCorreoElectronico);
 			txtCorreoElectronico.setColumns(10);
 		}
 		{
 			lblCorreoElectrnico = new JLabel("Correo electrónico:");
-			lblCorreoElectrnico.setBounds(45, 86, 100, 14);
+			lblCorreoElectrnico.setBounds(45, 80, 100, 14);
 			contentPane.add(lblCorreoElectrnico);
 		}
 		{
 			lblNewLabel_1 = new JLabel("Contraseña:");
-			lblNewLabel_1.setBounds(45, 125, 100, 14);
+			lblNewLabel_1.setBounds(45, 119, 100, 14);
 			contentPane.add(lblNewLabel_1);
 		}
 		{
-			txtContraseña = new JTextField();
-			txtContraseña.setBounds(171, 122, 200, 25);
-			contentPane.add(txtContraseña);
-			txtContraseña.setColumns(10);
-		}
-		{
 			btnRegistrarse = new JButton("Registrarse");
-			btnRegistrarse.setBounds(112, 225, 200, 35);
+			btnRegistrarse.addActionListener(this);
+			btnRegistrarse.setBounds(112, 212, 200, 35);
 			contentPane.add(btnRegistrarse);
 		}
+		{
+			txtContraseña = new JPasswordField();
+			txtContraseña.setBounds(171, 114, 200, 25);
+			contentPane.add(txtContraseña);
+		}
+		{
+			btnSalir = new JButton("Salir");
+			btnSalir.addActionListener(this);
+			btnSalir.setBounds(112, 258, 200, 35);
+			contentPane.add(btnSalir);
+		}
+	}
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnSalir) {
+			do_btnSalir_actionPerformed(e);
+		}
+		if (e.getSource() == btnRegistrarse) {
+			do_btnRegistrarse_actionPerformed(e);
+		}
+		if (e.getSource() == btnIniciarSesion) {
+			do_btnIniciarSesion_actionPerformed(e);
+		}
+	}
+	protected void do_btnIniciarSesion_actionPerformed(ActionEvent e) {
+		String correoElectronico = txtCorreoElectronico.getText().trim();
+		char[] contraseña = txtContraseña.getPassword();
+		if(correoElectronico.isEmpty() || 
+				contraseña.length == 0) {
+			JOptionPane.showMessageDialog(this, "No debe dejar campos vacíos.");
+			return;
+		}else if(!correoElectronico.contains("@")) {
+			JOptionPane.showMessageDialog(this, "Correo electrónico inválido.");
+			return;
+		}
+		limpiarCampos();
+		dispose();
+	}
+	protected void do_btnRegistrarse_actionPerformed(ActionEvent e) {
+		limpiarCampos();
+	}
+	protected void do_btnSalir_actionPerformed(ActionEvent e) {
+		System.exit(0);
+	}
+	private void limpiarCampos() {
+		txtCorreoElectronico.setText("");
+		txtContraseña.setText("");
 	}
 }
