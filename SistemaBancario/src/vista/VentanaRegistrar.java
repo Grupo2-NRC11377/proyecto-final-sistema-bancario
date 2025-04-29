@@ -7,10 +7,13 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
-public class VentanaRegistrar extends JDialog {
+public class VentanaRegistrar extends JDialog implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
@@ -23,12 +26,12 @@ public class VentanaRegistrar extends JDialog {
 	private JTextField txtTelefono;
 	private JLabel lblNewLabel_4;
 	private JTextField txtDireccion;
-	private JTextField textField;
+	private JTextField txtCorreoElectronico;
 	private JLabel lblCorreoElectrnico;
 	private JLabel lblNewLabel_5;
-	private JPasswordField passwordField;
+	private JPasswordField txtContraseña;
 	private JButton btnRegistrarse;
-	private JButton btnSalir;
+	private JButton btnCerrar;
 
 	public VentanaRegistrar() {
 		setModal(true);
@@ -88,10 +91,10 @@ public class VentanaRegistrar extends JDialog {
 			contentPanel.add(txtDireccion);
 		}
 		{
-			textField = new JTextField();
-			textField.setColumns(10);
-			textField.setBounds(160, 214, 200, 25);
-			contentPanel.add(textField);
+			txtCorreoElectronico = new JTextField();
+			txtCorreoElectronico.setColumns(10);
+			txtCorreoElectronico.setBounds(160, 214, 200, 25);
+			contentPanel.add(txtCorreoElectronico);
 		}
 		{
 			lblCorreoElectrnico = new JLabel("Correo electrónico:");
@@ -104,19 +107,66 @@ public class VentanaRegistrar extends JDialog {
 			contentPanel.add(lblNewLabel_5);
 		}
 		{
-			passwordField = new JPasswordField();
-			passwordField.setBounds(160, 253, 200, 25);
-			contentPanel.add(passwordField);
+			txtContraseña = new JPasswordField();
+			txtContraseña.setBounds(160, 253, 200, 25);
+			contentPanel.add(txtContraseña);
 		}
 		{
 			btnRegistrarse = new JButton("Registrarse");
+			btnRegistrarse.addActionListener(this);
 			btnRegistrarse.setBounds(34, 299, 150, 35);
 			contentPanel.add(btnRegistrarse);
 		}
 		{
-			btnSalir = new JButton("Salir");
-			btnSalir.setBounds(210, 299, 150, 35);
-			contentPanel.add(btnSalir);
+			btnCerrar = new JButton("Cerrar");
+			btnCerrar.addActionListener(this);
+			btnCerrar.setBounds(210, 299, 150, 35);
+			contentPanel.add(btnCerrar);
 		}
+	}
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnCerrar) {
+			do_btnCerrar_actionPerformed(e);
+		}
+		if (e.getSource() == btnRegistrarse) {
+			do_btnRegistrarse_actionPerformed(e);
+		}
+	}
+	protected void do_btnRegistrarse_actionPerformed(ActionEvent e) {
+		String nombres = txtNombres.getText().trim();
+		String apellidos = txtApellidos.getText().trim();
+		String telefono = txtTelefono.getText().trim();
+		String direccion = txtDireccion.getText().trim();
+		String correoElectronico = txtCorreoElectronico.getText().trim();
+		char[] contraseña = txtContraseña.getPassword();
+		if(nombres.isEmpty() || 
+			apellidos.isEmpty() || 
+			telefono.isEmpty() ||
+			direccion.isEmpty() ||
+			correoElectronico.isEmpty() || 
+			contraseña.length == 0) {
+			JOptionPane.showMessageDialog(this, "No debe dejar campos vacíos.");
+			return;
+		}else if(!correoElectronico.contains("@")) {
+			JOptionPane.showMessageDialog(this, "Correo electrónico inválido.");
+			return;
+		}else if(telefono.length() != 9) {
+			JOptionPane.showMessageDialog(this, "Número de teléfono inválido.");
+			return;
+		}
+		limpiarCampos();
+		dispose();
+	}
+	protected void do_btnCerrar_actionPerformed(ActionEvent e) {
+		limpiarCampos();
+		dispose();
+	}
+	private void limpiarCampos() {
+		txtNombres.setText("");
+		txtApellidos.setText("");
+		txtTelefono.setText("");
+		txtDireccion.setText("");
+		txtCorreoElectronico.setText("");
+		txtContraseña.setText("");
 	}
 }
