@@ -60,26 +60,55 @@ public class VentanaMenu extends JFrame {
 		menuBar.setBounds(49, 96, 630, 50);
 		getContentPane().add(menuBar);
 		
-		JMenu mnNewMenu = new JMenu("Perfil");
-		mnNewMenu.setBounds(49, 107, 115, 26);
-		getContentPane().add(mnNewMenu);
+		JMenu mnNewMenu_4 = new JMenu("Perfil");
+		menuBar.add(mnNewMenu_4);
 		
 		JMenuItem mntmNewMenuItem = new JMenuItem("Actualizar");
-		mnNewMenu.add(mntmNewMenuItem);
+		mnNewMenu_4.add(mntmNewMenuItem);
 		
 		JMenuItem mntmNewMenuItem_1 = new JMenuItem("Cerrar sesión");
-		mnNewMenu.add(mntmNewMenuItem_1);
+		mnNewMenu_4.add(mntmNewMenuItem_1);
 		
-		JMenu mnNewMenu_1 = new JMenu("Cuentas");
-		mnNewMenu_1.setBounds(175, 107, 115, 26);
-		getContentPane().add(mnNewMenu_1);
+		JMenu mnNewMenu = new JMenu("Cuentas");
+		menuBar.add(mnNewMenu);
 		
-		JMenu mnNewMenu_2 = new JMenu("Tarjetas");
-		mnNewMenu_2.setBounds(310, 107, 115, 26);
-		getContentPane().add(mnNewMenu_2);
+		JMenuItem mntmNewMenuItem_2 = new JMenuItem("Ver");
+		mnNewMenu.add(mntmNewMenuItem_2);
 		
-		JMenu mnNewMenu_3 = new JMenu("Transacciones");
-		mnNewMenu_3.setBounds(505, 107, 115, 26);
-		getContentPane().add(mnNewMenu_3);
+		JMenuItem mntmNewMenuItem_3 = new JMenuItem("Solicitar");
+		mnNewMenu.add(mntmNewMenuItem_3);
+		
+		JMenuItem mntmNewMenuItem_4 = new JMenuItem("Retirar");
+		mnNewMenu.add(mntmNewMenuItem_4);
+		
+		JMenuItem mntmNewMenuItem_5 = new JMenuItem("Depositar");
+		mnNewMenu.add(mntmNewMenuItem_5);
+		
+		JMenuItem mntmNewMenuItem_6 = new JMenuItem("Transferir");
+		mnNewMenu.add(mntmNewMenuItem_6);
+		
+		JMenuItem mntmNewMenuItem_7 = new JMenuItem("Cancelar");
+		mnNewMenu.add(mntmNewMenuItem_7);
+		
+		JMenu mnNewMenu_1 = new JMenu("Tarjetas");
+		menuBar.add(mnNewMenu_1);
+		
+		JMenuItem mntmNewMenuItem_8 = new JMenuItem("Ver");
+		mnNewMenu_1.add(mntmNewMenuItem_8);
+		
+		JMenuItem mntmNewMenuItem_10 = new JMenuItem("Solicitar");
+		mnNewMenu_1.add(mntmNewMenuItem_10);
+		
+		JMenuItem mntmNewMenuItem_11 = new JMenuItem("Realizar compras");
+		mnNewMenu_1.add(mntmNewMenuItem_11);
+		
+		JMenuItem mntmNewMenuItem_12 = new JMenuItem("Bloquear");
+		mnNewMenu_1.add(mntmNewMenuItem_12);
+		
+		JMenu mnNewMenu_2 = new JMenu("Transacciones");
+		menuBar.add(mnNewMenu_2);
+		
+		JMenuItem mntmNewMenuItem_9 = new JMenuItem("Ver");
+		mnNewMenu_2.add(mntmNewMenuItem_9);
 	}
 }
