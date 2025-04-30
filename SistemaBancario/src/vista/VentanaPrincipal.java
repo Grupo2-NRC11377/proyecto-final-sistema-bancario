@@ -116,6 +116,8 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 		}
 		limpiarCampos();
 		dispose();
+		VentanaMenu menu = new VentanaMenu();
+		menu.setVisible(true);
 	}
 	protected void do_btnRegistrarse_actionPerformed(ActionEvent e) {
 		VentanaRegistrar ventanaRegistrar = new VentanaRegistrar(this);

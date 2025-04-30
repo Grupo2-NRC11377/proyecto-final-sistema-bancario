@@ -141,12 +141,7 @@ public class VentanaRegistrar extends JDialog implements ActionListener {
 		String direccion = txtDireccion.getText().trim();
 		String correoElectronico = txtCorreoElectronico.getText().trim();
 		char[] contraseña = txtContraseña.getPassword();
-		if(nombres.isEmpty() || 
-			apellidos.isEmpty() || 
-			telefono.isEmpty() ||
-			direccion.isEmpty() ||
-			correoElectronico.isEmpty() || 
-			contraseña.length == 0) {
+		if(nombres.isEmpty() || apellidos.isEmpty() || telefono.isEmpty() ||direccion.isEmpty() ||correoElectronico.isEmpty() || contraseña.length == 0) {
 			JOptionPane.showMessageDialog(this, "No debe dejar campos vacíos.");
 			return;
 		}else if(!correoElectronico.contains("@")) {
@@ -159,6 +154,9 @@ public class VentanaRegistrar extends JDialog implements ActionListener {
 		if(ventanaPrincipal != null) ventanaPrincipal.dispose();
 		limpiarCampos();
 		dispose();
+		VentanaMenu menu = new VentanaMenu();
+		menu.setVisible(true);
+		
 	}
 	protected void do_btnCerrar_actionPerformed(ActionEvent e) {
 		limpiarCampos();
