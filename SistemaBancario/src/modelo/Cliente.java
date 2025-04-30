@@ -24,6 +24,13 @@ public class Cliente extends Persona {
 	        }
 	        return null;
 	    }
+	    
+	    public Cuenta eliminarCuenta(long numeroDeCuenta) {
+	    	Cuenta cuenta = buscarCuenta(numeroDeCuenta);
+	    	if(cuenta == null || !cuenta.getEstado()) return null;
+	    	cuentas.remove(cuenta);
+	        return cuenta;
+	    }
 
 	    public ArrayList<Cuenta> getCuentas() {
 	        return cuentas;
