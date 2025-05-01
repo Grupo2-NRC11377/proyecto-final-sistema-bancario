@@ -38,7 +38,9 @@ public class VerPerfil extends JDialog {
 	 * Create the dialog.
 	 */
 	public VerPerfil() {
-		setBounds(100, 100, 479, 571);
+		setModal(true);
+		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+		setBounds(100, 100, 443, 435);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(new Color(255, 255, 255));
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -104,11 +106,11 @@ public class VerPerfil extends JDialog {
 		}
 		
 		JButton btnNewButton = new JButton("Salir");
-		btnNewButton.setBounds(287, 393, 103, 36);
+		btnNewButton.setBounds(219, 327, 103, 36);
 		contentPanel.add(btnNewButton);
 		
 		JButton btnNewButton_1 = new JButton("Regresar");
-		btnNewButton_1.setBounds(43, 393, 105, 36);
+		btnNewButton_1.setBounds(84, 327, 105, 36);
 		contentPanel.add(btnNewButton_1);
 	}
 }
