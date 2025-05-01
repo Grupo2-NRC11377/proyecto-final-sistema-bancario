@@ -6,6 +6,10 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import modelo.Cliente;
+import servicio.ServicioCliente;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -135,28 +139,39 @@ public class VentanaRegistrar extends JDialog implements ActionListener {
 		}
 	}
 	protected void do_btnRegistrarse_actionPerformed(ActionEvent e) {
-		String nombres = txtNombres.getText().trim();
-		String apellidos = txtApellidos.getText().trim();
-		String telefono = txtTelefono.getText().trim();
-		String direccion = txtDireccion.getText().trim();
-		String correoElectronico = txtCorreoElectronico.getText().trim();
-		char[] contraseña = txtContraseña.getPassword();
-		if(nombres.isEmpty() || apellidos.isEmpty() || telefono.isEmpty() ||direccion.isEmpty() ||correoElectronico.isEmpty() || contraseña.length == 0) {
-			JOptionPane.showMessageDialog(this, "No debe dejar campos vacíos.");
-			return;
-		}else if(!correoElectronico.contains("@")) {
-			JOptionPane.showMessageDialog(this, "Correo electrónico inválido.");
-			return;
-		}else if(telefono.length() != 9) {
-			JOptionPane.showMessageDialog(this, "Número de teléfono inválido.");
-			return;
+		try {
+			String nombres = txtNombres.getText().trim();
+			String apellidos = txtApellidos.getText().trim();
+			String telefono = txtTelefono.getText().trim();
+			String direccion = txtDireccion.getText().trim();
+			String correoElectronico = txtCorreoElectronico.getText().trim();
+			char[] contraseña = txtContraseña.getPassword();
+			if(nombres.isEmpty() || apellidos.isEmpty() || telefono.isEmpty() ||direccion.isEmpty() ||correoElectronico.isEmpty() || contraseña.length == 0) {
+				JOptionPane.showMessageDialog(this, "No debe dejar campos vacíos.");
+				return;
+			}else if(!correoElectronico.contains("@")) {
+				JOptionPane.showMessageDialog(this, "Correo electrónico inválido.");
+				return;
+			}else if(telefono.length() != 9) {
+				JOptionPane.showMessageDialog(this, "Número de teléfono inválido.");
+				return;
+			}else if(ServicioCliente.buscarCliente(correoElectronico) != null) {
+				JOptionPane.showMessageDialog(this, "Correo electrónico ya registrado.");
+				return;
+			}
+			if(ventanaPrincipal != null) ventanaPrincipal.dispose();
+			Cliente cliente = new Cliente(nombres, apellidos, Integer.parseInt(telefono), direccion, correoElectronico, new String(contraseña));
+			ServicioCliente.agregarCliente(cliente);
+			limpiarCampos();
+			dispose();
+			VentanaMenu menu = new VentanaMenu();
+			menu.setVisible(true);
+		} catch (NumberFormatException error) {
+			JOptionPane.showMessageDialog(this, "Número de teléfono inválido. Error: "+error.getMessage());
+			txtTelefono.setText("");
+		}catch (Exception error) {
+			JOptionPane.showMessageDialog(this, "Error: "+error.getMessage());
 		}
-		if(ventanaPrincipal != null) ventanaPrincipal.dispose();
-		limpiarCampos();
-		dispose();
-		VentanaMenu menu = new VentanaMenu();
-		menu.setVisible(true);
-		
 	}
 	protected void do_btnCerrar_actionPerformed(ActionEvent e) {
 		limpiarCampos();
