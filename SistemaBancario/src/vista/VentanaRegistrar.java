@@ -16,6 +16,8 @@ import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Font;
+import javax.swing.SwingConstants;
 
 public class VentanaRegistrar extends JDialog implements ActionListener {
 
@@ -36,9 +38,10 @@ public class VentanaRegistrar extends JDialog implements ActionListener {
 	private JLabel lblNewLabel_5;
 	private JPasswordField txtContraseña;
 	private JButton btnRegistrarse;
-	private JButton btnCerrar;
+	private JButton btnCancelar;
 
 	public VentanaRegistrar(VentanaPrincipal ventanaPrincipal) {
+		setTitle("Registrar");
 		this.ventanaPrincipal = ventanaPrincipal;
 		setModal(true);
 		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
@@ -49,12 +52,14 @@ public class VentanaRegistrar extends JDialog implements ActionListener {
 		contentPanel.setLayout(null);
 		{
 			lblNewLabel = new JLabel("Registrarse");
-			lblNewLabel.setBounds(34, 34, 66, 14);
+			lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+			lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
+			lblNewLabel.setBounds(140, 22, 114, 35);
 			contentPanel.add(lblNewLabel);
 		}
 		{
 			lblNewLabel_1 = new JLabel("Nombres:");
-			lblNewLabel_1.setBounds(34, 76, 46, 14);
+			lblNewLabel_1.setBounds(34, 76, 114, 14);
 			contentPanel.add(lblNewLabel_1);
 		}
 		{
@@ -65,7 +70,7 @@ public class VentanaRegistrar extends JDialog implements ActionListener {
 		}
 		{
 			lblNewLabel_2 = new JLabel("Apellidos:");
-			lblNewLabel_2.setBounds(34, 112, 46, 14);
+			lblNewLabel_2.setBounds(34, 112, 114, 14);
 			contentPanel.add(lblNewLabel_2);
 		}
 		{
@@ -76,7 +81,7 @@ public class VentanaRegistrar extends JDialog implements ActionListener {
 		}
 		{
 			lblNewLabel_3 = new JLabel("Teléfono:");
-			lblNewLabel_3.setBounds(34, 146, 46, 14);
+			lblNewLabel_3.setBounds(34, 146, 114, 14);
 			contentPanel.add(lblNewLabel_3);
 		}
 		{
@@ -87,7 +92,7 @@ public class VentanaRegistrar extends JDialog implements ActionListener {
 		}
 		{
 			lblNewLabel_4 = new JLabel("Dirección:");
-			lblNewLabel_4.setBounds(34, 182, 66, 14);
+			lblNewLabel_4.setBounds(34, 182, 114, 14);
 			contentPanel.add(lblNewLabel_4);
 		}
 		{
@@ -104,12 +109,12 @@ public class VentanaRegistrar extends JDialog implements ActionListener {
 		}
 		{
 			lblCorreoElectrnico = new JLabel("Correo electrónico:");
-			lblCorreoElectrnico.setBounds(34, 219, 100, 14);
+			lblCorreoElectrnico.setBounds(34, 219, 114, 14);
 			contentPanel.add(lblCorreoElectrnico);
 		}
 		{
 			lblNewLabel_5 = new JLabel("Contraseña:");
-			lblNewLabel_5.setBounds(34, 258, 100, 14);
+			lblNewLabel_5.setBounds(34, 258, 114, 14);
 			contentPanel.add(lblNewLabel_5);
 		}
 		{
@@ -124,15 +129,15 @@ public class VentanaRegistrar extends JDialog implements ActionListener {
 			contentPanel.add(btnRegistrarse);
 		}
 		{
-			btnCerrar = new JButton("Cerrar");
-			btnCerrar.addActionListener(this);
-			btnCerrar.setBounds(210, 299, 150, 35);
-			contentPanel.add(btnCerrar);
+			btnCancelar = new JButton("Cancelar");
+			btnCancelar.addActionListener(this);
+			btnCancelar.setBounds(211, 299, 150, 35);
+			contentPanel.add(btnCancelar);
 		}
 	}
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == btnCerrar) {
-			do_btnCerrar_actionPerformed(e);
+		if (e.getSource() == btnCancelar) {
+			do_btnCancelar_actionPerformed(e);
 		}
 		if (e.getSource() == btnRegistrarse) {
 			do_btnRegistrarse_actionPerformed(e);
@@ -164,7 +169,7 @@ public class VentanaRegistrar extends JDialog implements ActionListener {
 			ServicioCliente.agregarCliente(cliente);
 			limpiarCampos();
 			dispose();
-			VentanaMenu menu = new VentanaMenu();
+			VentanaMenu menu = new VentanaMenu(ventanaPrincipal);
 			menu.setVisible(true);
 		} catch (NumberFormatException error) {
 			JOptionPane.showMessageDialog(this, "Número de teléfono inválido. Error: "+error.getMessage());
@@ -173,10 +178,6 @@ public class VentanaRegistrar extends JDialog implements ActionListener {
 			JOptionPane.showMessageDialog(this, "Error: "+error.getMessage());
 		}
 	}
-	protected void do_btnCerrar_actionPerformed(ActionEvent e) {
-		limpiarCampos();
-		dispose();
-	}
 	private void limpiarCampos() {
 		txtNombres.setText("");
 		txtApellidos.setText("");
@@ -184,5 +185,9 @@ public class VentanaRegistrar extends JDialog implements ActionListener {
 		txtDireccion.setText("");
 		txtCorreoElectronico.setText("");
 		txtContraseña.setText("");
+	}
+	protected void do_btnCancelar_actionPerformed(ActionEvent e) {
+		limpiarCampos();
+		dispose();
 	}
 }

@@ -8,106 +8,109 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import java.awt.Font;
+import javax.swing.SwingConstants;
 import javax.swing.JTextField;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
-public class VentanaActualizarPerfil extends JDialog {
+public class VentanaActualizarPerfil extends JDialog implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
-	private final JPanel contentPanel = new JPanel();
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTextField textField_4;
-	private JTextField textField_5;
+	private JTextField txtNombres;
+	private JTextField txtApellidos;
+	private JTextField txtTelefono;
+	private JTextField txtDireccion;
+	private JTextField txtCorreoElectronico;
+	private JButton btnCancelar;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			VentanaActualizarPerfil dialog = new VentanaActualizarPerfil();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
+	public VentanaActualizarPerfil() {
+		setModal(true);
+		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+		setTitle("Actualizar perfil");
+		setBounds(100, 100, 426, 315);
+		getContentPane().setLayout(null);
+		{
+			JLabel lblNewLabel = new JLabel("Perfil");
+			lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+			lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
+			lblNewLabel.setBounds(151, 27, 107, 25);
+			getContentPane().add(lblNewLabel);
+		}
+		{
+			JLabel lblNombres = new JLabel("Nombres:");
+			lblNombres.setBounds(34, 80, 115, 14);
+			getContentPane().add(lblNombres);
+		}
+		{
+			txtNombres = new JTextField();
+			txtNombres.setColumns(10);
+			txtNombres.setBounds(159, 77, 209, 20);
+			getContentPane().add(txtNombres);
+		}
+		{
+			JLabel lblApellidos = new JLabel("Apellidos:");
+			lblApellidos.setBounds(34, 105, 115, 14);
+			getContentPane().add(lblApellidos);
+		}
+		{
+			txtApellidos = new JTextField();
+			txtApellidos.setColumns(10);
+			txtApellidos.setBounds(159, 102, 209, 20);
+			getContentPane().add(txtApellidos);
+		}
+		{
+			JLabel lblTelfono = new JLabel("Teléfono:");
+			lblTelfono.setBounds(34, 130, 115, 14);
+			getContentPane().add(lblTelfono);
+		}
+		{
+			txtTelefono = new JTextField();
+			txtTelefono.setColumns(10);
+			txtTelefono.setBounds(159, 127, 209, 20);
+			getContentPane().add(txtTelefono);
+		}
+		{
+			JLabel lblDireccin = new JLabel("Dirección:");
+			lblDireccin.setBounds(34, 155, 115, 14);
+			getContentPane().add(lblDireccin);
+		}
+		{
+			txtDireccion = new JTextField();
+			txtDireccion.setColumns(10);
+			txtDireccion.setBounds(159, 152, 209, 20);
+			getContentPane().add(txtDireccion);
+		}
+		{
+			JLabel lblCorreoElectrnico = new JLabel("Correo electrónico:");
+			lblCorreoElectrnico.setBounds(34, 180, 115, 14);
+			getContentPane().add(lblCorreoElectrnico);
+		}
+		{
+			txtCorreoElectronico = new JTextField();
+			txtCorreoElectronico.setColumns(10);
+			txtCorreoElectronico.setBounds(159, 177, 209, 20);
+			getContentPane().add(txtCorreoElectronico);
+		}
+		{
+			btnCancelar = new JButton("Cancelar");
+			btnCancelar.addActionListener(this);
+			btnCancelar.setBounds(235, 227, 89, 23);
+			getContentPane().add(btnCancelar);
+		}
+		{
+			JButton btnGuardar = new JButton("Guardar");
+			btnGuardar.setBounds(83, 227, 89, 23);
+			getContentPane().add(btnGuardar);
 		}
 	}
 
-	/**
-	 * Create the dialog.
-	 */
-	public VentanaActualizarPerfil() {
-		setBounds(100, 100, 450, 379);
-		getContentPane().setLayout(new BorderLayout());
-		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(null);
-		
-		JLabel lblNewLabel = new JLabel("NOMBRE:");
-		lblNewLabel.setBounds(60, 63, 46, 14);
-		contentPanel.add(lblNewLabel);
-		
-		JLabel lblNewLabel_1 = new JLabel("APELLIDOS:");
-		lblNewLabel_1.setBounds(60, 105, 46, 14);
-		contentPanel.add(lblNewLabel_1);
-		
-		JLabel lblNewLabel_2 = new JLabel("TELEFONO:");
-		lblNewLabel_2.setBounds(60, 151, 56, 14);
-		contentPanel.add(lblNewLabel_2);
-		
-		JLabel lblNewLabel_3 = new JLabel("DIRECCIÓN:");
-		lblNewLabel_3.setBounds(60, 196, 61, 14);
-		contentPanel.add(lblNewLabel_3);
-		
-		JLabel lblNewLabel_4 = new JLabel("CORREO ELECTRONICO:");
-		lblNewLabel_4.setBounds(60, 245, 46, 14);
-		contentPanel.add(lblNewLabel_4);
-		
-		JLabel lblNewLabel_5 = new JLabel("CONTRASEÑA:");
-		lblNewLabel_5.setBounds(60, 279, 46, 14);
-		contentPanel.add(lblNewLabel_5);
-		
-		textField = new JTextField();
-		textField.setBounds(138, 60, 86, 20);
-		contentPanel.add(textField);
-		textField.setColumns(10);
-		
-		textField_1 = new JTextField();
-		textField_1.setBounds(138, 102, 86, 20);
-		contentPanel.add(textField_1);
-		textField_1.setColumns(10);
-		
-		textField_2 = new JTextField();
-		textField_2.setColumns(10);
-		textField_2.setBounds(138, 148, 86, 20);
-		contentPanel.add(textField_2);
-		
-		textField_3 = new JTextField();
-		textField_3.setColumns(10);
-		textField_3.setBounds(138, 193, 86, 20);
-		contentPanel.add(textField_3);
-		
-		textField_4 = new JTextField();
-		textField_4.setColumns(10);
-		textField_4.setBounds(138, 242, 86, 20);
-		contentPanel.add(textField_4);
-		
-		textField_5 = new JTextField();
-		textField_5.setColumns(10);
-		textField_5.setBounds(138, 276, 86, 20);
-		contentPanel.add(textField_5);
-		
-		JLabel lblNewLabel_6 = new JLabel("ACTUALIZAR PERFIL");
-		lblNewLabel_6.setBounds(153, 23, 100, 14);
-		contentPanel.add(lblNewLabel_6);
-		
-		JButton btnGuardar = new JButton("GUARDAD");
-		btnGuardar.setBounds(293, 147, 89, 23);
-		contentPanel.add(btnGuardar);
-		
-		JButton btnCancelar = new JButton("CANCELAR");
-		btnCancelar.setBounds(293, 209, 89, 23);
-		contentPanel.add(btnCancelar);
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnCancelar) {
+			do_btnCancelar_actionPerformed(e);
+		}
+	}
+	protected void do_btnCancelar_actionPerformed(ActionEvent e) {
+		dispose();
 	}
 }

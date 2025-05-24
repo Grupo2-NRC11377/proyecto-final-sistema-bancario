@@ -1,114 +1,100 @@
 package vista;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-import java.awt.Font;
-import javax.swing.JTextArea;
-import javax.swing.JComboBox;
-import javax.swing.JButton;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
-import javax.swing.JTextField;
 import javax.swing.JMenuItem;
-import javax.swing.JCheckBoxMenuItem;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.JLabel;
+import java.awt.Font;
+import javax.swing.JTextField;
 
-public class VentanaMenu extends JFrame {
+public class VentanaMenu extends JFrame implements ActionListener {
 
+	private VentanaPrincipal ventanaPrincipal;
+	
 	private static final long serialVersionUID = 1L;
+	private JPanel contentPane;
+	private JMenuBar menuBar;
+	private JMenu mnNewMenu;
+	private JMenuItem mntmActualizarPerfil;
+	private JMenuItem mntmVerPerfil;
+	private JMenuItem mntmCerrarSesion;
+	private JLabel lblNewLabel;
 	private JTextField textField;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					VentanaMenu frame = new VentanaMenu();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
+	public VentanaMenu(VentanaPrincipal ventanaPrincipal) {
+		this.ventanaPrincipal = ventanaPrincipal;
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 600, 240);
+		{
+			menuBar = new JMenuBar();
+			setJMenuBar(menuBar);
+			{
+				mnNewMenu = new JMenu("Perfil");
+				menuBar.add(mnNewMenu);
+				{
+					mntmVerPerfil = new JMenuItem("Ver");
+					mntmVerPerfil.addActionListener(this);
+					mnNewMenu.add(mntmVerPerfil);
+				}
+				{
+					mntmActualizarPerfil = new JMenuItem("Actualizar");
+					mntmActualizarPerfil.addActionListener(this);
+					mnNewMenu.add(mntmActualizarPerfil);
+				}
+				{
+					mntmCerrarSesion = new JMenuItem("Cerrar sesión");
+					mntmCerrarSesion.addActionListener(this);
+					mnNewMenu.add(mntmCerrarSesion);
 				}
 			}
-		});
+		}
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		{
+			lblNewLabel = new JLabel("Bienvenido/a,");
+			lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 40));
+			lblNewLabel.setBounds(51, 43, 255, 39);
+			contentPane.add(lblNewLabel);
+		}
+		{
+			textField = new JTextField();
+			textField.setEditable(false);
+			textField.setFont(new Font("Tahoma", Font.PLAIN, 40));
+			textField.setBounds(51, 101, 477, 39);
+			contentPane.add(textField);
+			textField.setColumns(10);
+		}
 	}
 
-	/**
-	 * Create the frame.
-	 */
-	public VentanaMenu() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 753, 280);
-		getContentPane().setLayout(null);
-		
-		JLabel lblNewLabel = new JLabel("Bienvenido,");
-		lblNewLabel.setFont(new Font("Times New Roman", Font.PLAIN, 20));
-		lblNewLabel.setBounds(177, 37, 135, 50);
-		getContentPane().add(lblNewLabel);
-		
-		textField = new JTextField();
-		textField.setEditable(false);
-		textField.setBounds(300, 47, 206, 35);
-		getContentPane().add(textField);
-		textField.setColumns(10);
-		
-		JMenuBar menuBar = new JMenuBar();
-		menuBar.setBounds(49, 96, 630, 50);
-		getContentPane().add(menuBar);
-		
-		JMenu mnNewMenu_4 = new JMenu("Perfil");
-		menuBar.add(mnNewMenu_4);
-		
-		JMenuItem mntmNewMenuItem = new JMenuItem("Actualizar");
-		mnNewMenu_4.add(mntmNewMenuItem);
-		
-		JMenuItem mntmNewMenuItem_1 = new JMenuItem("Cerrar sesión");
-		mnNewMenu_4.add(mntmNewMenuItem_1);
-		
-		JMenu mnNewMenu = new JMenu("Cuentas");
-		menuBar.add(mnNewMenu);
-		
-		JMenuItem mntmNewMenuItem_2 = new JMenuItem("Ver");
-		mnNewMenu.add(mntmNewMenuItem_2);
-		
-		JMenuItem mntmNewMenuItem_3 = new JMenuItem("Solicitar");
-		mnNewMenu.add(mntmNewMenuItem_3);
-		
-		JMenuItem mntmNewMenuItem_4 = new JMenuItem("Retirar");
-		mnNewMenu.add(mntmNewMenuItem_4);
-		
-		JMenuItem mntmNewMenuItem_5 = new JMenuItem("Depositar");
-		mnNewMenu.add(mntmNewMenuItem_5);
-		
-		JMenuItem mntmNewMenuItem_6 = new JMenuItem("Transferir");
-		mnNewMenu.add(mntmNewMenuItem_6);
-		
-		JMenuItem mntmNewMenuItem_7 = new JMenuItem("Cancelar");
-		mnNewMenu.add(mntmNewMenuItem_7);
-		
-		JMenu mnNewMenu_1 = new JMenu("Tarjetas");
-		menuBar.add(mnNewMenu_1);
-		
-		JMenuItem mntmNewMenuItem_8 = new JMenuItem("Ver");
-		mnNewMenu_1.add(mntmNewMenuItem_8);
-		
-		JMenuItem mntmNewMenuItem_10 = new JMenuItem("Solicitar");
-		mnNewMenu_1.add(mntmNewMenuItem_10);
-		
-		JMenuItem mntmNewMenuItem_11 = new JMenuItem("Realizar compras");
-		mnNewMenu_1.add(mntmNewMenuItem_11);
-		
-		JMenuItem mntmNewMenuItem_12 = new JMenuItem("Bloquear");
-		mnNewMenu_1.add(mntmNewMenuItem_12);
-		
-		JMenu mnNewMenu_2 = new JMenu("Transacciones");
-		menuBar.add(mnNewMenu_2);
-		
-		JMenuItem mntmNewMenuItem_9 = new JMenuItem("Ver");
-		mnNewMenu_2.add(mntmNewMenuItem_9);
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == mntmActualizarPerfil) {
+			do_mntmActualizarPerfil_actionPerformed(e);
+		}
+		if (e.getSource() == mntmVerPerfil) {
+			do_mntmVerPerfil_actionPerformed(e);
+		}
+		if (e.getSource() == mntmCerrarSesion) {
+			do_mntmCerrarSesion_actionPerformed(e);
+		}
+	}
+	protected void do_mntmCerrarSesion_actionPerformed(ActionEvent e) {
+		ventanaPrincipal.setVisible(true);
+		dispose();
+	}
+	protected void do_mntmVerPerfil_actionPerformed(ActionEvent e) {
+		VentanaVerPerfil ventanaVerPerfil = new VentanaVerPerfil();
+		ventanaVerPerfil.setVisible(true);
+	}
+	protected void do_mntmActualizarPerfil_actionPerformed(ActionEvent e) {
+		VentanaActualizarPerfil ventanaActualizarPerfil = new VentanaActualizarPerfil();
+		ventanaActualizarPerfil.setVisible(true);
 	}
 }

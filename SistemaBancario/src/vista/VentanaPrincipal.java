@@ -12,6 +12,8 @@ import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Font;
+import javax.swing.SwingConstants;
 
 public class VentanaPrincipal extends JFrame implements ActionListener {
 
@@ -49,13 +51,15 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 		contentPane.setLayout(null);
 		{
 			lblNewLabel = new JLabel("Bienvenido");
-			lblNewLabel.setBounds(45, 38, 60, 14);
+			lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+			lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
+			lblNewLabel.setBounds(159, 27, 116, 25);
 			contentPane.add(lblNewLabel);
 		}
 		{
 			btnIniciarSesion = new JButton("Iniciar Sesión");
 			btnIniciarSesion.addActionListener(this);
-			btnIniciarSesion.setBounds(112, 166, 200, 35);
+			btnIniciarSesion.setBounds(117, 166, 200, 35);
 			contentPane.add(btnIniciarSesion);
 		}
 		{
@@ -66,18 +70,18 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 		}
 		{
 			lblCorreoElectrnico = new JLabel("Correo electrónico:");
-			lblCorreoElectrnico.setBounds(45, 80, 100, 14);
+			lblCorreoElectrnico.setBounds(45, 80, 116, 14);
 			contentPane.add(lblCorreoElectrnico);
 		}
 		{
 			lblNewLabel_1 = new JLabel("Contraseña:");
-			lblNewLabel_1.setBounds(45, 119, 100, 14);
+			lblNewLabel_1.setBounds(45, 119, 116, 14);
 			contentPane.add(lblNewLabel_1);
 		}
 		{
 			btnRegistrarse = new JButton("Registrarse");
 			btnRegistrarse.addActionListener(this);
-			btnRegistrarse.setBounds(112, 212, 200, 35);
+			btnRegistrarse.setBounds(117, 212, 200, 35);
 			contentPane.add(btnRegistrarse);
 		}
 		{
@@ -88,7 +92,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 		{
 			btnSalir = new JButton("Salir");
 			btnSalir.addActionListener(this);
-			btnSalir.setBounds(112, 258, 200, 35);
+			btnSalir.setBounds(117, 258, 200, 35);
 			contentPane.add(btnSalir);
 		}
 	}
@@ -116,7 +120,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 		}
 		limpiarCampos();
 		dispose();
-		VentanaMenu menu = new VentanaMenu();
+		VentanaMenu menu = new VentanaMenu(this);
 		menu.setVisible(true);
 	}
 	protected void do_btnRegistrarse_actionPerformed(ActionEvent e) {
