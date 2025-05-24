@@ -1,57 +1,63 @@
 package modelo;
 import java.util.Random;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.ZoneId;
+import java.time.LocalDate;
 
 public class Cuenta {
-	protected long numeroCuenta;
-	protected int saldo;
-	protected String fechaCreacion;
-	protected boolean estado;
-	public Cuenta() {
+	protected String numeroCuenta;
+	protected int saldoContable;
+	protected int saldoDisponible;
+	protected LocalDate fechaCreacion;
+	protected String estado;
+	protected String tipoCuenta;
+	public Cuenta(String tipoCuenta) {
 		this.numeroCuenta = generarNumeroCuenta();
-		this.saldo = 0;
-		this.fechaCreacion = generarFechaCreacion();
-		this.estado = false;
+		this.saldoContable = this.saldoDisponible = 0;
+		this.fechaCreacion = LocalDate.now();
+		this.estado = "activa";
+		this.tipoCuenta = tipoCuenta;
 	}
-	private long generarNumeroCuenta() {
+	private String generarNumeroCuenta() {
 		Random rand = new Random();
 		String numero = "";
-		for (int i = 0; i < 18; i++)
+		for (int i = 0; i < 10; i++)
 	    {
-	        int n = rand.nextInt(10) + 0;
+	        int n = rand.nextInt(10);
 	        numero += Integer.toString(n);
 	    }
-		return Long.parseLong(numero);
+		return numero;
 	}
-	private String generarFechaCreacion() {
-        ZonedDateTime fechaYHora = ZonedDateTime.now(ZoneId.of("America/Lima"));
-		return fechaYHora.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-	}
-	public boolean Retirar(int monto) {
-		if(monto > saldo || monto < 0) return false;
-		saldo -= monto;
+	public boolean retirar(int monto) {
+		if(monto > saldoDisponible || monto < 0) return false;
+		saldoContable -= monto;
+		saldoDisponible -= monto;
 		return true;
 	}
-	public boolean Depositar(int monto) {
+	public boolean depositar(int monto) {
 		if(monto < 0) return false;
-		saldo += monto;
+		saldoContable += monto;
+		saldoDisponible += monto;
 		return true;
 	}
-	public int ConsultarSaldo() {
-		return saldo;
+	public void cancelar() {
+		this.estado = "cancelada";
 	}
-	public void Cancelar() {
-		this.estado = true;
+	public String getNumeroCuenta() {
+		return numeroCuenta.substring(0, 3) + "-" + numeroCuenta.substring(3);
 	}
-	public long getNumeroCuenta() {
-		return numeroCuenta;
+	public int getSaldoContable() {
+		return saldoContable;
+	}
+	public int getSaldoDisponible() {
+		return saldoDisponible;
 	}
 	public String getFechaCreacion() {
-		return fechaCreacion;
+		return fechaCreacion.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 	}
-	public boolean getEstado() {
+	public String getEstado() {
 		return estado;
+	}
+	public String getTipoCuenta() {
+		return tipoCuenta;
 	}
 }

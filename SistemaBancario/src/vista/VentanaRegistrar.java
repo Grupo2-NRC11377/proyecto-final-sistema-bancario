@@ -181,7 +181,7 @@ public class VentanaRegistrar extends JDialog implements ActionListener {
 			ServicioCliente.agregarCliente(cliente);
 			limpiarCampos();
 			dispose();
-			VentanaMenu menu = new VentanaMenu(ventanaPrincipal);
+			VentanaMenu menu = new VentanaMenu(ventanaPrincipal, cliente);
 			menu.setVisible(true);
 		} catch (NumberFormatException error) {
 			JOptionPane.showMessageDialog(this, "Número de teléfono inválido. Error: "+error.getMessage());

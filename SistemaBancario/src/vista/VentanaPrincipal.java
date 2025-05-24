@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import modelo.Cliente;
 import servicio.ServicioCliente;
 
 import javax.swing.JLabel;
@@ -133,14 +134,16 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 		}else if(!correoElectronico.contains("@")) {
 			JOptionPane.showMessageDialog(this, "Correo electrónico inválido.");
 			return;
-		}else if(ServicioCliente.buscarCliente(correoElectronico, new String(contraseña)) == null) {
+		}
+		Cliente cliente = ServicioCliente.buscarCliente(correoElectronico, new String(contraseña));
+		if(cliente == null) {
 			JOptionPane.showMessageDialog(this, "Correo electrónico o contraseña incorrectos. Intente nuevamente.");
 			return;
 		}
 		limpiarCampos();
-		dispose();
-		VentanaMenu menu = new VentanaMenu(this);
+		VentanaMenu menu = new VentanaMenu(this, cliente);
 		menu.setVisible(true);
+		dispose();
 	}
 	protected void do_btnRegistrarse_actionPerformed(ActionEvent e) {
 		VentanaRegistrar ventanaRegistrar = new VentanaRegistrar(this);

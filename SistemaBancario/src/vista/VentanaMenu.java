@@ -3,6 +3,9 @@ package vista;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import modelo.Cliente;
+
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -15,6 +18,7 @@ import javax.swing.JTextField;
 public class VentanaMenu extends JFrame implements ActionListener {
 
 	private VentanaPrincipal ventanaPrincipal;
+	private Cliente cliente;
 	
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -24,10 +28,14 @@ public class VentanaMenu extends JFrame implements ActionListener {
 	private JMenuItem mntmVerPerfil;
 	private JMenuItem mntmCerrarSesion;
 	private JLabel lblNewLabel;
-	private JTextField textField;
+	private JTextField txtCliente;
+	private JMenu mnNewMenu_1;
+	private JMenuItem mntmVerCuentasBancarias;
 
-	public VentanaMenu(VentanaPrincipal ventanaPrincipal) {
+	public VentanaMenu(VentanaPrincipal ventanaPrincipal, Cliente cliente) {
 		this.ventanaPrincipal = ventanaPrincipal;
+		this.cliente = cliente;
+		setTitle("Menú");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 600, 240);
 		{
@@ -52,6 +60,15 @@ public class VentanaMenu extends JFrame implements ActionListener {
 					mnNewMenu.add(mntmCerrarSesion);
 				}
 			}
+			{
+				mnNewMenu_1 = new JMenu("Cuentas");
+				menuBar.add(mnNewMenu_1);
+				{
+					mntmVerCuentasBancarias = new JMenuItem("Ver");
+					mntmVerCuentasBancarias.addActionListener(this);
+					mnNewMenu_1.add(mntmVerCuentasBancarias);
+				}
+			}
 		}
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -65,16 +82,20 @@ public class VentanaMenu extends JFrame implements ActionListener {
 			contentPane.add(lblNewLabel);
 		}
 		{
-			textField = new JTextField();
-			textField.setEditable(false);
-			textField.setFont(new Font("Tahoma", Font.PLAIN, 40));
-			textField.setBounds(51, 101, 477, 39);
-			contentPane.add(textField);
-			textField.setColumns(10);
+			txtCliente = new JTextField();
+			if(cliente != null) txtCliente.setText(cliente.getNombres() + " " + cliente.getApellidos());
+			txtCliente.setEditable(false);
+			txtCliente.setFont(new Font("Tahoma", Font.PLAIN, 40));
+			txtCliente.setBounds(51, 101, 477, 39);
+			contentPane.add(txtCliente);
+			txtCliente.setColumns(10);
 		}
 	}
 
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == mntmVerCuentasBancarias) {
+			do_mntmVerCuentasBancarias_actionPerformed(e);
+		}
 		if (e.getSource() == mntmActualizarPerfil) {
 			do_mntmActualizarPerfil_actionPerformed(e);
 		}
@@ -96,5 +117,10 @@ public class VentanaMenu extends JFrame implements ActionListener {
 	protected void do_mntmActualizarPerfil_actionPerformed(ActionEvent e) {
 		VentanaActualizarPerfil ventanaActualizarPerfil = new VentanaActualizarPerfil();
 		ventanaActualizarPerfil.setVisible(true);
+	}
+	protected void do_mntmVerCuentasBancarias_actionPerformed(ActionEvent e) {
+		VentanaVerCuentasBancarias ventanaVerCuentasBancarias = new VentanaVerCuentasBancarias(cliente);
+		ventanaVerCuentasBancarias.llenarTabla();
+		ventanaVerCuentasBancarias.setVisible(true);
 	}
 }
