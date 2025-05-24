@@ -17,6 +17,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
 import javax.swing.SwingConstants;
+import javax.swing.JCheckBox;
 
 public class VentanaPrincipal extends JFrame implements ActionListener {
 
@@ -30,6 +31,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 	private JButton btnRegistrarse;
 	private JPasswordField txtContraseña;
 	private JButton btnSalir;
+	private JCheckBox chckbxVerContraseña;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -45,24 +47,25 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 	}
 
 	public VentanaPrincipal() {
+		setTitle("Iniciar sesión");
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setBounds(100, 100, 450, 370);
+		setBounds(100, 100, 450, 395);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		{
-			lblNewLabel = new JLabel("Bienvenido");
+			lblNewLabel = new JLabel("Bienvenido/a");
 			lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 			lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
-			lblNewLabel.setBounds(159, 27, 116, 25);
+			lblNewLabel.setBounds(138, 27, 158, 25);
 			contentPane.add(lblNewLabel);
 		}
 		{
 			btnIniciarSesion = new JButton("Iniciar Sesión");
 			btnIniciarSesion.addActionListener(this);
-			btnIniciarSesion.setBounds(117, 166, 200, 35);
+			btnIniciarSesion.setBounds(117, 199, 200, 35);
 			contentPane.add(btnIniciarSesion);
 		}
 		{
@@ -84,22 +87,32 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 		{
 			btnRegistrarse = new JButton("Registrarse");
 			btnRegistrarse.addActionListener(this);
-			btnRegistrarse.setBounds(117, 212, 200, 35);
+			btnRegistrarse.setBounds(117, 245, 200, 35);
 			contentPane.add(btnRegistrarse);
 		}
 		{
 			txtContraseña = new JPasswordField();
 			txtContraseña.setBounds(171, 114, 200, 25);
+			txtContraseña.setEchoChar('●');
 			contentPane.add(txtContraseña);
 		}
 		{
 			btnSalir = new JButton("Salir");
 			btnSalir.addActionListener(this);
-			btnSalir.setBounds(117, 258, 200, 35);
+			btnSalir.setBounds(117, 291, 200, 35);
 			contentPane.add(btnSalir);
+		}
+		{
+			chckbxVerContraseña = new JCheckBox("Ver contraseña");
+			chckbxVerContraseña.addActionListener(this);
+			chckbxVerContraseña.setBounds(171, 146, 124, 23);
+			contentPane.add(chckbxVerContraseña);
 		}
 	}
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == chckbxVerContraseña) {
+			do_chckbxVerContraseña_actionPerformed(e);
+		}
 		if (e.getSource() == btnSalir) {
 			do_btnSalir_actionPerformed(e);
 		}
@@ -140,5 +153,9 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 	private void limpiarCampos() {
 		txtCorreoElectronico.setText("");
 		txtContraseña.setText("");
+	}
+	protected void do_chckbxVerContraseña_actionPerformed(ActionEvent e) {
+		if(chckbxVerContraseña.isSelected()) txtContraseña.setEchoChar((char) 0);
+		else txtContraseña.setEchoChar('●');
 	}
 }

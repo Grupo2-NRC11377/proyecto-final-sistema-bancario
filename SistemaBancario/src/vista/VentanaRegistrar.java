@@ -18,6 +18,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
 import javax.swing.SwingConstants;
+import javax.swing.JCheckBox;
 
 public class VentanaRegistrar extends JDialog implements ActionListener {
 
@@ -39,13 +40,14 @@ public class VentanaRegistrar extends JDialog implements ActionListener {
 	private JPasswordField txtContraseña;
 	private JButton btnRegistrarse;
 	private JButton btnCancelar;
+	private JCheckBox chckbxVerContraseña;
 
 	public VentanaRegistrar(VentanaPrincipal ventanaPrincipal) {
 		setTitle("Registrar");
 		this.ventanaPrincipal = ventanaPrincipal;
 		setModal(true);
 		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-		setBounds(100, 100, 410, 400);
+		setBounds(100, 100, 410, 433);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -120,22 +122,32 @@ public class VentanaRegistrar extends JDialog implements ActionListener {
 		{
 			txtContraseña = new JPasswordField();
 			txtContraseña.setBounds(160, 253, 200, 25);
+			txtContraseña.setEchoChar('●');
 			contentPanel.add(txtContraseña);
 		}
 		{
 			btnRegistrarse = new JButton("Registrarse");
 			btnRegistrarse.addActionListener(this);
-			btnRegistrarse.setBounds(34, 299, 150, 35);
+			btnRegistrarse.setBounds(34, 330, 150, 35);
 			contentPanel.add(btnRegistrarse);
 		}
 		{
 			btnCancelar = new JButton("Cancelar");
 			btnCancelar.addActionListener(this);
-			btnCancelar.setBounds(211, 299, 150, 35);
+			btnCancelar.setBounds(211, 330, 150, 35);
 			contentPanel.add(btnCancelar);
+		}
+		{
+			chckbxVerContraseña = new JCheckBox("Ver contraseña");
+			chckbxVerContraseña.addActionListener(this);
+			chckbxVerContraseña.setBounds(160, 285, 124, 23);
+			contentPanel.add(chckbxVerContraseña);
 		}
 	}
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == chckbxVerContraseña) {
+			do_chckbxVerContraseña_actionPerformed(e);
+		}
 		if (e.getSource() == btnCancelar) {
 			do_btnCancelar_actionPerformed(e);
 		}
@@ -189,5 +201,9 @@ public class VentanaRegistrar extends JDialog implements ActionListener {
 	protected void do_btnCancelar_actionPerformed(ActionEvent e) {
 		limpiarCampos();
 		dispose();
+	}
+	protected void do_chckbxVerContraseña_actionPerformed(ActionEvent e) {
+		if(chckbxVerContraseña.isSelected()) txtContraseña.setEchoChar((char) 0);
+		else txtContraseña.setEchoChar('●');
 	}
 }
