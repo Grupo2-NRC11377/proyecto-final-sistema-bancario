@@ -5,6 +5,9 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import servicio.ServicioCliente;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JButton;
@@ -116,6 +119,9 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 			return;
 		}else if(!correoElectronico.contains("@")) {
 			JOptionPane.showMessageDialog(this, "Correo electrónico inválido.");
+			return;
+		}else if(ServicioCliente.buscarCliente(correoElectronico, new String(contraseña)) == null) {
+			JOptionPane.showMessageDialog(this, "Correo electrónico o contraseña incorrectos. Intente nuevamente.");
 			return;
 		}
 		limpiarCampos();
