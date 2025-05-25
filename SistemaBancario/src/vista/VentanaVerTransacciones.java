@@ -32,6 +32,7 @@ public class VentanaVerTransacciones extends JFrame implements ActionListener {
 	private JScrollPane scrollPane;
 	private JTextArea txtResultadoBúsqueda;
 	private JButton btnCerrar;
+	private JButton btnRefrescar;
 
 	/**
 	 * Launch the application.
@@ -100,7 +101,7 @@ public class VentanaVerTransacciones extends JFrame implements ActionListener {
 			btnBuscar = new JButton("Buscar");
 			btnBuscar.addActionListener(this);
 			btnBuscar.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-			btnBuscar.setBounds(114, 121, 111, 39);
+			btnBuscar.setBounds(71, 123, 111, 39);
 			contentPane.add(btnBuscar);
 		}
 		{
@@ -122,8 +123,15 @@ public class VentanaVerTransacciones extends JFrame implements ActionListener {
 			btnCerrar = new JButton("Cerrar");
 			btnCerrar.addActionListener(this);
 			btnCerrar.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-			btnCerrar.setBounds(245, 123, 126, 39);
+			btnCerrar.setBounds(192, 123, 126, 39);
 			contentPane.add(btnCerrar);
+		}
+		{
+			btnRefrescar = new JButton("Refrescar");
+			btnRefrescar.addActionListener(this);
+			btnRefrescar.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+			btnRefrescar.setBounds(332, 123, 111, 39);
+			contentPane.add(btnRefrescar);
 		}
 		{
 		// Llenar comboBoxes
@@ -139,6 +147,9 @@ public class VentanaVerTransacciones extends JFrame implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnRefrescar) {
+			do_btnRefrescar_actionPerformed(e);
+		}
 		if (e.getSource() == btnCerrar) {
 			do_btnCerrar_actionPerformed(e);
 		}
@@ -200,5 +211,8 @@ public class VentanaVerTransacciones extends JFrame implements ActionListener {
 
 	protected void do_btnCerrar_actionPerformed(ActionEvent e) {
 		dispose();
+	}
+	protected void do_btnRefrescar_actionPerformed(ActionEvent e) {
+		txtResultadoBúsqueda.setText("");
 	}
 }
