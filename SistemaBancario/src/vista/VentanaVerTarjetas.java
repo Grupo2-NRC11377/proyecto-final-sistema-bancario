@@ -9,12 +9,16 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JScrollPane;
+import javax.swing.JList;
+import javax.swing.JTable;
 
 public class VentanaVerTarjetas extends JDialog implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
 	private JButton btnCerrar;
+	private JTable tableTarjetas;
 
 	/**
 	 * Launch the application.
@@ -44,6 +48,14 @@ public class VentanaVerTarjetas extends JDialog implements ActionListener {
 			btnCerrar.addActionListener(this);
 			btnCerrar.setBounds(325, 221, 99, 29);
 			contentPanel.add(btnCerrar);
+		}
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 11, 414, 185);
+		contentPanel.add(scrollPane);
+		{
+			tableTarjetas = new JTable();
+			scrollPane.setViewportView(tableTarjetas);
 		}
 	}
 	public void actionPerformed(ActionEvent e) {
