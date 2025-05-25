@@ -22,7 +22,7 @@ public class Cliente extends Persona {
 
     public Cuenta buscarCuenta(String numeroCuenta) {
         for (Cuenta cuenta : cuentas) 
-        	if (cuenta.getNumeroCuenta() == numeroCuenta) 
+        	if (cuenta.getNumeroCuenta().equals(numeroCuenta)) 
         		return cuenta;
         return null;
     }
@@ -39,20 +39,18 @@ public class Cliente extends Persona {
     }
     
     public boolean agregarTarjeta(Tarjeta tarjeta) {
-        if (tarjetas.contains(tarjeta)) return false;
+        if (buscarTarjeta(tarjeta.getNumeroTarjeta()) != null) return false;
         return tarjetas.add(tarjeta);
+    }
+    
+    public Tarjeta buscarTarjeta(String numeroTarjeta) {
+        for (Tarjeta tarjeta : tarjetas) 
+        	if (tarjeta.getNumeroTarjeta().equals(numeroTarjeta)) 
+        		return tarjeta;
+        return null;
     }
     
     public ArrayList<Tarjeta> getTarjetas() {
 		return tarjetas;
 	}
-    
-    
-    public ArrayList<Tarjeta> getTarjetasBloqueadas() {
-		ArrayList<Tarjeta> bloqueadas = new ArrayList<>();
-		for (Tarjeta t : tarjetas)
-			if (t.getEstado().equalsIgnoreCase("bloqueada"))
-				bloqueadas.add(t);
-		return bloqueadas;
-    }
 }

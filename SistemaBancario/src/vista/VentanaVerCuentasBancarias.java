@@ -56,12 +56,15 @@ public class VentanaVerCuentasBancarias extends JDialog implements ActionListene
 			{
 				tableCuentasBancarias = new JTable();
 				tableCuentasBancarias.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-				defaultTableModel = new DefaultTableModel();
+				String[] columnas = new String[] {"Número de cuenta", "Tipo de cuenta", "Saldo disponible", "Saldo contable", 
+						"Estado"};
+				defaultTableModel = new DefaultTableModel(columnas, 0) {
+					private static final long serialVersionUID = 1L;
+					public boolean isCellEditable(int row, int column) {
+		                return false;
+		            }
+				};
 				tableCuentasBancarias.setModel(defaultTableModel);
-				defaultTableModel.addColumn("Número de cuenta");
-				defaultTableModel.addColumn("Tipo de cuenta");
-				defaultTableModel.addColumn("Saldo disponible");
-				defaultTableModel.addColumn("Saldo contable");
 				scrollPane.setViewportView(tableCuentasBancarias);
 			}
 		}
@@ -92,18 +95,20 @@ public class VentanaVerCuentasBancarias extends JDialog implements ActionListene
 			fila[1] = cuenta.getTipoCuenta();
 			fila[2] = cuenta.getSaldoDisponible();
 			fila[3] = cuenta.getSaldoContable();
+			fila[4] = cuenta.getEstado();
 			defaultTableModel.addRow(fila);
 		}
 	}
 	protected void do_btnVerDetalles_actionPerformed(ActionEvent e) {
-		int posicion = tableCuentasBancarias.getSelectedRow();
-		if(posicion == -1) {
-			JOptionPane.showMessageDialog(this, "Selecciona una cuenta.");
+		int posicionFilaSeleccionada = tableCuentasBancarias.getSelectedRow();
+		if(posicionFilaSeleccionada == -1) {
+			JOptionPane.showMessageDialog(this, "Selecciona una cuenta.", "Información", JOptionPane.INFORMATION_MESSAGE);
 			return;
 		}
-		Cuenta cuenta = cliente.buscarCuenta(tableCuentasBancarias.getValueAt(posicion, 0).toString());
+		String numeroCuenta = tableCuentasBancarias.getValueAt(posicionFilaSeleccionada, 0).toString();
+		Cuenta cuenta = cliente.buscarCuenta(numeroCuenta);
 		if(cuenta == null) {
-			JOptionPane.showMessageDialog(this, "La cuenta seleccionada no existe.");
+			JOptionPane.showMessageDialog(this, "La cuenta seleccionada no existe.", "Error", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 		VentanaVerDetallesCB ventanaVerDetallesCB = new VentanaVerDetallesCB(cuenta);
