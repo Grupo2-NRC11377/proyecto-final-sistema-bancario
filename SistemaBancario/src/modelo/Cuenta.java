@@ -2,6 +2,8 @@ package modelo;
 import java.util.Random;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 public class Cuenta {
 	protected String numeroCuenta;
@@ -59,5 +61,13 @@ public class Cuenta {
 	}
 	public String getTipoCuenta() {
 		return tipoCuenta;
+	}
+	public String getSaldoContableSoles() {
+		NumberFormat formatoMoneda = NumberFormat.getCurrencyInstance(new Locale("es", "PE"));
+        return formatoMoneda.format(saldoContable);
+	}
+	public String getSaldoDisponibleSoles() {
+		NumberFormat formatoMoneda = NumberFormat.getCurrencyInstance(new Locale("es", "PE"));
+        return formatoMoneda.format(saldoDisponible);
 	}
 }

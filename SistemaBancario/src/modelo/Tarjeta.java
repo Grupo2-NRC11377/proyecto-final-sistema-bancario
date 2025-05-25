@@ -1,18 +1,20 @@
 package modelo;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Random;
 
 public class Tarjeta {
-	private String numero;
-	private String tipo;
+	private String numeroTarjeta;
+	private String tipoTarjeta;
 	private String estado;
-	private String fechaVencimiento;
+	private LocalDateTime fechaVencimiento;
 
-	public Tarjeta(String tipo) {
-	    this.tipo = tipo;
-	    this.numero = generarNumeroTarjeta();
+	public Tarjeta(String tipoTarjeta) {
+	    this.tipoTarjeta = tipoTarjeta;
+	    this.numeroTarjeta = generarNumeroTarjeta();
 	    this.estado = "activa";
-	    this.fechaVencimiento = generarFechaVencimiento();
+	    this.fechaVencimiento = LocalDateTime.now().plusYears(2);
 	}
 
 	private String generarNumeroTarjeta() {
@@ -23,26 +25,22 @@ public class Tarjeta {
 		}
 		return sb.toString();
 	}
-	private String generarFechaVencimiento() {
-	    int mes = (int)(Math.random() * 12) + 1; 
-	    int año = 28 + (int)(Math.random() * 3);
-	    return String.format("%02d/%02d", mes, año);
-	}
 
 	public String getFechaVencimiento() {
-		return fechaVencimiento;
+		return fechaVencimiento.format(DateTimeFormatter.ofPattern("MM/yy"));
 	}
 
-	public void setFechaVencimiento(String fechaVencimiento) {
-		this.fechaVencimiento = fechaVencimiento;
+	public String getNumeroTarjeta() {
+		String numero = "";
+		for (int i = 0; i < numeroTarjeta.length(); i++) {
+			if(i % 4 == 0) numero += " ";
+			numero += numeroTarjeta.charAt(i);
+		}
+	    return numero;
 	}
 
-	public String getNumero() {
-	    return numero.replaceAll("(.{4})(?!$)", "$1 ");
-	}
-
-	public String getTipo() {
-		return tipo;
+	public String getTipoTarjeta() {
+		return tipoTarjeta;
 	}
 
 	public String getEstado() {
@@ -52,8 +50,4 @@ public class Tarjeta {
 	public void bloquear() {
 		this.estado = "bloqueada";
 	}
-
-	public boolean estaActiva() {
-		return "activa".equals(estado);
-	}	
 }
