@@ -9,6 +9,8 @@ import javax.swing.JTextField;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 
+import modelo.Cliente;
+
 public class VentanaVerPerfil extends JDialog implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
@@ -24,8 +26,10 @@ public class VentanaVerPerfil extends JDialog implements ActionListener {
 	private JTextField txtDireccion;
 	private JTextField txtCorreoElectronico;
 	private JLabel lblNewLabel;
+	private Cliente cliente;
 
-	public VentanaVerPerfil() {
+	public VentanaVerPerfil(Cliente cliente) {
+		this.cliente = cliente;
 		setTitle("Ver perfil");
 		setModal(true);
 		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
@@ -112,5 +116,12 @@ public class VentanaVerPerfil extends JDialog implements ActionListener {
 	}
 	protected void do_btnCerrar_actionPerformed(ActionEvent e) {
 		dispose();
+	}
+	public void MostrarDatos() {
+		txtNombres.setText(cliente.getNombres());
+		txtApellidos.setText(cliente.getApellidos());
+		txtTelefono.setText(""+cliente.getTelefono());
+		txtDireccion.setText(cliente.getDireccion());
+		txtCorreoElectronico.setText(cliente.getCorreo());		
 	}
 }

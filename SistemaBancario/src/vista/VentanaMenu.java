@@ -130,7 +130,8 @@ public class VentanaMenu extends JFrame implements ActionListener {
 		dispose();
 	}
 	protected void do_mntmVerPerfil_actionPerformed(ActionEvent e) {
-		VentanaVerPerfil ventanaVerPerfil = new VentanaVerPerfil();
+		VentanaVerPerfil ventanaVerPerfil = new VentanaVerPerfil(cliente);
+		ventanaVerPerfil.MostrarDatos();
 		ventanaVerPerfil.setVisible(true);
 	}
 	protected void do_mntmActualizarPerfil_actionPerformed(ActionEvent e) {
