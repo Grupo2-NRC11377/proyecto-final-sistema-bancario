@@ -31,7 +31,10 @@ public class VentanaMenu extends JFrame implements ActionListener {
 	private JTextField txtCliente;
 	private JMenu mnNewMenu_1;
 	private JMenuItem mntmVerCuentasBancarias;
+	private JMenu mnNewMenu_2;
 	private JMenuItem mntmVerTarjetas;
+	private JMenuItem mntmSolicitar;
+	private JMenuItem mntmBloquear;
 
 	public VentanaMenu(VentanaPrincipal ventanaPrincipal, Cliente cliente) {
 		this.ventanaPrincipal = ventanaPrincipal;
@@ -53,11 +56,6 @@ public class VentanaMenu extends JFrame implements ActionListener {
 				{
 					mntmActualizarPerfil = new JMenuItem("Actualizar");
 					mntmActualizarPerfil.addActionListener(this);
-					{
-						mntmVerTarjetas = new JMenuItem("Ver Tarjetas");
-						mntmVerTarjetas.addActionListener(this);
-						mnNewMenu.add(mntmVerTarjetas);
-					}
 					mnNewMenu.add(mntmActualizarPerfil);
 				}
 				{
@@ -73,6 +71,23 @@ public class VentanaMenu extends JFrame implements ActionListener {
 					mntmVerCuentasBancarias = new JMenuItem("Ver");
 					mntmVerCuentasBancarias.addActionListener(this);
 					mnNewMenu_1.add(mntmVerCuentasBancarias);
+				}
+			}
+			{
+				mnNewMenu_2 = new JMenu("Tarjetas");
+				menuBar.add(mnNewMenu_2);
+				{
+					mntmVerTarjetas = new JMenuItem("Ver");
+					mntmVerTarjetas.addActionListener(this);
+					mnNewMenu_2.add(mntmVerTarjetas);
+				}
+				{
+					mntmSolicitar = new JMenuItem("Solicitar");
+					mnNewMenu_2.add(mntmSolicitar);
+				}
+				{
+					mntmBloquear = new JMenuItem("Bloquear");
+					mnNewMenu_2.add(mntmBloquear);
 				}
 			}
 		}
@@ -99,11 +114,11 @@ public class VentanaMenu extends JFrame implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == mntmVerCuentasBancarias) {
-			do_mntmVerCuentasBancarias_actionPerformed(e);
-		}
 		if (e.getSource() == mntmVerTarjetas) {
 			do_mntmVerTarjetas_actionPerformed(e);
+		}
+		if (e.getSource() == mntmVerCuentasBancarias) {
+			do_mntmVerCuentasBancarias_actionPerformed(e);
 		}
 		if (e.getSource() == mntmActualizarPerfil) {
 			do_mntmActualizarPerfil_actionPerformed(e);
@@ -132,8 +147,7 @@ public class VentanaMenu extends JFrame implements ActionListener {
 		ventanaVerCuentasBancarias.llenarTabla();
 		ventanaVerCuentasBancarias.setVisible(true);
 	}
-	protected void do_mntmVerTarjetas_actionPerformed(ActionEvent e) {
-		VentanaVerTarjetas ventanaVerTarjetas = new VentanaVerTarjetas();
+	protected void do_mntmVerTarjetas_actionPerformed(ActionEvent e) {		VentanaVerTarjetas ventanaVerTarjetas = new VentanaVerTarjetas();
 		ventanaVerTarjetas.setVisible(true);
 	}
 }
