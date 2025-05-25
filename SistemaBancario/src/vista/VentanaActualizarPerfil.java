@@ -2,14 +2,7 @@ package vista;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
-<<<<<<< HEAD
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-
 import modelo.Cliente;
-
-=======
->>>>>>> refs/remotes/origin/master
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
