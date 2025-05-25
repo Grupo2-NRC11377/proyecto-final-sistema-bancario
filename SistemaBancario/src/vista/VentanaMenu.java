@@ -63,10 +63,7 @@ public class VentanaMenu extends JFrame implements ActionListener {
 					mntmCerrarSesion.addActionListener(this);
 					{
 						mntmCambiarContraseña = new JMenuItem("Cambiar contraseña");
-						mntmCambiarContraseña.addActionListener(new ActionListener() {
-							public void actionPerformed(ActionEvent e) {
-							}
-						});
+						mntmCambiarContraseña.addActionListener(this);
 						mnNewMenu.add(mntmCambiarContraseña);
 					}
 					mnNewMenu.add(mntmCerrarSesion);
@@ -118,6 +115,9 @@ public class VentanaMenu extends JFrame implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == mntmCambiarContraseña) {
+			do_mntmCambiarContraseña_actionPerformed(e);
+		}
 		if (e.getSource() == mntmVerTarjetas) {
 			do_mntmVerTarjetas_actionPerformed(e);
 		}
