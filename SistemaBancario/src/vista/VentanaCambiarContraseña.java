@@ -16,15 +16,22 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JCheckBox;
 
-public class VentanaCambiarContraseña extends JFrame {
+public class VentanaCambiarContraseña extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private JLabel lblNewLabel;
+	private JLabel lblContraseñaAnterior;
+	private JLabel lblNuevaContraseña;
+	private JLabel lblRepetirContraseña;
 	private JTextField txtContraseñaAnterior;
 	private JTextField txtNuevaContraseña;
 	private JTextField txtRepetirContraseña;
+	private JButton btnCambiarContraseña;
 	private Cliente cliente;
+	private JButton btnCerrar;
 
 	/**
 	 * Launch the application.
@@ -35,67 +42,77 @@ public class VentanaCambiarContraseña extends JFrame {
 	public VentanaCambiarContraseña(Cliente cliente) {
 		this.cliente = cliente;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 264);
+		setBounds(100, 100, 429, 263);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
-		JLabel lblNewLabel = new JLabel("Contraseña");
-		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblNewLabel.setBounds(162, 10, 123, 52);
-		contentPane.add(lblNewLabel);
-		
-		JLabel lblContraseñaAnterior = new JLabel("Contraseña anterior");
-		lblContraseñaAnterior.setFont(new Font("Times New Roman", Font.PLAIN, 12));
-		lblContraseñaAnterior.setBounds(48, 72, 123, 21);
-		contentPane.add(lblContraseñaAnterior);
-		
-		JLabel lblNuevaContrasea = new JLabel("Nueva contraseña");
-		lblNuevaContrasea.setFont(new Font("Times New Roman", Font.PLAIN, 12));
-		lblNuevaContrasea.setBounds(48, 103, 123, 21);
-		contentPane.add(lblNuevaContrasea);
-		
-		JLabel lblRepetirNuevaContrasea = new JLabel("Repetir nueva contraseña");
-		lblRepetirNuevaContrasea.setFont(new Font("Times New Roman", Font.PLAIN, 12));
-		lblRepetirNuevaContrasea.setBounds(48, 134, 142, 21);
-		contentPane.add(lblRepetirNuevaContrasea);
-		
-		txtContraseñaAnterior = new JTextField();
-		txtContraseñaAnterior.setBounds(224, 73, 164, 19);
-		contentPane.add(txtContraseñaAnterior);
-		txtContraseñaAnterior.setColumns(10);
-		
-		txtNuevaContraseña = new JTextField();
-		txtNuevaContraseña.setColumns(10);
-		txtNuevaContraseña.setBounds(224, 104, 164, 19);
-		contentPane.add(txtNuevaContraseña);
-		
-		txtRepetirContraseña = new JTextField();
-		txtRepetirContraseña.setColumns(10);
-		txtRepetirContraseña.setBounds(224, 135, 164, 19);
-		contentPane.add(txtRepetirContraseña);
-		
-		JButton btnCambiarContraseña = new JButton("Cambiar contraseña");
-		btnCambiarContraseña.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		btnCambiarContraseña.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-		btnCambiarContraseña.setBounds(64, 177, 154, 36);
-		contentPane.add(btnCambiarContraseña);
-		
-		JButton btnCerrar = new JButton("Cerrar");
-		btnCerrar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		btnCerrar.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-		btnCerrar.setBounds(249, 177, 103, 36);
-		contentPane.add(btnCerrar);
+		{
+			lblNewLabel = new JLabel("Contraseña");
+			lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
+			lblNewLabel.setBounds(147, 13, 132, 39);
+			contentPane.add(lblNewLabel);
+		}
+		{
+			lblContraseñaAnterior = new JLabel("Contraseña anterior:");
+			lblContraseñaAnterior.setFont(new Font("Times New Roman", Font.PLAIN, 12));
+			lblContraseñaAnterior.setBounds(25, 61, 117, 21);
+			contentPane.add(lblContraseñaAnterior);
+		}
+		{
+			lblNuevaContraseña = new JLabel("Nueva contraseña:");
+			lblNuevaContraseña.setFont(new Font("Times New Roman", Font.PLAIN, 12));
+			lblNuevaContraseña.setBounds(25, 92, 117, 21);
+			contentPane.add(lblNuevaContraseña);
+		}
+		{
+			lblRepetirContraseña = new JLabel("Repetir nueva contraseña:");
+			lblRepetirContraseña.setFont(new Font("Times New Roman", Font.PLAIN, 12));
+			lblRepetirContraseña.setBounds(25, 123, 145, 21);
+			contentPane.add(lblRepetirContraseña);
+		}
+		{
+			txtContraseñaAnterior = new JTextField();
+			txtContraseñaAnterior.setBounds(201, 62, 169, 19);
+			contentPane.add(txtContraseñaAnterior);
+			txtContraseñaAnterior.setColumns(10);
+		}
+		{
+			txtNuevaContraseña = new JTextField();
+			txtNuevaContraseña.setColumns(10);
+			txtNuevaContraseña.setBounds(201, 93, 169, 19);
+			contentPane.add(txtNuevaContraseña);
+		}
+		{
+			txtRepetirContraseña = new JTextField();
+			txtRepetirContraseña.setColumns(10);
+			txtRepetirContraseña.setBounds(201, 124, 169, 19);
+			contentPane.add(txtRepetirContraseña);
+		}
+		{
+			btnCambiarContraseña = new JButton("Cambiar Contraseña");
+			btnCambiarContraseña.addActionListener(this);
+			btnCambiarContraseña.setFont(new Font("Times New Roman", Font.PLAIN, 13));
+			btnCambiarContraseña.setBounds(49, 165, 159, 39);
+			contentPane.add(btnCambiarContraseña);
+		}
+		{
+			btnCerrar = new JButton("Cerrar");
+			btnCerrar.addActionListener(this);
+			btnCerrar.setFont(new Font("Times New Roman", Font.PLAIN, 13));
+			btnCerrar.setBounds(233, 165, 103, 39);
+			contentPane.add(btnCerrar);
+		}
 	}
-	
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnCerrar) {
+			do_btnCerrar_actionPerformed(e);
+		}
+		if (e.getSource() == btnCambiarContraseña) {
+			do_btnCambiarContraseña_actionPerformed(e);
+		}
+	}
 	protected void do_btnCambiarContraseña_actionPerformed(ActionEvent e) {
 		String ContraAnterior = txtContraseñaAnterior.getText();
 		String NuevaContra = txtNuevaContraseña.getText();

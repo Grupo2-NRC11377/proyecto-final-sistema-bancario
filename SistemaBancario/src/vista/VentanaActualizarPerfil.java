@@ -7,7 +7,12 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import modelo.Cliente;
+
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
@@ -23,8 +28,11 @@ public class VentanaActualizarPerfil extends JDialog implements ActionListener {
 	private JTextField txtDireccion;
 	private JTextField txtCorreoElectronico;
 	private JButton btnCancelar;
+	private JButton btnGuardar;
+	private Cliente cliente;
 
-	public VentanaActualizarPerfil() {
+	public VentanaActualizarPerfil(Cliente cliente) {
+		this.cliente = cliente;
 		setModal(true);
 		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 		setTitle("Actualizar perfil");
@@ -99,18 +107,47 @@ public class VentanaActualizarPerfil extends JDialog implements ActionListener {
 			getContentPane().add(btnCancelar);
 		}
 		{
-			JButton btnGuardar = new JButton("Guardar");
+			btnGuardar = new JButton("Guardar");
+			btnGuardar.addActionListener(this);
 			btnGuardar.setBounds(83, 227, 89, 23);
 			getContentPane().add(btnGuardar);
 		}
+		Iniciar();
 	}
+	
 
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnGuardar) {
+			do_btnGuardar_actionPerformed(e);
+		}
 		if (e.getSource() == btnCancelar) {
 			do_btnCancelar_actionPerformed(e);
 		}
 	}
+	private void Iniciar() {
+		txtNombres.setText(cliente.getNombres());
+		txtApellidos.setText(cliente.getApellidos());
+		txtTelefono.setText(""+cliente.getTelefono());
+		txtDireccion.setText(cliente.getDireccion());
+		txtCorreoElectronico.setText(cliente.getCorreo());
+	}
 	protected void do_btnCancelar_actionPerformed(ActionEvent e) {
 		dispose();
+	}
+	protected void do_btnGuardar_actionPerformed(ActionEvent e) {
+		cliente.setNombres(txtNombres.getText());
+		cliente.setApellidos(txtApellidos.getText());
+		cliente.setDireccion(txtDireccion.getText());
+		cliente.setTelefono(Integer.parseInt(txtTelefono.getText()));
+		cliente.setCorreo(txtCorreoElectronico.getText());	
+		JOptionPane.showMessageDialog(this,"Datos actualizados correctamente");
+		Limpiar();
+	}
+	private void Limpiar() {
+		txtNombres.setText("");
+		txtApellidos.setText("");
+		txtDireccion.setText("");
+		txtTelefono.setText("");
+		txtCorreoElectronico.setText("");
 	}
 }
