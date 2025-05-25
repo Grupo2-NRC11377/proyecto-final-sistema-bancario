@@ -34,7 +34,6 @@ public class VentanaMenu extends JFrame implements ActionListener {
 	private JMenu mnNewMenu_2;
 	private JMenuItem mntmVerTarjetas;
 	private JMenuItem mntmSolicitar;
-	private JMenuItem mntmBloquear;
 
 	public VentanaMenu(VentanaPrincipal ventanaPrincipal, Cliente cliente) {
 		this.ventanaPrincipal = ventanaPrincipal;
@@ -84,10 +83,6 @@ public class VentanaMenu extends JFrame implements ActionListener {
 				{
 					mntmSolicitar = new JMenuItem("Solicitar");
 					mnNewMenu_2.add(mntmSolicitar);
-				}
-				{
-					mntmBloquear = new JMenuItem("Bloquear");
-					mnNewMenu_2.add(mntmBloquear);
 				}
 			}
 		}
@@ -147,7 +142,7 @@ public class VentanaMenu extends JFrame implements ActionListener {
 		ventanaVerCuentasBancarias.llenarTabla();
 		ventanaVerCuentasBancarias.setVisible(true);
 	}
-	protected void do_mntmVerTarjetas_actionPerformed(ActionEvent e) {		VentanaVerTarjetas ventanaVerTarjetas = new VentanaVerTarjetas();
+	protected void do_mntmVerTarjetas_actionPerformed(ActionEvent e) {		VentanaVerTarjetas ventanaVerTarjetas = new VentanaVerTarjetas(cliente);
 		ventanaVerTarjetas.setVisible(true);
 	}
 }
