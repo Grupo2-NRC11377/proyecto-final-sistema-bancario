@@ -3,6 +3,8 @@ package vista;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
@@ -25,6 +27,7 @@ public class VentanaVerCuentasBancarias extends JDialog implements ActionListene
 	private JScrollPane scrollPane;
 	private JTable tableCuentasBancarias;
 	private DefaultTableModel defaultTableModel;
+	private JButton btnVerDetalles;
 
 	public VentanaVerCuentasBancarias(Cliente cliente) {
 		this.cliente = cliente;
@@ -55,18 +58,25 @@ public class VentanaVerCuentasBancarias extends JDialog implements ActionListene
 				tableCuentasBancarias.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 				defaultTableModel = new DefaultTableModel();
 				tableCuentasBancarias.setModel(defaultTableModel);
-				defaultTableModel.addColumn("Tipo de cuenta");
 				defaultTableModel.addColumn("Número de cuenta");
+				defaultTableModel.addColumn("Tipo de cuenta");
 				defaultTableModel.addColumn("Saldo disponible");
 				defaultTableModel.addColumn("Saldo contable");
-				defaultTableModel.addColumn("Fecha de creación");
-				defaultTableModel.addColumn("Estado");
 				scrollPane.setViewportView(tableCuentasBancarias);
 			}
 		}
+		{
+			btnVerDetalles = new JButton("Ver detalles");
+			btnVerDetalles.addActionListener(this);
+			btnVerDetalles.setBounds(32, 389, 128, 23);
+			getContentPane().add(btnVerDetalles);
+		}
 	}
-
+	
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnVerDetalles) {
+			do_btnVerDetalles_actionPerformed(e);
+		}
 		if (e.getSource() == btnCerrar) {
 			do_btnCerrar_actionPerformed(e);
 		}
@@ -78,13 +88,25 @@ public class VentanaVerCuentasBancarias extends JDialog implements ActionListene
 		if(cliente == null) return;
 		for (Cuenta cuenta : cliente.getCuentas()) {
 			Object[] fila = new Object[6];
-			fila[0] = cuenta.getTipoCuenta();
-			fila[1] = cuenta.getNumeroCuenta();
+			fila[0] = cuenta.getNumeroCuenta();
+			fila[1] = cuenta.getTipoCuenta();
 			fila[2] = cuenta.getSaldoDisponible();
 			fila[3] = cuenta.getSaldoContable();
-			fila[4] = cuenta.getFechaCreacion();
-			fila[5] = cuenta.getEstado();
 			defaultTableModel.addRow(fila);
 		}
+	}
+	protected void do_btnVerDetalles_actionPerformed(ActionEvent e) {
+		int posicion = tableCuentasBancarias.getSelectedRow();
+		if(posicion == -1) {
+			JOptionPane.showMessageDialog(this, "Selecciona una cuenta.");
+			return;
+		}
+		Cuenta cuenta = cliente.buscarCuenta(tableCuentasBancarias.getValueAt(posicion, 0).toString());
+		if(cuenta == null) {
+			JOptionPane.showMessageDialog(this, "La cuenta seleccionada no existe.");
+			return;
+		}
+		VentanaVerDetallesCB ventanaVerDetallesCB = new VentanaVerDetallesCB(cuenta);
+		ventanaVerDetallesCB.setVisible(true);
 	}
 }
