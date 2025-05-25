@@ -93,8 +93,8 @@ public class VentanaVerCuentasBancarias extends JDialog implements ActionListene
 			Object[] fila = new Object[6];
 			fila[0] = cuenta.getNumeroCuenta();
 			fila[1] = cuenta.getTipoCuenta();
-			fila[2] = cuenta.getSaldoDisponible();
-			fila[3] = cuenta.getSaldoContable();
+			fila[2] = cuenta.getSaldoDisponibleSoles();
+			fila[3] = cuenta.getSaldoContableSoles();
 			fila[4] = cuenta.getEstado();
 			defaultTableModel.addRow(fila);
 		}
