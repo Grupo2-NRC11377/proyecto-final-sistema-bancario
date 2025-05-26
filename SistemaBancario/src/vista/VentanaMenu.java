@@ -183,7 +183,7 @@ public class VentanaMenu extends JFrame implements ActionListener {
 		ventanaCambiarContraseña.setVisible(true);
 	}
 	protected void do_mntmRealizarTransacción_actionPerformed(ActionEvent e) {
-		VentanaRealizarTransacción ventanaRealizar = new VentanaRealizarTransacción();
+		VentanaRealizarTransacción ventanaRealizar = new VentanaRealizarTransacción(cliente);
 	    ventanaRealizar.setVisible(true);
 	}
 	

@@ -15,6 +15,8 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextArea;
+
+import modelo.Cliente;
 import modelo.SimulaciónCuentas;
 
 public class VentanaPago extends JFrame implements ActionListener {
@@ -35,29 +37,13 @@ public class VentanaPago extends JFrame implements ActionListener {
 	private JButton btnCerrar;
 	private JLabel lblNewLabel_3;
 	private JTextArea txtConceptoPago;
+	private Cliente cliente;
+	private JTextField txtContraseña;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					VentanaPago frame = new VentanaPago();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
-	public VentanaPago() {
+	public VentanaPago(Cliente cliente) {
+		this.cliente = cliente;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 402, 526);
+		setBounds(100, 100, 402, 553);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -120,7 +106,7 @@ public class VentanaPago extends JFrame implements ActionListener {
 		}
 		{
 			scrollPane = new JScrollPane();
-			scrollPane.setBounds(32, 297, 317, 171);
+			scrollPane.setBounds(32, 322, 317, 184);
 			contentPane.add(scrollPane);
 			{
 				txtConceptoPago = new JTextArea();
@@ -131,22 +117,32 @@ public class VentanaPago extends JFrame implements ActionListener {
 			btnRealizarPago = new JButton("Realizar Pago");
 			btnRealizarPago.addActionListener(this);
 			btnRealizarPago.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-			btnRealizarPago.setBounds(25, 204, 173, 45);
+			btnRealizarPago.setBounds(25, 243, 173, 45);
 			contentPane.add(btnRealizarPago);
 		}
 		{
 			btnCerrar = new JButton("Cerrar");
 			btnCerrar.addActionListener(this);
 			btnCerrar.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-			btnCerrar.setBounds(223, 204, 126, 45);
+			btnCerrar.setBounds(223, 243, 126, 45);
 			contentPane.add(btnCerrar);
 		}
 		{
 			lblNewLabel_3 = new JLabel("Concepto de pago");
 			lblNewLabel_3.setFont(new Font("Times New Roman", Font.PLAIN, 12));
-			lblNewLabel_3.setBounds(142, 259, 119, 31);
+			lblNewLabel_3.setBounds(136, 294, 119, 31);
 			contentPane.add(lblNewLabel_3);
 		}
+		
+		JLabel lblIngresarContraseña = new JLabel("Ingrese su contraseña:");
+		lblIngresarContraseña.setFont(new Font("Sylfaen", Font.PLAIN, 12));
+		lblIngresarContraseña.setBounds(78, 211, 126, 31);
+		contentPane.add(lblIngresarContraseña);
+		
+		txtContraseña = new JTextField();
+		txtContraseña.setColumns(10);
+		txtContraseña.setBounds(205, 214, 96, 19);
+		contentPane.add(txtContraseña);
 		// Cargar cuentas simuladas
 				for (String cuenta : SimulaciónCuentas.obtenerTodasLasCuentas()) {
 					cboxCuentas.addItem(cuenta);
@@ -178,11 +174,11 @@ public class VentanaPago extends JFrame implements ActionListener {
 		String cuentaDestino = txtCuentaDestinoPago.getText().trim().replaceAll("\\s+", "");
 		String montoStr = txtMontoPagar.getText().trim();
 
-		if (cuentaDestino.isEmpty() || montoStr.isEmpty()) {
+		if (cuentaDestino.isEmpty() || montoStr.isEmpty() || txtContraseña.getText().trim().isEmpty()) {
 			JOptionPane.showMessageDialog(this, "Complete todos los campos");
 			return;
 		}
-
+	
 		if (!SimulaciónCuentas.existeCuenta(cuentaDestino)) {
 			JOptionPane.showMessageDialog(this, "La cuenta destino no existe");
 			return;
@@ -191,6 +187,13 @@ public class VentanaPago extends JFrame implements ActionListener {
 		if (cuentaOrigen.equals(cuentaDestino)) {
 			JOptionPane.showMessageDialog(this, "No puede pagar a la misma cuenta");
 			return;
+		}
+		
+		if(!txtContraseña.getText().equals(cliente.getContraseña())) {
+			JOptionPane.showMessageDialog(this, "La contraseña es incorrecta, vuelva a intentarlo");
+			return;
+		}else {
+			JOptionPane.showMessageDialog(this, "Contraseña correcta, pago llevado a cabo");
 		}
 
 		double monto;

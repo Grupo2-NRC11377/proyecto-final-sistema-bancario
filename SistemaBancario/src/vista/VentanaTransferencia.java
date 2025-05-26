@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import modelo.Cliente;
 import modelo.SimulaciónCuentas;
 
 import javax.swing.JLabel;
@@ -36,29 +37,14 @@ public class VentanaTransferencia extends JFrame implements ActionListener {
 	private JScrollPane scrollPane;
 	private JTextArea txtConceptoTransferencia;
 	private JButton btnCerrar;
+	private Cliente cliente;
+	private JLabel lblIngresarContraseña;
+	private JTextField txtContraseña;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					VentanaTransferencia frame = new VentanaTransferencia();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
-	public VentanaTransferencia() {
+	public VentanaTransferencia(Cliente cliente) {
+		this.cliente = cliente;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 445, 491);
+		setBounds(100, 100, 445, 532);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -70,36 +56,36 @@ public class VentanaTransferencia extends JFrame implements ActionListener {
 		lblTransferencia.setBounds(115, 10, 229, 59);
 		contentPane.add(lblTransferencia);
 		
-		btnRealizarTransferencia = new JButton("Realizar Transferemcia");
+		btnRealizarTransferencia = new JButton("Realizar Transferencia");
 		btnRealizarTransferencia.addActionListener(this);
 		btnRealizarTransferencia.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-		btnRealizarTransferencia.setBounds(47, 213, 173, 45);
+		btnRealizarTransferencia.setBounds(47, 246, 173, 45);
 		contentPane.add(btnRealizarTransferencia);
 		
-		JLabel lblNewLabel_1 = new JLabel("Ingrese el monto a transferir:");
-		lblNewLabel_1.setFont(new Font("Times New Roman", Font.PLAIN, 12));
-		lblNewLabel_1.setBounds(47, 131, 166, 31);
-		contentPane.add(lblNewLabel_1);
+		JLabel lblMontoTransferir = new JLabel("Ingrese el monto a transferir:");
+		lblMontoTransferir.setFont(new Font("Times New Roman", Font.PLAIN, 12));
+		lblMontoTransferir.setBounds(47, 131, 166, 31);
+		contentPane.add(lblMontoTransferir);
 		
 		txtMontoTransferencia = new JTextField();
 		txtMontoTransferencia.setBounds(223, 137, 144, 19);
 		contentPane.add(txtMontoTransferencia);
 		txtMontoTransferencia.setColumns(10);
 		
-		JLabel lblNewLabel_1_1 = new JLabel("Ingrese el número de cuenta:");
-		lblNewLabel_1_1.setFont(new Font("Times New Roman", Font.PLAIN, 12));
-		lblNewLabel_1_1.setBounds(47, 172, 166, 31);
-		contentPane.add(lblNewLabel_1_1);
+		JLabel lblCuentaDestino = new JLabel("Ingrese el número de cuenta de destno:");
+		lblCuentaDestino.setFont(new Font("Times New Roman", Font.PLAIN, 12));
+		lblCuentaDestino.setBounds(47, 172, 209, 31);
+		contentPane.add(lblCuentaDestino);
 		
 		txtNúmeroCuentaTransferencia = new JTextField();
 		txtNúmeroCuentaTransferencia.setColumns(10);
-		txtNúmeroCuentaTransferencia.setBounds(223, 178, 144, 19);
+		txtNúmeroCuentaTransferencia.setBounds(246, 178, 121, 19);
 		contentPane.add(txtNúmeroCuentaTransferencia);
 		
 		btnCerrar = new JButton("Cerrar");
 		btnCerrar.addActionListener(this);
 		btnCerrar.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-		btnCerrar.setBounds(233, 213, 126, 45);
+		btnCerrar.setBounds(230, 246, 126, 45);
 		contentPane.add(btnCerrar);
 		{
 			cboxCuentas = new JComboBox();
@@ -129,18 +115,28 @@ public class VentanaTransferencia extends JFrame implements ActionListener {
 		{
 			lblNewLabel = new JLabel("Concepto de transferencia");
 			lblNewLabel.setFont(new Font("Times New Roman", Font.PLAIN, 12));
-			lblNewLabel.setBounds(137, 268, 153, 31);
+			lblNewLabel.setBounds(134, 291, 153, 31);
 			contentPane.add(lblNewLabel);
 		}
 		{
 			scrollPane = new JScrollPane();
-			scrollPane.setBounds(47, 298, 319, 146);
+			scrollPane.setBounds(47, 321, 319, 146);
 			contentPane.add(scrollPane);
 			{
 				txtConceptoTransferencia = new JTextArea();
 				scrollPane.setViewportView(txtConceptoTransferencia);
 			}
 		}
+		
+		lblIngresarContraseña = new JLabel("Ingrese su contraseña:");
+		lblIngresarContraseña.setFont(new Font("Sylfaen", Font.PLAIN, 12));
+		lblIngresarContraseña.setBounds(90, 218, 126, 31);
+		contentPane.add(lblIngresarContraseña);
+		
+		txtContraseña = new JTextField();
+		txtContraseña.setColumns(10);
+		txtContraseña.setBounds(216, 217, 112, 19);
+		contentPane.add(txtContraseña);
 				// Poblar combo box con cuentas simuladas
 				for (String cuenta : SimulaciónCuentas.obtenerTodasLasCuentas()) {
 					cboxCuentas.addItem(cuenta);
@@ -173,11 +169,11 @@ public class VentanaTransferencia extends JFrame implements ActionListener {
 		String cuentaDestino = txtNúmeroCuentaTransferencia.getText().trim();
 		String montoStr = txtMontoTransferencia.getText().trim();
 
-		if (cuentaDestino.isEmpty() || montoStr.isEmpty()) {
+		if (cuentaDestino.isEmpty() || montoStr.isEmpty() || txtContraseña.getText().trim().isEmpty()) {
 			JOptionPane.showMessageDialog(this, "Complete todos los campos");
 			return;
 		}
-
+		
 		if (!SimulaciónCuentas.existeCuenta(cuentaDestino)) {
 			JOptionPane.showMessageDialog(this, "La cuenta destino no existe");
 			return;
@@ -186,6 +182,14 @@ public class VentanaTransferencia extends JFrame implements ActionListener {
 		if (cuentaOrigen.equals(cuentaDestino)) {
 			JOptionPane.showMessageDialog(this, "No puede transferir a la misma cuenta");
 			return;
+		}
+		
+		if (!txtContraseña.getText().equals(cliente.getContraseña()))
+		{
+			JOptionPane.showMessageDialog(this, "La contraseña es incorrecta, vuelva a intentarlo");
+			return;
+		}else {
+			JOptionPane.showMessageDialog(this, "Contraseña correcta, transferencia llevada a cabo");
 		}
 
 		double monto;

@@ -5,6 +5,9 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import modelo.Cliente;
+
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JMenu;
@@ -22,27 +25,10 @@ public class VentanaRealizarTransacción extends JFrame implements ActionListene
 	private JMenuItem mntmPago;
 	private JMenuBar menuBar;
 	private JButton btnRegresar;
+	private Cliente cliente;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					VentanaRealizarTransacción frame = new VentanaRealizarTransacción();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
-	public VentanaRealizarTransacción() {
+	public VentanaRealizarTransacción(Cliente cliente) {
+		this.cliente = cliente;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 259);
 		contentPane = new JPanel();
@@ -89,11 +75,11 @@ public class VentanaRealizarTransacción extends JFrame implements ActionListene
 		}
 	}
 	protected void do_mntmTransferencia_actionPerformed(ActionEvent e) {
-		VentanaTransferencia ventanaTransferencia = new VentanaTransferencia();
+		VentanaTransferencia ventanaTransferencia = new VentanaTransferencia(cliente);
 		ventanaTransferencia.setVisible(true);
 	}
 	protected void do_mntmPago_actionPerformed(ActionEvent e) {
-		VentanaPago ventanaPago = new VentanaPago();
+		VentanaPago ventanaPago = new VentanaPago(cliente);
 		ventanaPago.setVisible(true);
 	}
 	protected void do_btnRegresar_actionPerformed(ActionEvent e) {

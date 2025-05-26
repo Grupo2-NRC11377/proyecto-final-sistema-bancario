@@ -112,7 +112,7 @@ public class VentanaVerTransacciones extends JFrame implements ActionListener {
 		}
 		{
 			scrollPane = new JScrollPane();
-			scrollPane.setBounds(32, 225, 426, 256);
+			scrollPane.setBounds(10, 225, 476, 256);
 			contentPane.add(scrollPane);
 			{
 				txtResultadoBúsqueda = new JTextArea();
