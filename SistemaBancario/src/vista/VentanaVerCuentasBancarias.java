@@ -28,6 +28,7 @@ public class VentanaVerCuentasBancarias extends JDialog implements ActionListene
 	private JTable tableCuentasBancarias;
 	private DefaultTableModel defaultTableModel;
 	private JButton btnVerDetalles;
+	private JButton btnHistorialC;
 
 	public VentanaVerCuentasBancarias(Cliente cliente) {
 		this.cliente = cliente;
@@ -74,9 +75,18 @@ public class VentanaVerCuentasBancarias extends JDialog implements ActionListene
 			btnVerDetalles.setBounds(32, 389, 128, 23);
 			getContentPane().add(btnVerDetalles);
 		}
+		{
+			btnHistorialC = new JButton("Ver Historial");
+			btnHistorialC.addActionListener(this);
+			btnHistorialC.setBounds(180, 389, 122, 23);
+			getContentPane().add(btnHistorialC);
+		}
 	}
 	
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnHistorialC) {
+			do_btnHistorialC_actionPerformed(e);
+		}
 		if (e.getSource() == btnVerDetalles) {
 			do_btnVerDetalles_actionPerformed(e);
 		}
@@ -113,5 +123,20 @@ public class VentanaVerCuentasBancarias extends JDialog implements ActionListene
 		}
 		VentanaVerDetallesCB ventanaVerDetallesCB = new VentanaVerDetallesCB(cuenta);
 		ventanaVerDetallesCB.setVisible(true);
+	}
+	protected void do_btnHistorialC_actionPerformed(ActionEvent e) {
+		int posicionFilaSeleccionada = tableCuentasBancarias.getSelectedRow();
+		if (posicionFilaSeleccionada == -1) {
+			JOptionPane.showMessageDialog(this, "Selecciona una cuenta.", "Información", JOptionPane.INFORMATION_MESSAGE);
+			return;
+		}
+		String numeroCuenta = tableCuentasBancarias.getValueAt(posicionFilaSeleccionada, 0).toString();
+		Cuenta cuenta = cliente.buscarCuenta(numeroCuenta);
+		if (cuenta == null) {
+			JOptionPane.showMessageDialog(this, "La cuenta seleccionada no existe.", "Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		VerHistorialCuenta ventanaHistorial = new VerHistorialCuenta(cuenta);
+		ventanaHistorial.setVisible(true);
 	}
 }

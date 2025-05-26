@@ -5,6 +5,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import modelo.Cliente;
+import modelo.Cuenta;
 
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
@@ -33,10 +34,10 @@ public class VentanaMenu extends JFrame implements ActionListener {
 	private JMenuItem mntmVerCuentasBancarias;
 	private JMenu mnNewMenu_2;
 	private JMenuItem mntmVerTarjetas;
-	private JMenuItem mntmSolicitar;
 	private JMenuItem mntmCambiarContraseña;
 	private JMenuItem mntmRealizarTransacción;
 	private JMenuItem mntmVerTransacciones;
+	private JMenuItem mntmNewMenuItem;
 
 	public VentanaMenu(VentanaPrincipal ventanaPrincipal, Cliente cliente) {
 		this.ventanaPrincipal = ventanaPrincipal;
@@ -79,6 +80,10 @@ public class VentanaMenu extends JFrame implements ActionListener {
 					mntmVerCuentasBancarias.addActionListener(this);
 					mnNewMenu_1.add(mntmVerCuentasBancarias);
 				}
+				
+				mntmNewMenuItem = new JMenuItem("Modificar estado");
+				mntmNewMenuItem.addActionListener(this);
+				mnNewMenu_1.add(mntmNewMenuItem);
 			}
 			{
 				mnNewMenu_2 = new JMenu("Tarjetas");
@@ -87,10 +92,6 @@ public class VentanaMenu extends JFrame implements ActionListener {
 					mntmVerTarjetas = new JMenuItem("Ver");
 					mntmVerTarjetas.addActionListener(this);
 					mnNewMenu_2.add(mntmVerTarjetas);
-				}
-				{
-					mntmSolicitar = new JMenuItem("Solicitar");
-					mnNewMenu_2.add(mntmSolicitar);
 				}
 			}
 			
@@ -128,6 +129,9 @@ public class VentanaMenu extends JFrame implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == mntmNewMenuItem) {
+			do_mntmNewMenuItem_actionPerformed(e);
+		}
 		if (e.getSource() == mntmCambiarContraseña) {
 			do_mntmCambiarContraseña_actionPerformed(e);
 		}
@@ -186,5 +190,9 @@ public class VentanaMenu extends JFrame implements ActionListener {
 	protected void do_mntmVerTransacciones_actionPerformed(ActionEvent e) {
 		VentanaVerTransacciones ventanaVerTransacciones = new VentanaVerTransacciones();
 		ventanaVerTransacciones.setVisible(true);
+	}
+	protected void do_mntmNewMenuItem_actionPerformed(ActionEvent e) {
+		VentanaModificarEstadoCuenta ventanaModificarCuenta = new VentanaModificarEstadoCuenta(cliente);
+		ventanaModificarCuenta.setVisible(true);
 	}
 }

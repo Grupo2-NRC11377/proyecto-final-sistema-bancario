@@ -3,6 +3,7 @@ import java.util.Random;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Locale;
 
 public class Cuenta {
@@ -12,13 +13,17 @@ public class Cuenta {
 	protected LocalDate fechaCreacion;
 	protected String estado;
 	protected String tipoCuenta;
+    private ArrayList<HistorialCuenta> historialEstados;
+
 	public Cuenta(String tipoCuenta) {
 		this.numeroCuenta = generarNumeroCuenta();
 		this.saldoContable = this.saldoDisponible = 0;
 		this.fechaCreacion = LocalDate.now();
 		this.estado = "activa";
 		this.tipoCuenta = tipoCuenta;
-	}
+		this.historialEstados = new ArrayList<>();
+		registrarEstado(this.estado);
+	}	
 	private String generarNumeroCuenta() {
 		Random rand = new Random();
 		String numero = "";
@@ -43,7 +48,8 @@ public class Cuenta {
 	}
 	public void cancelar() {
 		this.estado = "cancelada";
-	}
+		registrarEstado(this.estado);
+	}	
 	public String getNumeroCuenta() {
 		return numeroCuenta.substring(0, 3) + "-" + numeroCuenta.substring(3);
 	}
@@ -70,4 +76,14 @@ public class Cuenta {
 		NumberFormat formatoMoneda = NumberFormat.getCurrencyInstance(new Locale("es", "PE"));
         return formatoMoneda.format(saldoDisponible);
 	}
+	private void registrarEstado(String nuevoEstado) {
+        historialEstados.add(new HistorialCuenta(nuevoEstado));
+    }
+	public void cambiarEstado(String nuevoEstado) {
+        this.estado = nuevoEstado;
+        registrarEstado(nuevoEstado);
+    }
+	public ArrayList<HistorialCuenta> getHistorialEstados() {
+        return historialEstados;
+    }
 }
