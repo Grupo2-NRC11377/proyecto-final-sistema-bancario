@@ -85,7 +85,7 @@ public class VentanaVerDetallesCB extends JDialog implements ActionListener {
 		}
 		{
 			txtSaldoDisponible = new JTextField();
-			if(cuenta != null) txtSaldoDisponible.setText(Integer.toString(cuenta.getSaldoDisponible()));
+			if(cuenta != null) txtSaldoDisponible.setText(cuenta.getSaldoDisponibleSoles());
 			txtSaldoDisponible.setEditable(false);
 			txtSaldoDisponible.setColumns(10);
 			txtSaldoDisponible.setBounds(153, 118, 240, 20);
@@ -93,7 +93,7 @@ public class VentanaVerDetallesCB extends JDialog implements ActionListener {
 		}
 		{
 			txtSaldoContable = new JTextField();
-			if(cuenta != null) txtSaldoContable.setText(Integer.toString(cuenta.getSaldoContable()));
+			if(cuenta != null) txtSaldoContable.setText(cuenta.getSaldoContableSoles());
 			txtSaldoContable.setEditable(false);
 			txtSaldoContable.setColumns(10);
 			txtSaldoContable.setBounds(153, 143, 240, 20);

@@ -7,8 +7,8 @@ import java.util.Locale;
 
 public class Cuenta {
 	protected String numeroCuenta;
-	protected int saldoContable;
-	protected int saldoDisponible;
+	protected double saldoContable;
+	protected double saldoDisponible;
 	protected LocalDate fechaCreacion;
 	protected String estado;
 	protected String tipoCuenta;
@@ -47,10 +47,10 @@ public class Cuenta {
 	public String getNumeroCuenta() {
 		return numeroCuenta.substring(0, 3) + "-" + numeroCuenta.substring(3);
 	}
-	public int getSaldoContable() {
+	public double getSaldoContable() {
 		return saldoContable;
 	}
-	public int getSaldoDisponible() {
+	public double getSaldoDisponible() {
 		return saldoDisponible;
 	}
 	public String getFechaCreacion() {
