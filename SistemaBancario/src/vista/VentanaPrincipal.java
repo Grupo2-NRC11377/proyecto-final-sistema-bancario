@@ -129,15 +129,15 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 		char[] contraseña = txtContraseña.getPassword();
 		if(correoElectronico.isEmpty() || 
 				contraseña.length == 0) {
-			JOptionPane.showMessageDialog(this, "No debe dejar campos vacíos.");
+			JOptionPane.showMessageDialog(this, "No debe dejar campos vacíos.", "Error", JOptionPane.ERROR_MESSAGE);
 			return;
 		}else if(!correoElectronico.contains("@")) {
-			JOptionPane.showMessageDialog(this, "Correo electrónico inválido.");
+			JOptionPane.showMessageDialog(this, "Correo electrónico inválido.", "Error", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 		Cliente cliente = ServicioCliente.buscarCliente(correoElectronico, new String(contraseña));
 		if(cliente == null) {
-			JOptionPane.showMessageDialog(this, "Correo electrónico o contraseña incorrectos. Intente nuevamente.");
+			JOptionPane.showMessageDialog(this, "Correo electrónico o contraseña incorrectos. Intente nuevamente.", "Error", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 		limpiarCampos();
