@@ -37,13 +37,13 @@ public class VentanaMenu extends JFrame implements ActionListener {
 	private JMenuItem mntmCambiarContraseña;
 	private JMenuItem mntmRealizarTransacción;
 	private JMenuItem mntmVerTransacciones;
-	private JMenuItem mntmNewMenuItem;
 	private JMenuItem mntmSolicitarApertura;
 	private JMenuItem mntmSolicitarEmision;
 
 	public VentanaMenu(VentanaPrincipal ventanaPrincipal, Cliente cliente) {
 		this.ventanaPrincipal = ventanaPrincipal;
 		this.cliente = cliente;
+		
 		setTitle("Menú");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 600, 240);
@@ -82,10 +82,6 @@ public class VentanaMenu extends JFrame implements ActionListener {
 					mntmVerCuentasBancarias.addActionListener(this);
 					mnNewMenu_1.add(mntmVerCuentasBancarias);
 				}
-				
-				mntmNewMenuItem = new JMenuItem("Modificar estado");
-				mntmNewMenuItem.addActionListener(this);
-				mnNewMenu_1.add(mntmNewMenuItem);
 				{
 					mntmSolicitarApertura = new JMenuItem("Solicitar apertura");
 					mntmSolicitarApertura.addActionListener(this);
@@ -147,9 +143,6 @@ public class VentanaMenu extends JFrame implements ActionListener {
 		if (e.getSource() == mntmSolicitarApertura) {
 			do_mntmSolicitarApertura_actionPerformed(e);
 		}
-		if (e.getSource() == mntmNewMenuItem) {
-			do_mntmNewMenuItem_actionPerformed(e);
-		}
 		if (e.getSource() == mntmCambiarContraseña) {
 			do_mntmCambiarContraseña_actionPerformed(e);
 		}
@@ -203,14 +196,9 @@ public class VentanaMenu extends JFrame implements ActionListener {
 		VentanaRealizarTransacción ventanaRealizar = new VentanaRealizarTransacción(cliente);
 	    ventanaRealizar.setVisible(true);
 	}
-	
 	protected void do_mntmVerTransacciones_actionPerformed(ActionEvent e) {
 		VentanaVerTransacciones ventanaVerTransacciones = new VentanaVerTransacciones();
 		ventanaVerTransacciones.setVisible(true);
-	}
-	protected void do_mntmNewMenuItem_actionPerformed(ActionEvent e) {
-		VentanaModificarEstadoCuenta ventanaModificarCuenta = new VentanaModificarEstadoCuenta(cliente);
-		ventanaModificarCuenta.setVisible(true);
 	}
 	protected void do_mntmSolicitarApertura_actionPerformed(ActionEvent e) {
 		VentanaRealizarSolicitud ventanaRealizarSolicitud = new VentanaRealizarSolicitud("Apertura de cuenta", cliente);

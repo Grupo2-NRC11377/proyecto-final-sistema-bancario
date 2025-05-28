@@ -47,7 +47,7 @@ public class Tarjeta {
 		return estado;
 	}
 
-	public void bloquear() {
-		this.estado = "bloqueada";
+	public void setEstado(String estado) {
+		this.estado = estado;
 	}
 }

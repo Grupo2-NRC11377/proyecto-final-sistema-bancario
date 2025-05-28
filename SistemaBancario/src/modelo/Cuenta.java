@@ -46,10 +46,9 @@ public class Cuenta {
 		saldoDisponible += monto;
 		return true;
 	}
-	public void cancelar() {
-		this.estado = "cancelada";
-		registrarEstado(this.estado);
-	}	
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
 	public String getNumeroCuenta() {
 		return numeroCuenta.substring(0, 3) + "-" + numeroCuenta.substring(3);
 	}
@@ -78,10 +77,6 @@ public class Cuenta {
 	}
 	private void registrarEstado(String nuevoEstado) {
         historialEstados.add(new HistorialCuenta(nuevoEstado));
-    }
-	public void cambiarEstado(String nuevoEstado) {
-        this.estado = nuevoEstado;
-        registrarEstado(nuevoEstado);
     }
 	public ArrayList<HistorialCuenta> getHistorialEstados() {
         return historialEstados;

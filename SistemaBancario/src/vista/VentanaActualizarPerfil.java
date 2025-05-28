@@ -155,33 +155,37 @@ public class VentanaActualizarPerfil extends JDialog implements ActionListener {
 		String direccion = txtDireccion.getText().trim();
 		String correo = txtCorreoElectronico.getText().trim();
 		if(!dni.isEmpty() && !dni.equals(persona.getDni())) {
-			if(RepositorioCliente.buscarClientePorDni(dni) != persona ||
-				RepositorioEmpleado.buscarEmpleadoPorDni(dni) != persona) {
+			if(RepositorioCliente.buscarClientePorDni(dni) != null ||
+				RepositorioEmpleado.buscarEmpleadoPorDni(dni) != null) {
 				JOptionPane.showMessageDialog(this,"DNI ya registrado.", "Información", JOptionPane.INFORMATION_MESSAGE);
+				return;
+			}else if(dni.length() != 8) {
+				JOptionPane.showMessageDialog(this, "DNI inválido.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
 			persona.setDni(dni);
 		}
 		if(!nombres.isEmpty() && !nombres.equalsIgnoreCase(persona.getNombres())) persona.setNombres(nombres);
 		if(!apellidos.isEmpty() && !apellidos.equalsIgnoreCase(persona.getApellidos())) persona.setApellidos(apellidos);
-		if(!telefono.isEmpty() && !telefono.equals(persona.getTelefono())) persona.setTelefono(telefono);
+		if(!telefono.isEmpty() && !telefono.equals(persona.getTelefono())) {
+			if(telefono.length() != 9) {
+				JOptionPane.showMessageDialog(this, "Número de teléfono inválido.", "Información", JOptionPane.INFORMATION_MESSAGE);
+				return;
+			}
+			persona.setTelefono(telefono);
+		}
 		if(!direccion.isEmpty() && !direccion.equalsIgnoreCase(persona.getDireccion())) persona.setDireccion(direccion);
 		if(!correo.isEmpty() && !correo.equalsIgnoreCase(persona.getCorreo())) {
 			if(RepositorioCliente.buscarCliente(correo) != persona ||
 				RepositorioEmpleado.buscarEmpleado(correo) != persona) {
 				JOptionPane.showMessageDialog(this,"Correo electrónico ya registrado.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
+			} else if(!correo.contains("@")) {
+				JOptionPane.showMessageDialog(this, "Correo electrónico inválido.", "Información", JOptionPane.INFORMATION_MESSAGE);
+				return;
 			}
 			persona.setCorreo(correo);
 		}
 		JOptionPane.showMessageDialog(this,"Datos actualizados correctamente");
-		limpiar();
-	}
-	private void limpiar() {
-		txtNombres.setText("");
-		txtApellidos.setText("");
-		txtDireccion.setText("");
-		txtTelefono.setText("");
-		txtCorreoElectronico.setText("");
 	}
 }

@@ -28,14 +28,16 @@ public class VentanaVerCuentasBancarias extends JDialog implements ActionListene
 	private JTable tableCuentasBancarias;
 	private DefaultTableModel defaultTableModel;
 	private JButton btnVerDetalles;
-	private JButton btnHistorialC;
+	private JButton btnCancelar;
+	private JButton btnVerHistorial;
 
 	public VentanaVerCuentasBancarias(Cliente cliente) {
 		this.cliente = cliente;
+		
 		setTitle("Ver cuentas bancarias");
 		setModal(true);
 		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-		setBounds(100, 100, 785, 482);
+		setBounds(100, 100, 785, 474);
 		getContentPane().setLayout(null);
 		{
 			JLabel lblNewLabel = new JLabel("Cuentas bancarias");
@@ -76,16 +78,25 @@ public class VentanaVerCuentasBancarias extends JDialog implements ActionListene
 			getContentPane().add(btnVerDetalles);
 		}
 		{
-			btnHistorialC = new JButton("Ver Historial");
-			btnHistorialC.addActionListener(this);
-			btnHistorialC.setBounds(180, 389, 122, 23);
-			getContentPane().add(btnHistorialC);
+			btnCancelar = new JButton("Cancelar");
+			btnCancelar.addActionListener(this);
+			btnCancelar.setBounds(182, 389, 128, 23);
+			getContentPane().add(btnCancelar);
+		}
+		{
+			btnVerHistorial = new JButton("Ver historial");
+			btnVerHistorial.addActionListener(this);
+			btnVerHistorial.setBounds(335, 389, 128, 23);
+			getContentPane().add(btnVerHistorial);
 		}
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == btnHistorialC) {
-			do_btnHistorialC_actionPerformed(e);
+		if (e.getSource() == btnVerHistorial) {
+			do_btnVerHistorial_actionPerformed(e);
+		}
+		if (e.getSource() == btnCancelar) {
+			do_btnCancelar_actionPerformed(e);
 		}
 		if (e.getSource() == btnVerDetalles) {
 			do_btnVerDetalles_actionPerformed(e);
@@ -99,6 +110,7 @@ public class VentanaVerCuentasBancarias extends JDialog implements ActionListene
 	}
 	public void llenarTabla() {
 		if(cliente == null) return;
+		defaultTableModel.setRowCount(0);
 		for (Cuenta cuenta : cliente.getCuentas()) {
 			Object[] fila = new Object[6];
 			fila[0] = cuenta.getNumeroCuenta();
@@ -124,8 +136,26 @@ public class VentanaVerCuentasBancarias extends JDialog implements ActionListene
 		VentanaVerDetallesCB ventanaVerDetallesCB = new VentanaVerDetallesCB(cuenta);
 		ventanaVerDetallesCB.setVisible(true);
 	}
-	protected void do_btnHistorialC_actionPerformed(ActionEvent e) {
+	protected void do_btnCancelar_actionPerformed(ActionEvent e) {
 		int posicionFilaSeleccionada = tableCuentasBancarias.getSelectedRow();
+		String numeroCuenta = (String) tableCuentasBancarias.getValueAt(posicionFilaSeleccionada, 0);
+        String estado = (String) tableCuentasBancarias.getValueAt(posicionFilaSeleccionada, 4);
+        if ("cancelada".equals(estado)) {
+            JOptionPane.showMessageDialog(this, "La cuenta ya está cancelada.", "Información", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        int respuesta = JOptionPane.showConfirmDialog(this,
+                "¿Está seguro que desea cancelar la cuenta " + numeroCuenta + "?",
+                "Confirmar cancelación", JOptionPane.YES_NO_OPTION);
+        if (respuesta == JOptionPane.YES_OPTION) {
+        	Cuenta cuenta = cliente.buscarCuenta(numeroCuenta);
+        	cuenta.setEstado("cancelada");
+        	llenarTabla();
+            JOptionPane.showMessageDialog(this, "La cuenta ha sido cancelada exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+        }
+	}
+	/*
+	 * int posicionFilaSeleccionada = tableCuentasBancarias.getSelectedRow();
 		if (posicionFilaSeleccionada == -1) {
 			JOptionPane.showMessageDialog(this, "Selecciona una cuenta.", "Información", JOptionPane.INFORMATION_MESSAGE);
 			return;
@@ -138,5 +168,9 @@ public class VentanaVerCuentasBancarias extends JDialog implements ActionListene
 		}
 		VerHistorialCuenta ventanaHistorial = new VerHistorialCuenta(cuenta);
 		ventanaHistorial.setVisible(true);
+	 * 
+	 * 
+	 * */
+	protected void do_btnVerHistorial_actionPerformed(ActionEvent e) {
 	}
 }

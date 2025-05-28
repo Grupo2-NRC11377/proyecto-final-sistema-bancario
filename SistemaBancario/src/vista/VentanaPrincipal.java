@@ -138,12 +138,9 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 			JOptionPane.showMessageDialog(this, "Correo electrónico inválido.", "Información", JOptionPane.INFORMATION_MESSAGE);
 			return;
 		}
-		iniciarSesion(correoElectronico, new String(contraseña));
-	}
-	private void iniciarSesion(String correoElectronico, String contraseña) {
 		Persona persona;
-		if(correoElectronico.contains("@empleado.com")) persona = RepositorioEmpleado.buscarEmpleado(correoElectronico, contraseña);
-		else persona = RepositorioCliente.buscarCliente(correoElectronico, contraseña);
+		if(correoElectronico.contains("@empleado.com")) persona = RepositorioEmpleado.buscarEmpleado(correoElectronico, new String(contraseña));
+		else persona = RepositorioCliente.buscarCliente(correoElectronico, new String(contraseña));
 		if(persona == null) {
 			JOptionPane.showMessageDialog(this, "Correo electrónico o contraseña incorrectos. Intente nuevamente.", "Información", JOptionPane.INFORMATION_MESSAGE);
 			return;

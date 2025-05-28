@@ -35,58 +35,58 @@ public class VentanaCambiarContraseña extends JDialog implements ActionListener
 		setTitle("Cambiar contraseña");
 		setModal(true);
 		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-		setBounds(100, 100, 420, 276);
+		setBounds(100, 100, 448, 276);
 		getContentPane().setLayout(null);
 		{
 			lblNewLabel = new JLabel("Cambiar contraseña");
 			lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 			lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
-			lblNewLabel.setBounds(84, 25, 236, 25);
+			lblNewLabel.setBounds(112, 33, 236, 25);
 			getContentPane().add(lblNewLabel);
 		}
 		{
 			lblContraseaAnterior = new JLabel("Contraseña actual:");
-			lblContraseaAnterior.setBounds(32, 78, 115, 14);
+			lblContraseaAnterior.setBounds(38, 86, 164, 14);
 			getContentPane().add(lblContraseaAnterior);
 		}
 		{
 			txtContraseñaActual = new JTextField();
 			txtContraseñaActual.setColumns(10);
-			txtContraseñaActual.setBounds(157, 75, 209, 20);
+			txtContraseñaActual.setBounds(203, 83, 209, 20);
 			getContentPane().add(txtContraseñaActual);
 		}
 		{
 			lblNuevaContrasea = new JLabel("Nueva contraseña:");
-			lblNuevaContrasea.setBounds(32, 103, 115, 14);
+			lblNuevaContrasea.setBounds(38, 111, 164, 14);
 			getContentPane().add(lblNuevaContrasea);
 		}
 		{
 			txtNuevaContreña = new JTextField();
 			txtNuevaContreña.setColumns(10);
-			txtNuevaContreña.setBounds(157, 100, 209, 20);
+			txtNuevaContreña.setBounds(203, 108, 209, 20);
 			getContentPane().add(txtNuevaContreña);
 		}
 		{
 			lblRepetirContrasea = new JLabel("Repetir contraseña:");
-			lblRepetirContrasea.setBounds(32, 128, 115, 14);
+			lblRepetirContrasea.setBounds(38, 136, 164, 14);
 			getContentPane().add(lblRepetirContrasea);
 		}
 		{
 			txtRepetirContraseña = new JTextField();
 			txtRepetirContraseña.setColumns(10);
-			txtRepetirContraseña.setBounds(157, 125, 209, 20);
+			txtRepetirContraseña.setBounds(203, 133, 209, 20);
 			getContentPane().add(txtRepetirContraseña);
 		}
 		{
 			btnGuardar = new JButton("Guardar");
 			btnGuardar.addActionListener(this);
-			btnGuardar.setBounds(82, 179, 89, 23);
+			btnGuardar.setBounds(88, 187, 89, 23);
 			getContentPane().add(btnGuardar);
 		}
 		{
 			btnCancelar = new JButton("Cancelar");
 			btnCancelar.addActionListener(this);
-			btnCancelar.setBounds(234, 179, 89, 23);
+			btnCancelar.setBounds(240, 187, 89, 23);
 			getContentPane().add(btnCancelar);
 		}
 	}

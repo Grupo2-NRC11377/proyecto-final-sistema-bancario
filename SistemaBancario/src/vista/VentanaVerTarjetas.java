@@ -21,6 +21,8 @@ import java.awt.Font;
 import javax.swing.SwingConstants;
 
 public class VentanaVerTarjetas extends JDialog implements ActionListener {
+	
+	private Cliente cliente;
 
     private static final long serialVersionUID = 1L;
     private final JPanel contentPanel = new JPanel();
@@ -28,12 +30,12 @@ public class VentanaVerTarjetas extends JDialog implements ActionListener {
     private JButton btnBloquear;
     private JTable tableTarjetas;
     private DefaultTableModel tableModel;
-    private Cliente cliente;
     private JLabel lblTarjetasBancarias;
     
     public VentanaVerTarjetas(Cliente cliente) {
-    	setModal(true);
     	this.cliente = cliente;
+    	
+    	setModal(true);
         setTitle("Ver tarjetas bancarias");
         setBounds(100, 100, 650, 450);
         getContentPane().setLayout(new BorderLayout());
@@ -79,9 +81,7 @@ public class VentanaVerTarjetas extends JDialog implements ActionListener {
 
     private void llenarTabla() {
         if (cliente == null) return;
-
         tableModel.setRowCount(0);
-
         for (Tarjeta tarjeta : cliente.getTarjetas()) {
         	Object[] fila = new Object[] {
                     tarjeta.getNumeroTarjeta(),     
@@ -103,22 +103,18 @@ public class VentanaVerTarjetas extends JDialog implements ActionListener {
 
     private void bloquearTarjetaSeleccionada() {
         int posicionFilaSeleccionada = tableTarjetas.getSelectedRow();
-        
         String numeroTarjeta = (String) tableModel.getValueAt(posicionFilaSeleccionada, 0);
         String estado = (String) tableModel.getValueAt(posicionFilaSeleccionada, 3);
-
         if ("bloqueada".equals(estado)) {
             JOptionPane.showMessageDialog(this, "La tarjeta ya está bloqueada.", "Información", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
-
-        int confirm = JOptionPane.showConfirmDialog(this,
+        int respuesta = JOptionPane.showConfirmDialog(this,
                 "¿Está seguro que desea bloquear la tarjeta " + numeroTarjeta + "?",
                 "Confirmar bloqueo", JOptionPane.YES_NO_OPTION);
-
-        if (confirm == JOptionPane.YES_OPTION) {
+        if (respuesta == JOptionPane.YES_OPTION) {
         	Tarjeta tarjeta = cliente.buscarTarjeta(numeroTarjeta);
-        	tarjeta.bloquear();
+        	tarjeta.setEstado("bloqueada");
         	llenarTabla();
             JOptionPane.showMessageDialog(this, "La tarjeta ha sido bloqueada exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
         }
