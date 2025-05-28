@@ -5,18 +5,12 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import modelo.Cliente;
-import modelo.Empleado;
-import modelo.Solicitud;
-import repositorio.RepositorioEmpleado;
 
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 
 import java.awt.event.ActionListener;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import java.awt.Font;
@@ -219,33 +213,11 @@ public class VentanaMenu extends JFrame implements ActionListener {
 		ventanaModificarCuenta.setVisible(true);
 	}
 	protected void do_mntmSolicitarApertura_actionPerformed(ActionEvent e) {
-		int opcion = JOptionPane.showConfirmDialog(this,
-                "¿Está seguro que deseas solicitar la apertura de una cuenta bancaria?",
-                "Confirmar solicitud", JOptionPane.YES_NO_OPTION);
-		if (opcion == JOptionPane.YES_OPTION) {
-        	Empleado empleado = RepositorioEmpleado.obtenerEmpleadoAleatorio();
-        	if(empleado == null) {
-        		JOptionPane.showMessageDialog(this, "No hay empleados disponibles, vuelva a intentarlo más tarde.", "Información", JOptionPane.INFORMATION_MESSAGE);
-        		return;
-        	}
-        	Solicitud solicitud = new Solicitud("Apertura de cuenta", cliente, empleado);
-        	empleado.agregarSolicitud(solicitud);
-            JOptionPane.showMessageDialog(this, "La solicitud se realizó con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-    	}
+		VentanaRealizarSolicitud ventanaRealizarSolicitud = new VentanaRealizarSolicitud("Apertura de cuenta", cliente);
+		ventanaRealizarSolicitud.setVisible(true);
 	}
 	protected void do_mntmSolicitarEmision_actionPerformed(ActionEvent e) {
-		int opcion = JOptionPane.showConfirmDialog(this,
-                "¿Está seguro que deseas solicitar la emisión de una tarjeta bancaria?",
-                "Confirmar solicitud", JOptionPane.YES_NO_OPTION);
-		if (opcion == JOptionPane.YES_OPTION) {
-        	Empleado empleado = RepositorioEmpleado.obtenerEmpleadoAleatorio();
-        	if(empleado == null) {
-        		JOptionPane.showMessageDialog(this, "No hay empleados disponibles, vuelva a intentarlo más tarde.", "Información", JOptionPane.INFORMATION_MESSAGE);
-        		return;
-        	}
-        	Solicitud solicitud = new Solicitud("Emisión de tarjeta", cliente, empleado);
-        	empleado.agregarSolicitud(solicitud);
-            JOptionPane.showMessageDialog(this, "La solicitud se realizó con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-    	}
+		VentanaRealizarSolicitud ventanaRealizarSolicitud = new VentanaRealizarSolicitud("Emisión de tarjeta", cliente);
+		ventanaRealizarSolicitud.setVisible(true);
 	}
 }

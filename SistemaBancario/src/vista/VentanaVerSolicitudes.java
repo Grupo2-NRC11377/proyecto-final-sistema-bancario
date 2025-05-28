@@ -1,12 +1,7 @@
 package vista;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import modelo.Cliente;
@@ -130,11 +125,17 @@ public class VentanaVerSolicitudes extends JDialog implements ActionListener {
 			JOptionPane.showMessageDialog(this, "La solicitud ya fue resuelta.", "Información", JOptionPane.INFORMATION_MESSAGE);
 			return;
 		}
+		Cliente cliente = solicitud.getCliente();
+		if(solicitud.getAsunto().contains("cuenta")) {
+			if(solicitud.getAsunto().contains("corriente")) cliente.agregarCuenta(new Cuenta("corriente"));
+			else if(solicitud.getAsunto().contains("ahorro")) cliente.agregarCuenta(new Cuenta("ahorro"));
+		}
+		else if (solicitud.getAsunto().contains("tarjeta")) {
+			if(solicitud.getAsunto().contains("débito")) cliente.agregarTarjeta(new Tarjeta("débito"));
+			else if(solicitud.getAsunto().contains("crédito")) cliente.agregarTarjeta(new Tarjeta("crédito"));
+		}
 		solicitud.setEstado("aceptada");
 		solicitud.setFechaResolucion(LocalDate.now());
-		Cliente cliente = solicitud.getCliente();
-		if(solicitud.getAsunto().contains("cuenta")) cliente.agregarCuenta(new Cuenta("ahorro"));
-		else if (solicitud.getAsunto().contains("tarjeta")) cliente.agregarTarjeta(new Tarjeta("débito"));
 		llenarTabla();
 	}
 	protected void do_btnRechazar_actionPerformed(ActionEvent e) {
