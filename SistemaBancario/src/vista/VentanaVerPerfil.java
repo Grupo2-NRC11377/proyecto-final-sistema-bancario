@@ -9,7 +9,7 @@ import javax.swing.JTextField;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 
-import modelo.Cliente;
+import modelo.Persona;
 
 public class VentanaVerPerfil extends JDialog implements ActionListener {
 
@@ -26,10 +26,10 @@ public class VentanaVerPerfil extends JDialog implements ActionListener {
 	private JTextField txtDireccion;
 	private JTextField txtCorreoElectronico;
 	private JLabel lblNewLabel;
-	private Cliente cliente;
+	private Persona persona;
 
-	public VentanaVerPerfil(Cliente cliente) {
-		this.cliente = cliente;
+	public VentanaVerPerfil(Persona persona) {
+		this.persona = persona;
 		setTitle("Ver perfil");
 		setModal(true);
 		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
@@ -108,6 +108,7 @@ public class VentanaVerPerfil extends JDialog implements ActionListener {
 			lblNewLabel.setBounds(153, 25, 96, 23);
 			getContentPane().add(lblNewLabel);
 		}
+		mostrarDatos();
 	}
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnCerrar) {
@@ -117,11 +118,11 @@ public class VentanaVerPerfil extends JDialog implements ActionListener {
 	protected void do_btnCerrar_actionPerformed(ActionEvent e) {
 		dispose();
 	}
-	public void MostrarDatos() {
-		txtNombres.setText(cliente.getNombres());
-		txtApellidos.setText(cliente.getApellidos());
-		txtTelefono.setText(""+cliente.getTelefono());
-		txtDireccion.setText(cliente.getDireccion());
-		txtCorreoElectronico.setText(cliente.getCorreo());		
+	private void mostrarDatos() {
+		txtNombres.setText(persona.getNombres());
+		txtApellidos.setText(persona.getApellidos());
+		txtTelefono.setText(persona.getTelefono());
+		txtDireccion.setText(persona.getDireccion());
+		txtCorreoElectronico.setText(persona.getCorreo());		
 	}
 }

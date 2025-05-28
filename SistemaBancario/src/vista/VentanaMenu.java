@@ -5,12 +5,18 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import modelo.Cliente;
-import modelo.Cuenta;
+import modelo.Empleado;
+import modelo.Solicitud;
+import repositorio.RepositorioEmpleado;
 
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+
 import java.awt.event.ActionListener;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import java.awt.Font;
@@ -38,6 +44,8 @@ public class VentanaMenu extends JFrame implements ActionListener {
 	private JMenuItem mntmRealizarTransacción;
 	private JMenuItem mntmVerTransacciones;
 	private JMenuItem mntmNewMenuItem;
+	private JMenuItem mntmSolicitarApertura;
+	private JMenuItem mntmSolicitarEmision;
 
 	public VentanaMenu(VentanaPrincipal ventanaPrincipal, Cliente cliente) {
 		this.ventanaPrincipal = ventanaPrincipal;
@@ -84,6 +92,11 @@ public class VentanaMenu extends JFrame implements ActionListener {
 				mntmNewMenuItem = new JMenuItem("Modificar estado");
 				mntmNewMenuItem.addActionListener(this);
 				mnNewMenu_1.add(mntmNewMenuItem);
+				{
+					mntmSolicitarApertura = new JMenuItem("Solicitar apertura");
+					mntmSolicitarApertura.addActionListener(this);
+					mnNewMenu_1.add(mntmSolicitarApertura);
+				}
 			}
 			{
 				mnNewMenu_2 = new JMenu("Tarjetas");
@@ -92,6 +105,11 @@ public class VentanaMenu extends JFrame implements ActionListener {
 					mntmVerTarjetas = new JMenuItem("Ver");
 					mntmVerTarjetas.addActionListener(this);
 					mnNewMenu_2.add(mntmVerTarjetas);
+				}
+				{
+					mntmSolicitarEmision = new JMenuItem("Solicitar emisión");
+					mntmSolicitarEmision.addActionListener(this);
+					mnNewMenu_2.add(mntmSolicitarEmision);
 				}
 			}
 			
@@ -119,7 +137,7 @@ public class VentanaMenu extends JFrame implements ActionListener {
 		}
 		{
 			txtCliente = new JTextField();
-			if(cliente != null) txtCliente.setText(cliente.getNombres() + " " + cliente.getApellidos());
+			txtCliente.setText(cliente.getNombres() + " " + cliente.getApellidos());
 			txtCliente.setEditable(false);
 			txtCliente.setFont(new Font("Tahoma", Font.PLAIN, 40));
 			txtCliente.setBounds(51, 101, 477, 39);
@@ -129,6 +147,12 @@ public class VentanaMenu extends JFrame implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == mntmSolicitarEmision) {
+			do_mntmSolicitarEmision_actionPerformed(e);
+		}
+		if (e.getSource() == mntmSolicitarApertura) {
+			do_mntmSolicitarApertura_actionPerformed(e);
+		}
 		if (e.getSource() == mntmNewMenuItem) {
 			do_mntmNewMenuItem_actionPerformed(e);
 		}
@@ -163,7 +187,6 @@ public class VentanaMenu extends JFrame implements ActionListener {
 	}
 	protected void do_mntmVerPerfil_actionPerformed(ActionEvent e) {
 		VentanaVerPerfil ventanaVerPerfil = new VentanaVerPerfil(cliente);
-		ventanaVerPerfil.MostrarDatos();
 		ventanaVerPerfil.setVisible(true);
 	}
 	protected void do_mntmActualizarPerfil_actionPerformed(ActionEvent e) {
@@ -194,5 +217,35 @@ public class VentanaMenu extends JFrame implements ActionListener {
 	protected void do_mntmNewMenuItem_actionPerformed(ActionEvent e) {
 		VentanaModificarEstadoCuenta ventanaModificarCuenta = new VentanaModificarEstadoCuenta(cliente);
 		ventanaModificarCuenta.setVisible(true);
+	}
+	protected void do_mntmSolicitarApertura_actionPerformed(ActionEvent e) {
+		int opcion = JOptionPane.showConfirmDialog(this,
+                "¿Está seguro que deseas solicitar la apertura de una cuenta bancaria?",
+                "Confirmar solicitud", JOptionPane.YES_NO_OPTION);
+		if (opcion == JOptionPane.YES_OPTION) {
+        	Empleado empleado = RepositorioEmpleado.obtenerEmpleadoAleatorio();
+        	if(empleado == null) {
+        		JOptionPane.showMessageDialog(this, "No hay empleados disponibles, vuelva a intentarlo más tarde.", "Información", JOptionPane.INFORMATION_MESSAGE);
+        		return;
+        	}
+        	Solicitud solicitud = new Solicitud("Apertura de cuenta", cliente, empleado);
+        	empleado.agregarSolicitud(solicitud);
+            JOptionPane.showMessageDialog(this, "La solicitud se realizó con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+    	}
+	}
+	protected void do_mntmSolicitarEmision_actionPerformed(ActionEvent e) {
+		int opcion = JOptionPane.showConfirmDialog(this,
+                "¿Está seguro que deseas solicitar la emisión de una tarjeta bancaria?",
+                "Confirmar solicitud", JOptionPane.YES_NO_OPTION);
+		if (opcion == JOptionPane.YES_OPTION) {
+        	Empleado empleado = RepositorioEmpleado.obtenerEmpleadoAleatorio();
+        	if(empleado == null) {
+        		JOptionPane.showMessageDialog(this, "No hay empleados disponibles, vuelva a intentarlo más tarde.", "Información", JOptionPane.INFORMATION_MESSAGE);
+        		return;
+        	}
+        	Solicitud solicitud = new Solicitud("Emisión de tarjeta", cliente, empleado);
+        	empleado.agregarSolicitud(solicitud);
+            JOptionPane.showMessageDialog(this, "La solicitud se realizó con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+    	}
 	}
 }

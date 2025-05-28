@@ -1,8 +1,16 @@
 package modelo;
 
 public class Persona {
-	public Persona(String nombres, String apellidos, int telefono, String direccion, String correo, String contraseña) {
-		super();
+	protected String dni;
+	protected String nombres;
+	protected String apellidos;
+	protected String telefono;
+	protected String direccion;
+	protected String correo;
+	protected String contraseña;
+	public Persona(String dni, String nombres, String apellidos, String telefono, String direccion, String correo,
+			String contraseña) {
+		this.dni = dni;
 		this.nombres = nombres;
 		this.apellidos = apellidos;
 		this.telefono = telefono;
@@ -10,12 +18,12 @@ public class Persona {
 		this.correo = correo;
 		this.contraseña = contraseña;
 	}
-	protected String nombres;
-	protected String apellidos;
-	protected int telefono;
-	protected String direccion;
-	protected String correo;
-	protected String contraseña;
+	public String getDni() {
+		return dni;
+	}
+	public void setDni(String dni) {
+		this.dni = dni;
+	}
 	public String getNombres() {
 		return nombres;
 	}
@@ -28,10 +36,10 @@ public class Persona {
 	public void setApellidos(String apellidos) {
 		this.apellidos = apellidos;
 	}
-	public int getTelefono() {
+	public String getTelefono() {
 		return telefono;
 	}
-	public void setTelefono(int telefono) {
+	public void setTelefono(String telefono) {
 		this.telefono = telefono;
 	}
 	public String getDireccion() {
@@ -52,5 +60,5 @@ public class Persona {
 	public void setContraseña(String contraseña) {
 		this.contraseña = contraseña;
 	}
-
+	
 }

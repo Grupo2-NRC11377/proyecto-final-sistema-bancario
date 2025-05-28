@@ -7,7 +7,10 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import modelo.Cliente;
-import servicio.ServicioCliente;
+import modelo.Empleado;
+import modelo.Persona;
+import repositorio.RepositorioCliente;
+import repositorio.RepositorioEmpleado;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -60,53 +63,53 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 			lblNewLabel = new JLabel("Bienvenido/a");
 			lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 			lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
-			lblNewLabel.setBounds(138, 27, 158, 25);
+			lblNewLabel.setBounds(146, 27, 158, 25);
 			contentPane.add(lblNewLabel);
 		}
 		{
 			btnIniciarSesion = new JButton("Iniciar Sesión");
 			btnIniciarSesion.addActionListener(this);
-			btnIniciarSesion.setBounds(117, 199, 200, 35);
+			btnIniciarSesion.setBounds(125, 199, 200, 35);
 			contentPane.add(btnIniciarSesion);
 		}
 		{
 			txtCorreoElectronico = new JTextField();
-			txtCorreoElectronico.setBounds(171, 77, 200, 25);
+			txtCorreoElectronico.setBounds(203, 74, 200, 25);
 			contentPane.add(txtCorreoElectronico);
 			txtCorreoElectronico.setColumns(10);
 		}
 		{
 			lblCorreoElectrnico = new JLabel("Correo electrónico:");
-			lblCorreoElectrnico.setBounds(45, 80, 116, 14);
+			lblCorreoElectrnico.setBounds(45, 80, 158, 14);
 			contentPane.add(lblCorreoElectrnico);
 		}
 		{
 			lblNewLabel_1 = new JLabel("Contraseña:");
-			lblNewLabel_1.setBounds(45, 119, 116, 14);
+			lblNewLabel_1.setBounds(45, 119, 158, 14);
 			contentPane.add(lblNewLabel_1);
 		}
 		{
 			btnRegistrarse = new JButton("Registrarse");
 			btnRegistrarse.addActionListener(this);
-			btnRegistrarse.setBounds(117, 245, 200, 35);
+			btnRegistrarse.setBounds(125, 245, 200, 35);
 			contentPane.add(btnRegistrarse);
 		}
 		{
 			txtContraseña = new JPasswordField();
-			txtContraseña.setBounds(171, 114, 200, 25);
+			txtContraseña.setBounds(203, 113, 200, 25);
 			txtContraseña.setEchoChar('●');
 			contentPane.add(txtContraseña);
 		}
 		{
 			btnSalir = new JButton("Salir");
 			btnSalir.addActionListener(this);
-			btnSalir.setBounds(117, 291, 200, 35);
+			btnSalir.setBounds(125, 291, 200, 35);
 			contentPane.add(btnSalir);
 		}
 		{
 			chckbxVerContraseña = new JCheckBox("Ver contraseña");
 			chckbxVerContraseña.addActionListener(this);
-			chckbxVerContraseña.setBounds(171, 146, 124, 23);
+			chckbxVerContraseña.setBounds(203, 143, 200, 23);
 			contentPane.add(chckbxVerContraseña);
 		}
 	}
@@ -129,20 +132,30 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 		char[] contraseña = txtContraseña.getPassword();
 		if(correoElectronico.isEmpty() || 
 				contraseña.length == 0) {
-			JOptionPane.showMessageDialog(this, "No debe dejar campos vacíos.", "Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this, "No debe dejar campos vacíos.", "Información", JOptionPane.INFORMATION_MESSAGE);
 			return;
 		}else if(!correoElectronico.contains("@")) {
-			JOptionPane.showMessageDialog(this, "Correo electrónico inválido.", "Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this, "Correo electrónico inválido.", "Información", JOptionPane.INFORMATION_MESSAGE);
 			return;
 		}
-		Cliente cliente = ServicioCliente.buscarCliente(correoElectronico, new String(contraseña));
-		if(cliente == null) {
-			JOptionPane.showMessageDialog(this, "Correo electrónico o contraseña incorrectos. Intente nuevamente.", "Error", JOptionPane.ERROR_MESSAGE);
+		iniciarSesion(correoElectronico, new String(contraseña));
+	}
+	private void iniciarSesion(String correoElectronico, String contraseña) {
+		Persona persona;
+		if(correoElectronico.contains("@empleado.com")) persona = RepositorioEmpleado.buscarEmpleado(correoElectronico, contraseña);
+		else persona = RepositorioCliente.buscarCliente(correoElectronico, contraseña);
+		if(persona == null) {
+			JOptionPane.showMessageDialog(this, "Correo electrónico o contraseña incorrectos. Intente nuevamente.", "Información", JOptionPane.INFORMATION_MESSAGE);
 			return;
+		}
+		if(correoElectronico.contains("@empleado.com")) {
+			VentanaMenuEmpleado ventanaMenuEmpleado = new VentanaMenuEmpleado(this, (Empleado) persona);
+			ventanaMenuEmpleado.setVisible(true);
+		}else {
+			VentanaMenu menu = new VentanaMenu(this, (Cliente) persona);
+			menu.setVisible(true);
 		}
 		limpiarCampos();
-		VentanaMenu menu = new VentanaMenu(this, cliente);
-		menu.setVisible(true);
 		dispose();
 	}
 	protected void do_btnRegistrarse_actionPerformed(ActionEvent e) {

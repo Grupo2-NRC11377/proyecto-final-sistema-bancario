@@ -8,7 +8,9 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import modelo.Cliente;
-import servicio.ServicioCliente;
+import modelo.Empleado;
+import repositorio.RepositorioCliente;
+import repositorio.RepositorioEmpleado;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -22,7 +24,8 @@ import javax.swing.JCheckBox;
 
 public class VentanaRegistrar extends JDialog implements ActionListener {
 
-	private VentanaPrincipal ventanaPrincipal = null;
+	private VentanaPrincipal ventanaPrincipal;
+	
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
 	private JLabel lblNewLabel;
@@ -41,13 +44,15 @@ public class VentanaRegistrar extends JDialog implements ActionListener {
 	private JButton btnRegistrarse;
 	private JButton btnCancelar;
 	private JCheckBox chckbxVerContraseña;
+	private JLabel lblNewLabel_6;
+	private JTextField txtDNI;
 
 	public VentanaRegistrar(VentanaPrincipal ventanaPrincipal) {
-		setTitle("Registrar");
 		this.ventanaPrincipal = ventanaPrincipal;
+		setTitle("Registrar");
 		setModal(true);
 		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-		setBounds(100, 100, 410, 433);
+		setBounds(100, 100, 445, 465);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -56,92 +61,103 @@ public class VentanaRegistrar extends JDialog implements ActionListener {
 			lblNewLabel = new JLabel("Registrarse");
 			lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 			lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
-			lblNewLabel.setBounds(140, 22, 114, 35);
+			lblNewLabel.setBounds(165, 22, 114, 35);
 			contentPanel.add(lblNewLabel);
 		}
 		{
 			lblNewLabel_1 = new JLabel("Nombres:");
-			lblNewLabel_1.setBounds(34, 76, 114, 14);
+			lblNewLabel_1.setBounds(37, 112, 155, 14);
 			contentPanel.add(lblNewLabel_1);
 		}
 		{
 			txtNombres = new JTextField();
-			txtNombres.setBounds(160, 71, 200, 25);
+			txtNombres.setBounds(204, 105, 200, 25);
 			contentPanel.add(txtNombres);
 			txtNombres.setColumns(10);
 		}
 		{
 			lblNewLabel_2 = new JLabel("Apellidos:");
-			lblNewLabel_2.setBounds(34, 112, 114, 14);
+			lblNewLabel_2.setBounds(37, 148, 155, 14);
 			contentPanel.add(lblNewLabel_2);
 		}
 		{
 			txtApellidos = new JTextField();
 			txtApellidos.setColumns(10);
-			txtApellidos.setBounds(160, 107, 200, 25);
+			txtApellidos.setBounds(204, 141, 200, 25);
 			contentPanel.add(txtApellidos);
 		}
 		{
 			lblNewLabel_3 = new JLabel("Teléfono:");
-			lblNewLabel_3.setBounds(34, 146, 114, 14);
+			lblNewLabel_3.setBounds(37, 182, 150, 14);
 			contentPanel.add(lblNewLabel_3);
 		}
 		{
 			txtTelefono = new JTextField();
 			txtTelefono.setColumns(10);
-			txtTelefono.setBounds(160, 141, 200, 25);
+			txtTelefono.setBounds(204, 175, 200, 25);
 			contentPanel.add(txtTelefono);
 		}
 		{
 			lblNewLabel_4 = new JLabel("Dirección:");
-			lblNewLabel_4.setBounds(34, 182, 114, 14);
+			lblNewLabel_4.setBounds(37, 218, 155, 14);
 			contentPanel.add(lblNewLabel_4);
 		}
 		{
 			txtDireccion = new JTextField();
 			txtDireccion.setColumns(10);
-			txtDireccion.setBounds(160, 177, 200, 25);
+			txtDireccion.setBounds(204, 211, 200, 25);
 			contentPanel.add(txtDireccion);
 		}
 		{
 			txtCorreoElectronico = new JTextField();
 			txtCorreoElectronico.setColumns(10);
-			txtCorreoElectronico.setBounds(160, 214, 200, 25);
+			txtCorreoElectronico.setBounds(204, 248, 200, 25);
 			contentPanel.add(txtCorreoElectronico);
 		}
 		{
 			lblCorreoElectrnico = new JLabel("Correo electrónico:");
-			lblCorreoElectrnico.setBounds(34, 219, 114, 14);
+			lblCorreoElectrnico.setBounds(37, 255, 155, 14);
 			contentPanel.add(lblCorreoElectrnico);
 		}
 		{
 			lblNewLabel_5 = new JLabel("Contraseña:");
-			lblNewLabel_5.setBounds(34, 258, 114, 14);
+			lblNewLabel_5.setBounds(37, 294, 155, 14);
 			contentPanel.add(lblNewLabel_5);
 		}
 		{
 			txtContraseña = new JPasswordField();
-			txtContraseña.setBounds(160, 253, 200, 25);
+			txtContraseña.setBounds(204, 287, 200, 25);
 			txtContraseña.setEchoChar('●');
 			contentPanel.add(txtContraseña);
 		}
 		{
 			btnRegistrarse = new JButton("Registrarse");
 			btnRegistrarse.addActionListener(this);
-			btnRegistrarse.setBounds(34, 330, 150, 35);
+			btnRegistrarse.setBounds(53, 366, 150, 35);
 			contentPanel.add(btnRegistrarse);
 		}
 		{
 			btnCancelar = new JButton("Cancelar");
 			btnCancelar.addActionListener(this);
-			btnCancelar.setBounds(211, 330, 150, 35);
+			btnCancelar.setBounds(230, 366, 150, 35);
 			contentPanel.add(btnCancelar);
 		}
 		{
 			chckbxVerContraseña = new JCheckBox("Ver contraseña");
 			chckbxVerContraseña.addActionListener(this);
-			chckbxVerContraseña.setBounds(160, 285, 124, 23);
+			chckbxVerContraseña.setBounds(204, 318, 200, 23);
 			contentPanel.add(chckbxVerContraseña);
+		}
+		{
+			lblNewLabel_6 = new JLabel("DNI:");
+			lblNewLabel_6.setBounds(37, 76, 155, 14);
+			contentPanel.add(lblNewLabel_6);
+		}
+		{
+			txtDNI = new JTextField();
+			txtDNI.setColumns(10);
+			txtDNI.setBounds(204, 69, 200, 25);
+			contentPanel.add(txtDNI);
 		}
 	}
 	public void actionPerformed(ActionEvent e) {
@@ -157,37 +173,56 @@ public class VentanaRegistrar extends JDialog implements ActionListener {
 	}
 	protected void do_btnRegistrarse_actionPerformed(ActionEvent e) {
 		try {
+			String dni = txtDNI.getText().trim();
 			String nombres = txtNombres.getText().trim();
 			String apellidos = txtApellidos.getText().trim();
 			String telefono = txtTelefono.getText().trim();
 			String direccion = txtDireccion.getText().trim();
 			String correoElectronico = txtCorreoElectronico.getText().trim();
 			char[] contraseña = txtContraseña.getPassword();
-			if(nombres.isEmpty() || apellidos.isEmpty() || telefono.isEmpty() ||direccion.isEmpty() ||correoElectronico.isEmpty() || contraseña.length == 0) {
-				JOptionPane.showMessageDialog(this, "No debe dejar campos vacíos.");
+			if(dni.isEmpty() || 
+					nombres.isEmpty() || 
+					apellidos.isEmpty() || 
+					telefono.isEmpty() ||
+					direccion.isEmpty() ||
+					correoElectronico.isEmpty() || 
+					contraseña.length == 0) {
+				JOptionPane.showMessageDialog(this, "No debe dejar campos vacíos.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}else if(!correoElectronico.contains("@")) {
-				JOptionPane.showMessageDialog(this, "Correo electrónico inválido.");
+				JOptionPane.showMessageDialog(this, "Correo electrónico inválido.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}else if(telefono.length() != 9) {
-				JOptionPane.showMessageDialog(this, "Número de teléfono inválido.");
+				JOptionPane.showMessageDialog(this, "Número de teléfono inválido.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
-			}else if(ServicioCliente.buscarCliente(correoElectronico) != null) {
-				JOptionPane.showMessageDialog(this, "Correo electrónico ya registrado.");
+			}else if(dni.length() != 8) {
+				JOptionPane.showMessageDialog(this, "DNI inválido.", "Información", JOptionPane.INFORMATION_MESSAGE);
+				return;
+			}else if(RepositorioEmpleado.buscarEmpleado(correoElectronico) != null ||
+					RepositorioCliente.buscarCliente(correoElectronico) != null) {
+				JOptionPane.showMessageDialog(this, "Correo electrónico ya registrado.", "Información", JOptionPane.INFORMATION_MESSAGE);
+				return;
+			}else if(RepositorioEmpleado.buscarEmpleadoPorDni(dni) != null ||
+					RepositorioCliente.buscarClientePorDni(dni) != null) {
+				JOptionPane.showMessageDialog(this, "DNI ya registrado.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
-			if(ventanaPrincipal != null) ventanaPrincipal.dispose();
-			Cliente cliente = new Cliente(nombres, apellidos, Integer.parseInt(telefono), direccion, correoElectronico, new String(contraseña));
-			ServicioCliente.agregarCliente(cliente);
+			if(correoElectronico.contains("@empleado")) {
+				Empleado empleado= new Empleado(dni, nombres, apellidos, telefono, direccion, correoElectronico, new String(contraseña));
+				RepositorioEmpleado.agregarEmpleado(empleado);
+				VentanaMenuEmpleado ventanaMenuEmpleado = new VentanaMenuEmpleado(ventanaPrincipal, empleado);
+				ventanaMenuEmpleado.setVisible(true);
+			}else {
+				Cliente cliente = new Cliente(dni, nombres, apellidos, telefono, direccion, correoElectronico, new String(contraseña));
+				RepositorioCliente.agregarCliente(cliente);
+				VentanaMenu menu = new VentanaMenu(ventanaPrincipal, cliente);
+				menu.setVisible(true);
+			}
+			ventanaPrincipal.dispose();
 			limpiarCampos();
 			dispose();
-			VentanaMenu menu = new VentanaMenu(ventanaPrincipal, cliente);
-			menu.setVisible(true);
-		} catch (NumberFormatException error) {
-			JOptionPane.showMessageDialog(this, "Número de teléfono inválido. Error: "+error.getMessage());
-			txtTelefono.setText("");
-		}catch (Exception error) {
-			JOptionPane.showMessageDialog(this, "Error: "+error.getMessage());
+		} catch (Exception error) {
+			JOptionPane.showMessageDialog(this, "Error: "+error.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	private void limpiarCampos() {

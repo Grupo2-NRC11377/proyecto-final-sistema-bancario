@@ -5,17 +5,18 @@ public class Cliente extends Persona {
 	private ArrayList<Cuenta> cuentas;
 	private ArrayList<Tarjeta> tarjetas;
 
-    public Cliente(String nombres, String apellidos, int telefono, String direccion, String correo, String contraseña) {
-        super(nombres, apellidos, telefono, direccion, correo, contraseña);
-        this.cuentas = new ArrayList<>();
-		this.tarjetas = new ArrayList<>();
-        agregarCuenta(new Cuenta("Cuenta de ahorro"));
-		agregarCuenta(new Cuenta("Cuenta corriente"));
-		agregarTarjeta(new Tarjeta("Débito"));
-		agregarTarjeta(new Tarjeta("Crédito"));
+    public Cliente(String dni, String nombres, String apellidos, String telefono, String direccion, String correo,
+			String contraseña) {
+		super(dni, nombres, apellidos, telefono, direccion, correo, contraseña);
+		cuentas = new ArrayList<Cuenta>();
+		tarjetas = new ArrayList<Tarjeta>();
+	}
+    
+    public ArrayList<Cuenta> getCuentas() {
+        return cuentas;
     }
 
-    public boolean agregarCuenta(Cuenta cuenta) {
+	public boolean agregarCuenta(Cuenta cuenta) {
         if (buscarCuenta(cuenta.getNumeroCuenta()) != null) return false;
         return cuentas.add(cuenta);
     }
@@ -27,16 +28,9 @@ public class Cliente extends Persona {
         return null;
     }
     
-    public Cuenta eliminarCuenta(String numeroCuenta) {
-    	Cuenta cuenta = buscarCuenta(numeroCuenta);
-    	if(cuenta == null || cuenta.getEstado().equals("cancelada")) return null;
-    	cuentas.remove(cuenta);
-        return cuenta;
-    }
-
-    public ArrayList<Cuenta> getCuentas() {
-        return cuentas;
-    }
+    public ArrayList<Tarjeta> getTarjetas() {
+		return tarjetas;
+	}
     
     public boolean agregarTarjeta(Tarjeta tarjeta) {
         if (buscarTarjeta(tarjeta.getNumeroTarjeta()) != null) return false;
@@ -49,8 +43,4 @@ public class Cliente extends Persona {
         		return tarjeta;
         return null;
     }
-    
-    public ArrayList<Tarjeta> getTarjetas() {
-		return tarjetas;
-	}
 }

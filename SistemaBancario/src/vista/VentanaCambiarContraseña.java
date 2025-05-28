@@ -3,7 +3,8 @@ package vista;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 
-import modelo.Cliente;
+import modelo.Persona;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
@@ -15,7 +16,8 @@ import java.awt.event.ActionEvent;
 
 public class VentanaCambiarContraseña extends JDialog implements ActionListener {
 
-	private Cliente cliente;
+	private Persona persona;
+	
 	private static final long serialVersionUID = 1L;
 	private JLabel lblNewLabel;
 	private JLabel lblContraseaAnterior;
@@ -27,12 +29,12 @@ public class VentanaCambiarContraseña extends JDialog implements ActionListener
 	private JButton btnGuardar;
 	private JButton btnCancelar;
 
-	public VentanaCambiarContraseña(Cliente cliente) {
-		this.cliente = cliente;
+	public VentanaCambiarContraseña(Persona persona) {
+		this.persona = persona;
+		
 		setTitle("Cambiar contraseña");
 		setModal(true);
 		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-		this.cliente = cliente;
 		setBounds(100, 100, 420, 276);
 		getContentPane().setLayout(null);
 		{
@@ -96,7 +98,7 @@ public class VentanaCambiarContraseña extends JDialog implements ActionListener
 			do_btnCancelar_actionPerformed(e);
 		}
 	}
-	private void Limpiar() {
+	private void limpiar() {
 		txtContraseñaActual.setText("");
 		txtNuevaContreña.setText("");
 		txtRepetirContraseña.setText("");
@@ -113,18 +115,18 @@ public class VentanaCambiarContraseña extends JDialog implements ActionListener
 		if (contraseñaActual.isEmpty() || nuevaContraseña.isEmpty() || repetirContraseña.isEmpty()){
 			JOptionPane.showMessageDialog(this, "Los campos no deben estar vacíos.", "Información", JOptionPane.INFORMATION_MESSAGE);
 		}
-		else if (!contraseñaActual.equals(cliente.getContraseña())) {
-			JOptionPane.showMessageDialog(this, "La contraseña anterior es incorrecta, vuelva a intentarlo.", "Error", JOptionPane.ERROR_MESSAGE);
+		else if (!contraseñaActual.equals(persona.getContraseña())) {
+			JOptionPane.showMessageDialog(this, "La contraseña anterior es incorrecta, vuelva a intentarlo.", "Información", JOptionPane.INFORMATION_MESSAGE);
 			return;
 		}
 		else if (!nuevaContraseña.equals(repetirContraseña)) {
-			JOptionPane.showMessageDialog(this, "Las nuevas contraseñas no coinciden.", "Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this, "Las nuevas contraseñas no coinciden.", "Información", JOptionPane.INFORMATION_MESSAGE);
 			return;
 		}
 		else {
-			cliente.setContraseña(repetirContraseña);
+			persona.setContraseña(repetirContraseña);
 			JOptionPane.showMessageDialog(this, "¡Contraseña fue cambiada correctamente!", "Información", JOptionPane.INFORMATION_MESSAGE);
-			Limpiar();
+			limpiar();
 		}
 
 	}
