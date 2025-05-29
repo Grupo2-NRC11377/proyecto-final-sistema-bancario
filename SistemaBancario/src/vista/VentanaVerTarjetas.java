@@ -116,7 +116,7 @@ public class VentanaVerTarjetas extends JDialog implements ActionListener {
         	Tarjeta tarjeta = cliente.buscarTarjeta(numeroTarjeta);
         	tarjeta.setEstado("bloqueada");
         	llenarTabla();
-            JOptionPane.showMessageDialog(this, "La tarjeta ha sido bloqueada exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "La tarjeta ha sido bloqueada exitosamente.", "Información", JOptionPane.INFORMATION_MESSAGE);
         }
     } 
 }

@@ -4,12 +4,18 @@ import java.util.ArrayList;
 public class Cliente extends Persona {
 	private ArrayList<Cuenta> cuentas;
 	private ArrayList<Tarjeta> tarjetas;
+	private ArrayList<Transaccion> transacciones;
 
     public Cliente(String dni, String nombres, String apellidos, String telefono, String direccion, String correo,
 			String contraseña) {
 		super(dni, nombres, apellidos, telefono, direccion, correo, contraseña);
 		cuentas = new ArrayList<Cuenta>();
 		tarjetas = new ArrayList<Tarjeta>();
+		transacciones = new ArrayList<Transaccion>();
+		agregarCuenta(new Cuenta("ahorro"));
+		agregarCuenta(new Cuenta("corriente"));
+		agregarTarjeta(new Tarjeta("crédito"));
+		agregarTarjeta(new Tarjeta("débito"));
 	}
     
     public ArrayList<Cuenta> getCuentas() {
@@ -41,6 +47,22 @@ public class Cliente extends Persona {
         for (Tarjeta tarjeta : tarjetas) 
         	if (tarjeta.getNumeroTarjeta().equals(numeroTarjeta)) 
         		return tarjeta;
+        return null;
+    }
+    
+    public ArrayList<Transaccion> getTransacciones() {
+		return transacciones;
+	}
+    
+    public boolean agregarTransaccion(Transaccion transaccion) {
+        if (buscarTransaccion(transaccion.getIdTransaccion()) != null) return false;
+        return transacciones.add(transaccion);
+    }
+    
+    public Transaccion buscarTransaccion(String idTransaccion) {
+        for (Transaccion transaccion : transacciones) 
+        	if (transaccion.getIdTransaccion().equals(idTransaccion)) 
+        		return transaccion;
         return null;
     }
 }

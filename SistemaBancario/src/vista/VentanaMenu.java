@@ -35,10 +35,13 @@ public class VentanaMenu extends JFrame implements ActionListener {
 	private JMenu mnNewMenu_2;
 	private JMenuItem mntmVerTarjetas;
 	private JMenuItem mntmCambiarContraseña;
-	private JMenuItem mntmRealizarTransacción;
 	private JMenuItem mntmVerTransacciones;
 	private JMenuItem mntmSolicitarApertura;
 	private JMenuItem mntmSolicitarEmision;
+	private JMenuItem mntmTransferir;
+	private JMenuItem mntmPagar;
+	private JMenuItem mntmRetirar;
+	private JMenuItem mntmDepositar;
 
 	public VentanaMenu(VentanaPrincipal ventanaPrincipal, Cliente cliente) {
 		this.ventanaPrincipal = ventanaPrincipal;
@@ -106,13 +109,29 @@ public class VentanaMenu extends JFrame implements ActionListener {
 			JMenu mnTransacción = new JMenu("Transacción");
 			menuBar.add(mnTransacción);
 			
-			mntmRealizarTransacción = new JMenuItem("Realizar transacción");
-			mntmRealizarTransacción.addActionListener(this);
-			mnTransacción.add(mntmRealizarTransacción);
-			
-			mntmVerTransacciones = new JMenuItem("Ver transacciones");
+			mntmVerTransacciones = new JMenuItem("Ver");
 			mntmVerTransacciones.addActionListener(this);
 			mnTransacción.add(mntmVerTransacciones);
+			{
+				mntmTransferir = new JMenuItem("Transferir");
+				mntmTransferir.addActionListener(this);
+				mnTransacción.add(mntmTransferir);
+			}
+			{
+				mntmPagar = new JMenuItem("Pagar");
+				mntmPagar.addActionListener(this);
+				mnTransacción.add(mntmPagar);
+			}
+			{
+				mntmRetirar = new JMenuItem("Retirar");
+				mntmRetirar.addActionListener(this);
+				mnTransacción.add(mntmRetirar);
+			}
+			{
+				mntmDepositar = new JMenuItem("Depositar");
+				mntmDepositar.addActionListener(this);
+				mnTransacción.add(mntmDepositar);
+			}
 		}
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -137,6 +156,18 @@ public class VentanaMenu extends JFrame implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == mntmDepositar) {
+			do_mntmDepositar_actionPerformed(e);
+		}
+		if (e.getSource() == mntmRetirar) {
+			do_mntmRetirar_actionPerformed(e);
+		}
+		if (e.getSource() == mntmPagar) {
+			do_mntmPagar_actionPerformed(e);
+		}
+		if (e.getSource() == mntmTransferir) {
+			do_mntmTransferir_actionPerformed(e);
+		}
 		if (e.getSource() == mntmSolicitarEmision) {
 			do_mntmSolicitarEmision_actionPerformed(e);
 		}
@@ -148,9 +179,6 @@ public class VentanaMenu extends JFrame implements ActionListener {
 		}
 		if (e.getSource() == mntmVerTransacciones) {
 			do_mntmVerTransacciones_actionPerformed(e);
-		}
-		if (e.getSource() == mntmRealizarTransacción) {
-			do_mntmRealizarTransacción_actionPerformed(e);
 		}
 		if (e.getSource() == mntmVerTarjetas) {
 			do_mntmVerTarjetas_actionPerformed(e);
@@ -192,12 +220,8 @@ public class VentanaMenu extends JFrame implements ActionListener {
 		VentanaCambiarContraseña ventanaCambiarContraseña = new VentanaCambiarContraseña(cliente);
 		ventanaCambiarContraseña.setVisible(true);
 	}
-	protected void do_mntmRealizarTransacción_actionPerformed(ActionEvent e) {
-		VentanaRealizarTransacción ventanaRealizar = new VentanaRealizarTransacción(cliente);
-	    ventanaRealizar.setVisible(true);
-	}
 	protected void do_mntmVerTransacciones_actionPerformed(ActionEvent e) {
-		VentanaVerTransacciones ventanaVerTransacciones = new VentanaVerTransacciones();
+		VentanaVerTransacciones ventanaVerTransacciones = new VentanaVerTransacciones(cliente);
 		ventanaVerTransacciones.setVisible(true);
 	}
 	protected void do_mntmSolicitarApertura_actionPerformed(ActionEvent e) {
@@ -207,5 +231,21 @@ public class VentanaMenu extends JFrame implements ActionListener {
 	protected void do_mntmSolicitarEmision_actionPerformed(ActionEvent e) {
 		VentanaRealizarSolicitud ventanaRealizarSolicitud = new VentanaRealizarSolicitud("Emisión de tarjeta", cliente);
 		ventanaRealizarSolicitud.setVisible(true);
+	}
+	protected void do_mntmTransferir_actionPerformed(ActionEvent e) {
+		VentanaTransaccion ventanaTransaccion = new VentanaTransaccion(cliente, "Transferir");
+		ventanaTransaccion.setVisible(true);
+	}
+	protected void do_mntmPagar_actionPerformed(ActionEvent e) {
+		VentanaTransaccion ventanaTransaccion = new VentanaTransaccion(cliente, "Pagar");
+		ventanaTransaccion.setVisible(true);
+	}
+	protected void do_mntmRetirar_actionPerformed(ActionEvent e) {
+		VentanaTransaccion ventanaTransaccion = new VentanaTransaccion(cliente, "Retirar");
+		ventanaTransaccion.setVisible(true);
+	}
+	protected void do_mntmDepositar_actionPerformed(ActionEvent e) {
+		VentanaTransaccion ventanaTransaccion = new VentanaTransaccion(cliente, "Depositar");
+		ventanaTransaccion.setVisible(true);
 	}
 }

@@ -34,17 +34,12 @@ public class Cuenta {
 	    }
 		return numero;
 	}
-	public boolean retirar(int monto) {
-		if(monto > saldoDisponible || monto < 0) return false;
-		saldoContable -= monto;
-		saldoDisponible -= monto;
-		return true;
+	
+	public void setSaldoContable(double saldoContable) {
+		this.saldoContable = saldoContable;
 	}
-	public boolean depositar(int monto) {
-		if(monto < 0) return false;
-		saldoContable += monto;
-		saldoDisponible += monto;
-		return true;
+	public void setSaldoDisponible(double saldoDisponible) {
+		this.saldoDisponible = saldoDisponible;
 	}
 	public void setEstado(String estado) {
 		this.estado = estado;

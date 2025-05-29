@@ -97,7 +97,7 @@ public class VentanaRealizarSolicitud extends JDialog implements ActionListener 
     	}
     	Solicitud solicitud = new Solicitud(tipo.equals("corriente") ? asunto + " " + tipo : asunto + " de " + tipo, cliente, empleado);
     	empleado.agregarSolicitud(solicitud);
-    	JOptionPane.showMessageDialog(this, "La solicitud se realizó con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+    	JOptionPane.showMessageDialog(this, "La solicitud se realizó con éxito.", "Información", JOptionPane.INFORMATION_MESSAGE);
     	dispose();
 	}
 }

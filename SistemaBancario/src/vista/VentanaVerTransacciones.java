@@ -1,218 +1,168 @@
 package vista;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-
-import modelo.SimulaciónCuentas;
-
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import java.awt.Font;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableModel;
+
+import modelo.Cliente;
+import modelo.Transaccion;
+
 import javax.swing.JComboBox;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+import javax.swing.JTable;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class VentanaVerTransacciones extends JFrame implements ActionListener {
+public class VentanaVerTransacciones extends JDialog implements ActionListener {
+	
+	private Cliente cliente;
 
 	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
 	private JLabel lblHistorialTransacciones;
-	private JLabel lblFiltrar;
-	private JLabel lblCuenta;
-	private JComboBox<String> cboxCuenta;
+	private JComboBox<String> cbxTipoTransaccion;
 	private JLabel lblTipoOperación;
-	private JComboBox<String> cboxTipoOperación;
-	private JButton btnBuscar;
-	private JLabel lblResultadoBúsqueda;
+	private JLabel lblDescripcin;
+	private JTextField txtDescripcion;
+	private JButton btnFiltrar;
 	private JScrollPane scrollPane;
-	private JTextArea txtResultadoBúsqueda;
 	private JButton btnCerrar;
 	private JButton btnRefrescar;
+	private JTable tableTransacciones;
+	private DefaultTableModel defaultTableModel;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					VentanaVerTransacciones frame = new VentanaVerTransacciones();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
-	public VentanaVerTransacciones() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 510, 528);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
+	public VentanaVerTransacciones(Cliente cliente) {
+		this.cliente = cliente;
+		
+		setTitle("Ver transacciones");
+		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+		setModal(true);
+		setBounds(100, 100, 723, 548);
+		getContentPane().setLayout(null);
 		{
-			lblHistorialTransacciones = new JLabel("Historial de Transacciones");
+			lblHistorialTransacciones = new JLabel("Transacciones");
+			lblHistorialTransacciones.setHorizontalAlignment(SwingConstants.CENTER);
 			lblHistorialTransacciones.setFont(new Font("Tahoma", Font.PLAIN, 20));
-			lblHistorialTransacciones.setBounds(126, 10, 267, 52);
-			contentPane.add(lblHistorialTransacciones);
+			lblHistorialTransacciones.setBounds(225, 26, 267, 31);
+			getContentPane().add(lblHistorialTransacciones);
 		}
 		{
-			lblFiltrar = new JLabel("Filtrar por:");
-			lblFiltrar.setFont(new Font("Times New Roman", Font.PLAIN, 15));
-			lblFiltrar.setBounds(32, 55, 83, 31);
-			contentPane.add(lblFiltrar);
+			cbxTipoTransaccion = new JComboBox<String>();
+			String[] tiposTransacciones = {"transferencia", "pago", "retiro", "deposito"};
+			for (String tipoTransaccion : tiposTransacciones) {
+				cbxTipoTransaccion.addItem(tipoTransaccion);
+			}
+			cbxTipoTransaccion.setBounds(161, 84, 185, 21);
+			getContentPane().add(cbxTipoTransaccion);
 		}
 		{
-			lblCuenta = new JLabel("Cuenta");
-			lblCuenta.setFont(new Font("Times New Roman", Font.PLAIN, 13));
-			lblCuenta.setBounds(61, 92, 54, 17);
-			contentPane.add(lblCuenta);
+			lblTipoOperación = new JLabel("Tipo de transacción:");
+			lblTipoOperación.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
+			lblTipoOperación.setBounds(22, 87, 129, 13);
+			getContentPane().add(lblTipoOperación);
 		}
 		{
-			cboxCuenta = new JComboBox();
-			cboxCuenta.addActionListener(this);
-			cboxCuenta.setBounds(125, 90, 83, 21);
-			contentPane.add(cboxCuenta);
+			lblDescripcin = new JLabel("Descripción:");
+			lblDescripcin.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
+			lblDescripcin.setBounds(379, 87, 129, 13);
+			getContentPane().add(lblDescripcin);
 		}
 		{
-			lblTipoOperación = new JLabel("Tipo de operación:");
-			lblTipoOperación.setFont(new Font("Times New Roman", Font.PLAIN, 13));
-			lblTipoOperación.setBounds(235, 94, 129, 13);
-			contentPane.add(lblTipoOperación);
+			txtDescripcion = new JTextField();
+			txtDescripcion.setColumns(10);
+			txtDescripcion.setBounds(481, 80, 222, 26);
+			getContentPane().add(txtDescripcion);
 		}
 		{
-			cboxTipoOperación = new JComboBox();
-			cboxTipoOperación.addActionListener(this);
-			cboxTipoOperación.setBounds(347, 90, 111, 21);
-			contentPane.add(cboxTipoOperación);
-		}
-		{
-			btnBuscar = new JButton("Buscar");
-			btnBuscar.addActionListener(this);
-			btnBuscar.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-			btnBuscar.setBounds(71, 123, 111, 39);
-			contentPane.add(btnBuscar);
-		}
-		{
-			lblResultadoBúsqueda = new JLabel("Resultado de la búsqueda");
-			lblResultadoBúsqueda.setFont(new Font("Times New Roman", Font.PLAIN, 15));
-			lblResultadoBúsqueda.setBounds(166, 184, 250, 31);
-			contentPane.add(lblResultadoBúsqueda);
+			btnFiltrar = new JButton("Filtrar");
+			btnFiltrar.addActionListener(this);
+			btnFiltrar.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
+			btnFiltrar.setBounds(303, 117, 111, 39);
+			getContentPane().add(btnFiltrar);
 		}
 		{
 			scrollPane = new JScrollPane();
-			scrollPane.setBounds(10, 225, 476, 256);
-			contentPane.add(scrollPane);
+			scrollPane.setBounds(22, 176, 678, 254);
+			getContentPane().add(scrollPane);
 			{
-				txtResultadoBúsqueda = new JTextArea();
-				scrollPane.setViewportView(txtResultadoBúsqueda);
+				tableTransacciones = new JTable();
+				tableTransacciones.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+				String[] columnas = new String[] {"Id", "Tipo", "Descripción", "Fecha y hora", "Estado", "Monto"};
+				defaultTableModel = new DefaultTableModel(columnas, 0) {
+					private static final long serialVersionUID = 1L;
+					public boolean isCellEditable(int row, int column) {
+		                return false;
+		            }
+				};
+				tableTransacciones.setModel(defaultTableModel);
+				scrollPane.setViewportView(tableTransacciones);
 			}
 		}
 		{
 			btnCerrar = new JButton("Cerrar");
 			btnCerrar.addActionListener(this);
-			btnCerrar.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-			btnCerrar.setBounds(192, 123, 126, 39);
-			contentPane.add(btnCerrar);
+			btnCerrar.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
+			btnCerrar.setBounds(577, 455, 126, 39);
+			getContentPane().add(btnCerrar);
 		}
 		{
 			btnRefrescar = new JButton("Refrescar");
 			btnRefrescar.addActionListener(this);
-			btnRefrescar.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-			btnRefrescar.setBounds(332, 123, 111, 39);
-			contentPane.add(btnRefrescar);
+			btnRefrescar.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
+			btnRefrescar.setBounds(23, 455, 111, 39);
+			getContentPane().add(btnRefrescar);
 		}
-		{
-		// Llenar comboBoxes
-				cboxCuenta.addItem("Seleccione");
-				for (String cuenta : SimulaciónCuentas.obtenerTodasLasCuentas()) {
-					cboxCuenta.addItem(cuenta);
-				}
-
-				cboxTipoOperación.addItem("Todos");
-				cboxTipoOperación.addItem("Transferencia");
-				cboxTipoOperación.addItem("Pago");
-		}
+		llenarTabla();
 	}
 
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnRefrescar) {
 			do_btnRefrescar_actionPerformed(e);
 		}
+		if (e.getSource() == btnFiltrar) {
+			do_btnFiltrar_actionPerformed(e);
+		}
 		if (e.getSource() == btnCerrar) {
 			do_btnCerrar_actionPerformed(e);
 		}
-		if (e.getSource() == btnBuscar) {
-			do_btnBuscar_actionPerformed(e);
-		}
 	}
-	
-	protected void do_btnBuscar_actionPerformed(ActionEvent e) {
-		String cuentaSeleccionada = (String) cboxCuenta.getSelectedItem();
-	    String tipoSeleccionado = (String) cboxTipoOperación.getSelectedItem();
-
-	    // Validar selección
-	    if (cuentaSeleccionada == null || cuentaSeleccionada.equals("Seleccione")) {
-	        txtResultadoBúsqueda.setText("Por favor, seleccione una cuenta válida.");
-	        return;
-	    }
-	    if (tipoSeleccionado == null) {
-	        txtResultadoBúsqueda.setText("Por favor, seleccione un tipo de operación.");
-	        return;
-	    }
-
-	    // Obtener todas las transacciones
-	    java.util.List<modelo.Transacción> todasTransacciones = modelo.Transacción.obtenerTransacciones();
-
-	    // Filtrar transacciones por cuenta y tipo
-	    StringBuilder sb = new StringBuilder();
-	    boolean hayResultados = false;
-
-	    for (modelo.Transacción t : todasTransacciones) {
-	        // Supongamos que en Transacción agregaste el campo cuenta para filtrar
-	        // Si no, deberías añadirlo para filtrar correctamente
-	        if (!t.getCuenta().equals(cuentaSeleccionada)) {
-	            continue;
-	        }
-
-	        if (!tipoSeleccionado.equals("Todos") && !t.getTipoTransacción().equalsIgnoreCase(tipoSeleccionado)) {
-	            continue;
-	        }
-
-	        hayResultados = true;
-
-	        // Formatear la transacción para mostrarla
-	        sb.append(String.format("ID: %d | Tipo: %s | Fecha: %s | Monto: %.2f | Estado: %s\n",
-	                t.getIdTransacción(),
-	                t.getTipoTransacción(),
-	                t.getFechaYhora().toString(),
-	                t.getMontoTransacción(),
-	                t.getEstadoTransacción()
-	        ));
-	    }
-
-	    if (!hayResultados) {
-	        txtResultadoBúsqueda.setText("No se encontraron transacciones para los filtros seleccionados.");
-	    } else {
-	        txtResultadoBúsqueda.setText(sb.toString());
-	    }
-	}
-
 	protected void do_btnCerrar_actionPerformed(ActionEvent e) {
 		dispose();
 	}
+	private void llenarTabla() {
+		if(cliente == null) return;
+		defaultTableModel.setRowCount(0);
+		for (Transaccion transaccion : cliente.getTransacciones()) {
+			Object[] fila = new Object[6];
+			fila[0] = transaccion.getIdTransaccion();
+			fila[1] = transaccion.getTipo();
+			fila[2] = transaccion.getDescripcion();
+			fila[3] = transaccion.getFechaHora();
+			fila[4] = transaccion.getMonto();
+			defaultTableModel.addRow(fila);
+		}
+	}
+	protected void do_btnFiltrar_actionPerformed(ActionEvent e) {
+		String tipo = (String) cbxTipoTransaccion.getSelectedItem();
+		String descripcion = txtDescripcion.getText().trim();
+		defaultTableModel.setRowCount(0);
+		for (Transaccion transaccion : cliente.getTransacciones()) {
+			if(!descripcion.isEmpty()) if(!transaccion.getDescripcion().contains(descripcion) && !transaccion.getTipo().equals(tipo)) continue;
+			else if(!transaccion.getTipo().equals(tipo)) continue;
+			Object[] fila = new Object[6];
+			fila[0] = transaccion.getIdTransaccion();
+			fila[1] = transaccion.getTipo();
+			fila[2] = transaccion.getDescripcion();
+			fila[3] = transaccion.getFechaHora();
+			fila[4] = transaccion.getMonto();
+			defaultTableModel.addRow(fila);
+		}
+	}
 	protected void do_btnRefrescar_actionPerformed(ActionEvent e) {
-		txtResultadoBúsqueda.setText("");
+		llenarTabla();
 	}
 }

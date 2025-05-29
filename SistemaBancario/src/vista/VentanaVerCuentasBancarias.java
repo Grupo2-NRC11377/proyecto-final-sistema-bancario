@@ -130,7 +130,7 @@ public class VentanaVerCuentasBancarias extends JDialog implements ActionListene
 		String numeroCuenta = tableCuentasBancarias.getValueAt(posicionFilaSeleccionada, 0).toString();
 		Cuenta cuenta = cliente.buscarCuenta(numeroCuenta);
 		if(cuenta == null) {
-			JOptionPane.showMessageDialog(this, "La cuenta seleccionada no existe.", "Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this, "La cuenta seleccionada no existe.", "Información", JOptionPane.INFORMATION_MESSAGE);
 			return;
 		}
 		VentanaVerDetallesCB ventanaVerDetallesCB = new VentanaVerDetallesCB(cuenta);
@@ -151,7 +151,7 @@ public class VentanaVerCuentasBancarias extends JDialog implements ActionListene
         	Cuenta cuenta = cliente.buscarCuenta(numeroCuenta);
         	cuenta.setEstado("cancelada");
         	llenarTabla();
-            JOptionPane.showMessageDialog(this, "La cuenta ha sido cancelada exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "La cuenta ha sido cancelada exitosamente.", "Información", JOptionPane.INFORMATION_MESSAGE);
         }
 	}
 	/*
