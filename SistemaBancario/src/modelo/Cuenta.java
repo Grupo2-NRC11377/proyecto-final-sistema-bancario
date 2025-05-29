@@ -7,13 +7,13 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class Cuenta {
-	protected String numeroCuenta;
-	protected double saldoContable;
-	protected double saldoDisponible;
-	protected LocalDate fechaCreacion;
-	protected String estado;
-	protected String tipoCuenta;
-    private ArrayList<HistorialCuenta> historialEstados;
+	private String numeroCuenta;
+	private double saldoContable;
+	private double saldoDisponible;
+	private LocalDate fechaCreacion;
+	private String estado;
+	private String tipoCuenta;
+	private ArrayList<Transaccion> transacciones;
 
 	public Cuenta(String tipoCuenta) {
 		this.numeroCuenta = generarNumeroCuenta();
@@ -21,9 +21,9 @@ public class Cuenta {
 		this.fechaCreacion = LocalDate.now();
 		this.estado = "activa";
 		this.tipoCuenta = tipoCuenta;
-		this.historialEstados = new ArrayList<>();
-		registrarEstado(this.estado);
+		this.transacciones = new ArrayList<Transaccion>();
 	}	
+	
 	private String generarNumeroCuenta() {
 		Random rand = new Random();
 		String numero = "";
@@ -70,10 +70,10 @@ public class Cuenta {
 		NumberFormat formatoMoneda = NumberFormat.getCurrencyInstance(new Locale("es", "PE"));
         return formatoMoneda.format(saldoDisponible);
 	}
-	private void registrarEstado(String nuevoEstado) {
-        historialEstados.add(new HistorialCuenta(nuevoEstado));
-    }
-	public ArrayList<HistorialCuenta> getHistorialEstados() {
-        return historialEstados;
-    }
+	public ArrayList<Transaccion> getTransacciones() {
+		return transacciones;
+	}
+	public void agregarTransaccion(Transaccion transaccion) {
+		transacciones.add(transaccion);
+	}
 }

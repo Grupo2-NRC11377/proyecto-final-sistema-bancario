@@ -31,6 +31,8 @@ public class VentanaMenuEmpleado extends JFrame implements ActionListener {
 	private JMenuItem mntmCerrarSesion;
 	private JMenu mnNewMenu_1;
 	private JMenuItem mntmVerSolicitudes;
+	private JMenu mnNewMenu_2;
+	private JMenuItem mntmVerClientes;
 
 	public VentanaMenuEmpleado(VentanaPrincipal ventanaPrincipal, Empleado empleado) {
 		setTitle("Menú");
@@ -74,6 +76,15 @@ public class VentanaMenuEmpleado extends JFrame implements ActionListener {
 					mnNewMenu_1.add(mntmVerSolicitudes);
 				}
 			}
+			{
+				mnNewMenu_2 = new JMenu("Clientes");
+				menuBar.add(mnNewMenu_2);
+				{
+					mntmVerClientes = new JMenuItem("Ver");
+					mntmVerClientes.addActionListener(this);
+					mnNewMenu_2.add(mntmVerClientes);
+				}
+			}
 		}
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -97,6 +108,9 @@ public class VentanaMenuEmpleado extends JFrame implements ActionListener {
 		}
 	}
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == mntmVerClientes) {
+			do_mntmVerClientes_actionPerformed(e);
+		}
 		if (e.getSource() == mntmVerSolicitudes) {
 			do_mntmVerSolicitudes_actionPerformed(e);
 		}
@@ -132,5 +146,9 @@ public class VentanaMenuEmpleado extends JFrame implements ActionListener {
 	protected void do_mntmVerSolicitudes_actionPerformed(ActionEvent e) {
 		VentanaVerSolicitudes verSolicitudes = new VentanaVerSolicitudes(empleado);
 		verSolicitudes.setVisible(true);
+	}
+	protected void do_mntmVerClientes_actionPerformed(ActionEvent e) {
+		VentanaVerClientes ventanaVerClientes = new VentanaVerClientes();
+		ventanaVerClientes.setVisible(true);
 	}
 }

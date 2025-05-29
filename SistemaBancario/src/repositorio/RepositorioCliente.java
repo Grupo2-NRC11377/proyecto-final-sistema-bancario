@@ -12,6 +12,10 @@ public class RepositorioCliente {
 		clientes.add(new Cliente("00000002","Ana","Gonzales Castillo","933112233","Pasaje Inventado 789, Zona Test, Ciudad Ejemplo","ana.gonzales@email.com","ClaveEjemplo#2"));
 	}
 	
+	public static ArrayList<Cliente> getClientes(){
+		return clientes;
+	}
+	
 	public static void agregarCliente(Cliente cliente) {
 		clientes.add(cliente);
 	}

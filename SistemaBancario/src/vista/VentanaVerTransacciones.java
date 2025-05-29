@@ -23,7 +23,7 @@ public class VentanaVerTransacciones extends JDialog implements ActionListener {
 	private Cliente cliente;
 
 	private static final long serialVersionUID = 1L;
-	private JLabel lblHistorialTransacciones;
+	private JLabel lblTransacciones;
 	private JComboBox<String> cbxTipoTransaccion;
 	private JLabel lblTipoOperación;
 	private JLabel lblDescripcin;
@@ -43,11 +43,11 @@ public class VentanaVerTransacciones extends JDialog implements ActionListener {
 		setBounds(100, 100, 723, 548);
 		getContentPane().setLayout(null);
 		{
-			lblHistorialTransacciones = new JLabel("Transacciones");
-			lblHistorialTransacciones.setHorizontalAlignment(SwingConstants.CENTER);
-			lblHistorialTransacciones.setFont(new Font("Tahoma", Font.PLAIN, 20));
-			lblHistorialTransacciones.setBounds(225, 26, 267, 31);
-			getContentPane().add(lblHistorialTransacciones);
+			lblTransacciones = new JLabel("Transacciones");
+			lblTransacciones.setHorizontalAlignment(SwingConstants.CENTER);
+			lblTransacciones.setFont(new Font("Tahoma", Font.PLAIN, 20));
+			lblTransacciones.setBounds(225, 26, 267, 31);
+			getContentPane().add(lblTransacciones);
 		}
 		{
 			cbxTipoTransaccion = new JComboBox<String>();

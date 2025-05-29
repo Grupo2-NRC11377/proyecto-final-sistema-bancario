@@ -4,12 +4,19 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+
 import java.awt.Font;
 import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableModel;
 
 import modelo.Cuenta;
+import modelo.Transaccion;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
 public class VentanaVerDetallesCB extends JDialog implements ActionListener {
 	
@@ -28,26 +35,30 @@ public class VentanaVerDetallesCB extends JDialog implements ActionListener {
 	private JTextField txtFechaCreacion;
 	private JTextField txtEstado;
 	private JButton btnCerrar;
+	private JScrollPane scrollPane;
+	private JLabel lblHistorial;
+	private JTable tableHistorial;
+	private DefaultTableModel defaultTableModel;
 
 	public VentanaVerDetallesCB(Cuenta cuenta) {
 		this.cuenta = cuenta;
 		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 		setModal(true);
 		setTitle("Ver detalles");
-		setBounds(100, 100, 450, 330);
+		setBounds(100, 100, 704, 614);
 		getContentPane().setLayout(null);
 		{
 			btnCerrar = new JButton("Cerrar");
 			btnCerrar.addActionListener(this);
-			btnCerrar.setBounds(173, 242, 89, 23);
+			btnCerrar.setBounds(307, 533, 89, 23);
 			getContentPane().add(btnCerrar);
 		}
 		{
 			lblCuentaBancaria = new JLabel("");
-			if(cuenta != null) lblCuentaBancaria.setText(cuenta.getTipoCuenta());
+			if(cuenta != null) lblCuentaBancaria.setText("Cuenta de " + cuenta.getTipoCuenta());
 			lblCuentaBancaria.setFont(new Font("Tahoma", Font.PLAIN, 20));
 			lblCuentaBancaria.setHorizontalAlignment(SwingConstants.CENTER);
-			lblCuentaBancaria.setBounds(28, 29, 378, 34);
+			lblCuentaBancaria.setBounds(163, 29, 378, 34);
 			getContentPane().add(lblCuentaBancaria);
 		}
 		{
@@ -115,7 +126,31 @@ public class VentanaVerDetallesCB extends JDialog implements ActionListener {
 			txtEstado.setBounds(153, 193, 240, 20);
 			getContentPane().add(txtEstado);
 		}
+		{
+			scrollPane = new JScrollPane();
+			scrollPane.setBounds(28, 275, 644, 231);
+			getContentPane().add(scrollPane);
+			{
+				tableHistorial = new JTable();
+				tableHistorial.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+				String[] columnas = new String[] {"Id", "Tipo", "Descripción", "Fecha y hora", "Estado", "Monto"};
+				defaultTableModel = new DefaultTableModel(columnas, 0) {
+					private static final long serialVersionUID = 1L;
+					public boolean isCellEditable(int row, int column) {
+		                return false;
+		            }
+				};
+				tableHistorial.setModel(defaultTableModel);
+				scrollPane.setViewportView(tableHistorial);
+			}
+		}
+		{
+			lblHistorial = new JLabel("Historial:");
+			lblHistorial.setBounds(28, 241, 131, 14);
+			getContentPane().add(lblHistorial);
+		}
 		mostrarDatos();
+		llenarTabla();
 	}
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnCerrar) {
@@ -131,5 +166,19 @@ public class VentanaVerDetallesCB extends JDialog implements ActionListener {
 		txtNumeroCuenta.setText(cuenta.getNumeroCuenta());
 		txtSaldoContable.setText(cuenta.getSaldoContableSoles());
 		txtSaldoDisponible.setText(cuenta.getSaldoDisponibleSoles());
+	}
+	private void llenarTabla() {
+		if(cuenta == null) return;
+		defaultTableModel.setRowCount(0);
+		for (Transaccion transaccion : cuenta.getTransacciones()) {
+			Object[] fila = new Object[6];
+			fila[0] = transaccion.getIdTransaccion();
+			fila[1] = transaccion.getTipo();
+			fila[2] = transaccion.getDescripcion();
+			fila[3] = transaccion.getFechaHora();
+			fila[4] = transaccion.getEstado();
+			fila[5] = transaccion.getMonto();
+			defaultTableModel.addRow(fila);
+		}
 	}
 }

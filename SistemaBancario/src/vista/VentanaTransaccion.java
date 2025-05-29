@@ -204,6 +204,8 @@ public class VentanaTransaccion extends JDialog implements ActionListener {
 		if(ventanaAutenticar.getEstadoAutenticacion()) {			
 			Transaccion transaccion = new Transaccion(tipo, descripcion, monto);
 			transaccion.setEstado("completada");
+			if(cuentaOrigen!=null) cuentaOrigen.agregarTransaccion(transaccion);
+			if(cuentaDestino!=null) cuentaDestino.agregarTransaccion(transaccion);
 			cliente.agregarTransaccion(transaccion);
 			JOptionPane.showMessageDialog(this, "La autenticación se realizó con éxito, la transacción se ejecutó.", "Información", JOptionPane.INFORMATION_MESSAGE);
 		}else {
