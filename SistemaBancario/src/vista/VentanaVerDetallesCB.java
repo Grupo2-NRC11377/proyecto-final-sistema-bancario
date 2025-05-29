@@ -115,6 +115,7 @@ public class VentanaVerDetallesCB extends JDialog implements ActionListener {
 			txtEstado.setBounds(153, 193, 240, 20);
 			getContentPane().add(txtEstado);
 		}
+		mostrarDatos();
 	}
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnCerrar) {
@@ -123,5 +124,12 @@ public class VentanaVerDetallesCB extends JDialog implements ActionListener {
 	}
 	protected void do_btnCerrar_actionPerformed(ActionEvent e) {
 		dispose();
+	}
+	private void mostrarDatos() {
+		txtEstado.setText(cuenta.getEstado());
+		txtFechaCreacion.setText(cuenta.getFechaCreacion());
+		txtNumeroCuenta.setText(cuenta.getNumeroCuenta());
+		txtSaldoContable.setText(cuenta.getSaldoContableSoles());
+		txtSaldoDisponible.setText(cuenta.getSaldoDisponibleSoles());
 	}
 }

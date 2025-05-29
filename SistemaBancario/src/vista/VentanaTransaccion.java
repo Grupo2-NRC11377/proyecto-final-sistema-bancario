@@ -36,7 +36,7 @@ public class VentanaTransaccion extends JDialog implements ActionListener {
 
 	public VentanaTransaccion(Cliente cliente, String tipo) {
 		this.cliente = cliente;
-		this.tipo = tipo;
+		this.tipo = tipo.toLowerCase();
 		
 		setTitle("Transacción");
 		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
@@ -138,9 +138,11 @@ public class VentanaTransaccion extends JDialog implements ActionListener {
 		if(monto < 0) {
 			JOptionPane.showMessageDialog(this, "Monto inválido.", "Información", JOptionPane.INFORMATION_MESSAGE);
 			return;
+		}else if(monto == 0) {
+			JOptionPane.showMessageDialog(this, "Monto no puede ser cero.", "Información", JOptionPane.INFORMATION_MESSAGE);
+			return;
 		}
-		
-		if(tipo.equalsIgnoreCase("retirar") || tipo.equalsIgnoreCase("transferir") || tipo.equalsIgnoreCase("pagar")) {
+		if(tipo.equals("retirar") || tipo.equals("transferir") || tipo.equals("pagar")) {
 			if(numeroOrigen.isEmpty()) {
 				JOptionPane.showMessageDialog(this, "El campo número de cuenta de origen está vacío.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
@@ -150,16 +152,14 @@ public class VentanaTransaccion extends JDialog implements ActionListener {
 				JOptionPane.showMessageDialog(this, "La cuenta de origen no existe.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}else if(monto > cuentaOrigen.getSaldoDisponible()) {
-				JOptionPane.showMessageDialog(this, "Saldo de la cuenta de origen es insuficiente.", "Información", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(this, "El saldo de la cuenta de origen es insuficiente.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
-			cuentaOrigen.setSaldoContable(cuentaOrigen.getSaldoContable() - monto);
-			cuentaOrigen.setSaldoDisponible(cuentaOrigen.getSaldoDisponible() - monto);
-			if(tipo.equalsIgnoreCase("transferir")) descripcion = "Número de cuenta de origen: " + numeroOrigen;
-			else if(tipo.equalsIgnoreCase("pagar")) descripcion = "Número de cuenta de origen: " + numeroOrigen;
+			if(tipo.equals("transferir")) descripcion = "Número de cuenta de origen: " + numeroOrigen;
+			else if(tipo.equals("pagar")) descripcion = "Número de cuenta de origen: " + numeroOrigen;
 			else descripcion = "Número de cuenta de origen: " + numeroOrigen + ";";
 		}
-		if(tipo.equalsIgnoreCase("despositar") || tipo.equalsIgnoreCase("transferir") || tipo.equalsIgnoreCase("pagar")){
+		if(tipo.equals("depositar") || tipo.equals("transferir") || tipo.equals("pagar")){
 			if(numeroDestino.isEmpty()) {
 				JOptionPane.showMessageDialog(this, "El campo número de cuenta de destino está vacío.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
@@ -172,18 +172,24 @@ public class VentanaTransaccion extends JDialog implements ActionListener {
 				JOptionPane.showMessageDialog(this, "No se puede " + tipo + " a la misma cuenta", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
-			cuentaDestino.setSaldoContable(cuentaDestino.getSaldoContable() + monto);
-			cuentaDestino.setSaldoDisponible(cuentaDestino.getSaldoDisponible() + monto);
-			if(tipo.equalsIgnoreCase("transferir")) descripcion += "; Número de cuenta de destino: " + numeroDestino + ";";
-			else if(tipo.equalsIgnoreCase("pagar")) descripcion += "; Número de cuenta de destino: " + numeroDestino + ";";
+			if(tipo.equals("transferir")) descripcion += "; Número de cuenta de destino: " + numeroDestino + ";";
+			else if(tipo.equals("pagar")) descripcion += "; Número de cuenta de destino: " + numeroDestino + ";";
 			else descripcion = "Número de cuenta de destino: " + numeroDestino + ";";
 		}
-		if(tipo.equalsIgnoreCase("pagar")) {
+		if(tipo.equals("pagar")) {
 			if(motivoPagar.isEmpty()) {
 				JOptionPane.showMessageDialog(this, "El campo motivo a pagar está vacío.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
 			descripcion += "; Motivo: " + motivoPagar + ";";
+		}
+		if(cuentaOrigen!=null) {
+			cuentaOrigen.setSaldoContable(cuentaOrigen.getSaldoContable() - monto);
+			cuentaOrigen.setSaldoDisponible(cuentaOrigen.getSaldoDisponible() - monto);
+		}
+		if(cuentaDestino!=null) {
+			cuentaDestino.setSaldoContable(cuentaDestino.getSaldoContable() + monto);
+			cuentaDestino.setSaldoDisponible(cuentaDestino.getSaldoDisponible() + monto);
 		}
 		Transaccion transaccion = new Transaccion(tipo, descripcion, monto);
 		transaccion.setEstado("completada");

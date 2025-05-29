@@ -52,7 +52,7 @@ public class VentanaVerTransacciones extends JDialog implements ActionListener {
 		}
 		{
 			cbxTipoTransaccion = new JComboBox<String>();
-			String[] tiposTransacciones = {"transferencia", "pago", "retiro", "deposito"};
+			String[] tiposTransacciones = {"transferir", "pagar", "retirar", "depositar"};
 			for (String tipoTransaccion : tiposTransacciones) {
 				cbxTipoTransaccion.addItem(tipoTransaccion);
 			}
@@ -142,7 +142,8 @@ public class VentanaVerTransacciones extends JDialog implements ActionListener {
 			fila[1] = transaccion.getTipo();
 			fila[2] = transaccion.getDescripcion();
 			fila[3] = transaccion.getFechaHora();
-			fila[4] = transaccion.getMonto();
+			fila[4] = transaccion.getEstado();
+			fila[5] = transaccion.getMonto();
 			defaultTableModel.addRow(fila);
 		}
 	}
@@ -158,7 +159,8 @@ public class VentanaVerTransacciones extends JDialog implements ActionListener {
 			fila[1] = transaccion.getTipo();
 			fila[2] = transaccion.getDescripcion();
 			fila[3] = transaccion.getFechaHora();
-			fila[4] = transaccion.getMonto();
+			fila[4] = transaccion.getEstado();
+			fila[5] = transaccion.getMonto();
 			defaultTableModel.addRow(fila);
 		}
 	}
