@@ -184,17 +184,31 @@ public class VentanaTransaccion extends JDialog implements ActionListener {
 			descripcion += "; Motivo: " + motivoPagar + ";";
 		}
 		if(cuentaOrigen!=null) {
+			if(cuentaOrigen.getEstado().equals("cancelada")){
+				JOptionPane.showMessageDialog(this, "La cuenta de origen está cancelada.", "Información", JOptionPane.INFORMATION_MESSAGE);
+				return;
+			}
 			cuentaOrigen.setSaldoContable(cuentaOrigen.getSaldoContable() - monto);
 			cuentaOrigen.setSaldoDisponible(cuentaOrigen.getSaldoDisponible() - monto);
 		}
 		if(cuentaDestino!=null) {
+			if(cuentaDestino.getEstado().equals("cancelada")) {
+				JOptionPane.showMessageDialog(this, "La cuenta de destino está cancelada.", "Información", JOptionPane.INFORMATION_MESSAGE);
+				return;
+			}
 			cuentaDestino.setSaldoContable(cuentaDestino.getSaldoContable() + monto);
 			cuentaDestino.setSaldoDisponible(cuentaDestino.getSaldoDisponible() + monto);
 		}
-		Transaccion transaccion = new Transaccion(tipo, descripcion, monto);
-		transaccion.setEstado("completada");
-		cliente.agregarTransaccion(transaccion);
-		JOptionPane.showMessageDialog(this, "La transacción se realizó con éxito.", "Información", JOptionPane.INFORMATION_MESSAGE);
+		VentanaAutenticar ventanaAutenticar = new VentanaAutenticar(cliente);
+		ventanaAutenticar.setVisible(true);
+		if(ventanaAutenticar.getEstadoAutenticacion()) {			
+			Transaccion transaccion = new Transaccion(tipo, descripcion, monto);
+			transaccion.setEstado("completada");
+			cliente.agregarTransaccion(transaccion);
+			JOptionPane.showMessageDialog(this, "La autenticación se realizó con éxito, la transacción se ejecutó.", "Información", JOptionPane.INFORMATION_MESSAGE);
+		}else {
+			JOptionPane.showMessageDialog(this, "La autenticación falló.", "Información", JOptionPane.INFORMATION_MESSAGE);
+		}
 		dispose();
 	}
 }

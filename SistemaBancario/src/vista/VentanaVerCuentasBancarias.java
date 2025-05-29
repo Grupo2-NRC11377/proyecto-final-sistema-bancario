@@ -154,7 +154,7 @@ public class VentanaVerCuentasBancarias extends JDialog implements ActionListene
             JOptionPane.showMessageDialog(this, "La cuenta ha sido cancelada exitosamente.", "Información", JOptionPane.INFORMATION_MESSAGE);
         }
 	}
-	/*
+	/* Historial de la cuenta
 	 * int posicionFilaSeleccionada = tableCuentasBancarias.getSelectedRow();
 		if (posicionFilaSeleccionada == -1) {
 			JOptionPane.showMessageDialog(this, "Selecciona una cuenta.", "Información", JOptionPane.INFORMATION_MESSAGE);

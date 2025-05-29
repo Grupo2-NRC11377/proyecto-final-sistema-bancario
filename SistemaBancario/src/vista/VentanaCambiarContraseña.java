@@ -117,11 +117,9 @@ public class VentanaCambiarContraseña extends JDialog implements ActionListener
 		}
 		else if (!contraseñaActual.equals(persona.getContraseña())) {
 			JOptionPane.showMessageDialog(this, "La contraseña anterior es incorrecta, vuelva a intentarlo.", "Información", JOptionPane.INFORMATION_MESSAGE);
-			return;
 		}
 		else if (!nuevaContraseña.equals(repetirContraseña)) {
 			JOptionPane.showMessageDialog(this, "Las nuevas contraseñas no coinciden.", "Información", JOptionPane.INFORMATION_MESSAGE);
-			return;
 		}
 		else {
 			persona.setContraseña(repetirContraseña);

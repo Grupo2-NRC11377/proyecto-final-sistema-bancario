@@ -31,7 +31,6 @@ public class VentanaVerTransacciones extends JDialog implements ActionListener {
 	private JButton btnFiltrar;
 	private JScrollPane scrollPane;
 	private JButton btnCerrar;
-	private JButton btnRefrescar;
 	private JTable tableTransacciones;
 	private DefaultTableModel defaultTableModel;
 
@@ -52,7 +51,7 @@ public class VentanaVerTransacciones extends JDialog implements ActionListener {
 		}
 		{
 			cbxTipoTransaccion = new JComboBox<String>();
-			String[] tiposTransacciones = {"transferir", "pagar", "retirar", "depositar"};
+			String[] tiposTransacciones = {"todos", "transferir", "pagar", "retirar", "depositar"};
 			for (String tipoTransaccion : tiposTransacciones) {
 				cbxTipoTransaccion.addItem(tipoTransaccion);
 			}
@@ -109,20 +108,10 @@ public class VentanaVerTransacciones extends JDialog implements ActionListener {
 			btnCerrar.setBounds(577, 455, 126, 39);
 			getContentPane().add(btnCerrar);
 		}
-		{
-			btnRefrescar = new JButton("Refrescar");
-			btnRefrescar.addActionListener(this);
-			btnRefrescar.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
-			btnRefrescar.setBounds(23, 455, 111, 39);
-			getContentPane().add(btnRefrescar);
-		}
 		llenarTabla();
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == btnRefrescar) {
-			do_btnRefrescar_actionPerformed(e);
-		}
 		if (e.getSource() == btnFiltrar) {
 			do_btnFiltrar_actionPerformed(e);
 		}
@@ -151,20 +140,25 @@ public class VentanaVerTransacciones extends JDialog implements ActionListener {
 		String tipo = (String) cbxTipoTransaccion.getSelectedItem();
 		String descripcion = txtDescripcion.getText().trim();
 		defaultTableModel.setRowCount(0);
-		for (Transaccion transaccion : cliente.getTransacciones()) {
-			if(!descripcion.isEmpty()) if(!transaccion.getDescripcion().contains(descripcion) && !transaccion.getTipo().equals(tipo)) continue;
-			else if(!transaccion.getTipo().equals(tipo)) continue;
-			Object[] fila = new Object[6];
-			fila[0] = transaccion.getIdTransaccion();
-			fila[1] = transaccion.getTipo();
-			fila[2] = transaccion.getDescripcion();
-			fila[3] = transaccion.getFechaHora();
-			fila[4] = transaccion.getEstado();
-			fila[5] = transaccion.getMonto();
-			defaultTableModel.addRow(fila);
+		boolean filtrarPorTipo = !tipo.equals("todos");
+		boolean filtrarPorDescripcion = !descripcion.isEmpty();
+		if (!filtrarPorTipo && !filtrarPorDescripcion) {
+		    llenarTabla();
+		    return;
 		}
-	}
-	protected void do_btnRefrescar_actionPerformed(ActionEvent e) {
-		llenarTabla();
+		for (Transaccion transaccion : cliente.getTransacciones()) {
+		    boolean coincideTipo = !filtrarPorTipo || transaccion.getTipo().equals(tipo);
+		    boolean coincideDescripcion = !filtrarPorDescripcion || transaccion.getDescripcion().contains(descripcion);
+		    if (coincideTipo && coincideDescripcion) {
+		    	Object[] fila = new Object[6];
+				fila[0] = transaccion.getIdTransaccion();
+				fila[1] = transaccion.getTipo();
+				fila[2] = transaccion.getDescripcion();
+				fila[3] = transaccion.getFechaHora();
+				fila[4] = transaccion.getEstado();
+				fila[5] = transaccion.getMonto();
+		        defaultTableModel.addRow(fila);
+		    }
+		}
 	}
 }
