@@ -9,6 +9,7 @@ import modelo.Cuenta;
 import modelo.Empleado;
 import modelo.Solicitud;
 import modelo.Tarjeta;
+import repositorio.RepositorioCuenta;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -129,12 +130,15 @@ public class VentanaVerSolicitudes extends JDialog implements ActionListener {
 		if(solicitud.getAsunto().contains("cuenta")) {
 			String asunto = solicitud.getAsunto();
 			String moneda = asunto.split(" en ")[1];
-			if(solicitud.getAsunto().contains("corriente")) cliente.agregarCuenta(new Cuenta("corriente", moneda));
-			else if(solicitud.getAsunto().contains("ahorro")) cliente.agregarCuenta(new Cuenta("ahorro", moneda));
+			Cuenta cuenta = null;
+			if(solicitud.getAsunto().contains("corriente")) cuenta = new Cuenta("corriente", moneda, cliente);
+			else if(solicitud.getAsunto().contains("ahorro")) cuenta = new Cuenta("ahorro", moneda, cliente);
+			cliente.agregarCuenta(cuenta);
+			RepositorioCuenta.agregarCuenta(cuenta);
 		}
 		else if (solicitud.getAsunto().contains("tarjeta")) {
-			if(solicitud.getAsunto().contains("débito")) cliente.agregarTarjeta(new Tarjeta("débito"));
-			else if(solicitud.getAsunto().contains("crédito")) cliente.agregarTarjeta(new Tarjeta("crédito"));
+			if(solicitud.getAsunto().contains("débito")) cliente.agregarTarjeta(new Tarjeta("débito", cliente));
+			else if(solicitud.getAsunto().contains("crédito")) cliente.agregarTarjeta(new Tarjeta("crédito", cliente));
 		}
 		solicitud.setEstado("aceptada");
 		solicitud.setFechaResolucion(LocalDate.now());

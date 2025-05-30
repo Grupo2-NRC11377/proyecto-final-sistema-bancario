@@ -12,10 +12,6 @@ public class Cliente extends Persona {
 		cuentas = new ArrayList<Cuenta>();
 		tarjetas = new ArrayList<Tarjeta>();
 		transacciones = new ArrayList<Transaccion>();
-		agregarCuenta(new Cuenta("ahorro", "soles"));
-		agregarCuenta(new Cuenta("corriente", "dólares"));
-		agregarTarjeta(new Tarjeta("crédito"));
-		agregarTarjeta(new Tarjeta("débito"));
 	}
     
     public ArrayList<Cuenta> getCuentas() {

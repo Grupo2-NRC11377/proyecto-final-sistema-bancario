@@ -84,7 +84,7 @@ public class VentanaRealizarSolicitud extends JDialog implements ActionListener 
 		}
 		{
 			cbxMonedas = new JComboBox<String>();
-			if(asunto.contains("cuentas")) {
+			if(asunto.contains("cuenta")) {
 				cbxMonedas.setEnabled(true);
 				String[] monedas = {"soles", "dólares", "euros", "libras"};
 				for (String moneda : monedas) {

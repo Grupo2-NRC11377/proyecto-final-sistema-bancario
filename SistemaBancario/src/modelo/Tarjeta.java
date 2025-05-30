@@ -8,9 +8,11 @@ public class Tarjeta {
 	private String numeroTarjeta;
 	private String tipoTarjeta;
 	private String estado;
+	private Cliente cliente;
 	private LocalDateTime fechaVencimiento;
 
-	public Tarjeta(String tipoTarjeta) {
+	public Tarjeta(String tipoTarjeta, Cliente cliente) {
+		this.cliente = cliente;
 	    this.tipoTarjeta = tipoTarjeta;
 	    this.numeroTarjeta = generarNumeroTarjeta();
 	    this.estado = "activa";
@@ -49,5 +51,9 @@ public class Tarjeta {
 
 	public void setEstado(String estado) {
 		this.estado = estado;
+	}
+
+	public Cliente getCliente() {
+		return cliente;
 	}
 }

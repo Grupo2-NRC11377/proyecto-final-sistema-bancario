@@ -6,6 +6,7 @@ import javax.swing.JDialog;
 import modelo.Cliente;
 import modelo.Cuenta;
 import modelo.Transaccion;
+import repositorio.RepositorioCuenta;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -125,6 +126,7 @@ public class VentanaTransaccion extends JDialog implements ActionListener {
 		dispose();
 	}
 	protected void do_btnContinuar_actionPerformed(ActionEvent e) {
+		Cliente clienteOrigen = null, clienteDestino = null;
 		Cuenta cuentaOrigen = null, cuentaDestino = null;
 		String descripcion = "";
 		String numeroOrigen = txtNumeroCuentaOrigen.getText().trim();
@@ -147,7 +149,7 @@ public class VentanaTransaccion extends JDialog implements ActionListener {
 				JOptionPane.showMessageDialog(this, "El campo número de cuenta de origen está vacío.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
-			cuentaOrigen = cliente.buscarCuenta(numeroOrigen);
+			cuentaOrigen = RepositorioCuenta.buscarCuenta(numeroOrigen);
 			if(cuentaOrigen == null) {
 				JOptionPane.showMessageDialog(this, "La cuenta de origen no existe.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
@@ -155,6 +157,7 @@ public class VentanaTransaccion extends JDialog implements ActionListener {
 				JOptionPane.showMessageDialog(this, "El saldo de la cuenta de origen es insuficiente.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
+			clienteOrigen = cuentaOrigen.getCliente();
 			if(tipo.equals("transferir")) descripcion = "Número de cuenta de origen: " + numeroOrigen;
 			else if(tipo.equals("pagar")) descripcion = "Número de cuenta de origen: " + numeroOrigen;
 			else descripcion = "Número de cuenta de origen: " + numeroOrigen + ";";
@@ -164,7 +167,7 @@ public class VentanaTransaccion extends JDialog implements ActionListener {
 				JOptionPane.showMessageDialog(this, "El campo número de cuenta de destino está vacío.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
-			cuentaDestino = cliente.buscarCuenta(numeroDestino);
+			cuentaDestino = RepositorioCuenta.buscarCuenta(numeroDestino);
 			if(cuentaDestino == null) {
 				JOptionPane.showMessageDialog(this, "La cuenta de destino no existe.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
@@ -172,6 +175,7 @@ public class VentanaTransaccion extends JDialog implements ActionListener {
 				JOptionPane.showMessageDialog(this, "No se puede " + tipo + " a la misma cuenta", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
+			clienteDestino = cuentaDestino.getCliente();
 			if(tipo.equals("transferir")) descripcion += "; Número de cuenta de destino: " + numeroDestino + ";";
 			else if(tipo.equals("pagar")) descripcion += "; Número de cuenta de destino: " + numeroDestino + ";";
 			else descripcion = "Número de cuenta de destino: " + numeroDestino + ";";
@@ -208,7 +212,17 @@ public class VentanaTransaccion extends JDialog implements ActionListener {
 			transaccion.setEstado("completada");
 			if(cuentaOrigen!=null) cuentaOrigen.agregarTransaccion(transaccion);
 			if(cuentaDestino!=null) cuentaDestino.agregarTransaccion(transaccion);
-			cliente.agregarTransaccion(transaccion);
+			if(clienteOrigen != null && clienteDestino != null) {
+				if(clienteOrigen.equals(clienteDestino)) clienteOrigen.agregarTransaccion(transaccion);
+				else {
+					clienteOrigen.agregarTransaccion(transaccion);
+					clienteDestino.agregarTransaccion(transaccion);
+				}
+			}else if(cuentaDestino==null) {
+				clienteOrigen.agregarTransaccion(transaccion);
+			}else if(cuentaOrigen==null) {
+				clienteDestino.agregarTransaccion(transaccion);
+			}
 			JOptionPane.showMessageDialog(this, "La autenticación se realizó con éxito, la transacción se ejecutó.", "Información", JOptionPane.INFORMATION_MESSAGE);
 		}else {
 			JOptionPane.showMessageDialog(this, "La autenticación falló.", "Información", JOptionPane.INFORMATION_MESSAGE);

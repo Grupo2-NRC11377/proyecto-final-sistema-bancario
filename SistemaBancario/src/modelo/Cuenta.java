@@ -14,15 +14,17 @@ public class Cuenta {
 	private String estado;
 	private String tipoCuenta;
 	private String moneda;
+	private Cliente cliente;
 	private ArrayList<Transaccion> transacciones;
 
-	public Cuenta(String tipoCuenta, String moneda) {
+	public Cuenta(String tipoCuenta, String moneda, Cliente cliente) {
 		this.numeroCuenta = generarNumeroCuenta();
 		this.saldoContable = this.saldoDisponible = 0;
 		this.fechaCreacion = LocalDate.now();
 		this.estado = "activa";
 		this.tipoCuenta = tipoCuenta;
 		this.moneda = moneda;
+		this.cliente = cliente;
 		this.transacciones = new ArrayList<Transaccion>();
 	}	
 	
@@ -112,5 +114,8 @@ public class Cuenta {
 	}
 	public String getMoneda() {
 		return moneda;
+	}
+	public Cliente getCliente() {
+		return cliente;
 	}
 }
