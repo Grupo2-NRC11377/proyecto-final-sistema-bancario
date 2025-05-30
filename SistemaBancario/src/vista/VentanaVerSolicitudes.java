@@ -127,8 +127,10 @@ public class VentanaVerSolicitudes extends JDialog implements ActionListener {
 		}
 		Cliente cliente = solicitud.getCliente();
 		if(solicitud.getAsunto().contains("cuenta")) {
-			if(solicitud.getAsunto().contains("corriente")) cliente.agregarCuenta(new Cuenta("corriente"));
-			else if(solicitud.getAsunto().contains("ahorro")) cliente.agregarCuenta(new Cuenta("ahorro"));
+			String asunto = solicitud.getAsunto();
+			String moneda = asunto.split(" en ")[1];
+			if(solicitud.getAsunto().contains("corriente")) cliente.agregarCuenta(new Cuenta("corriente", moneda));
+			else if(solicitud.getAsunto().contains("ahorro")) cliente.agregarCuenta(new Cuenta("ahorro", moneda));
 		}
 		else if (solicitud.getAsunto().contains("tarjeta")) {
 			if(solicitud.getAsunto().contains("débito")) cliente.agregarTarjeta(new Tarjeta("débito"));
@@ -162,7 +164,7 @@ public class VentanaVerSolicitudes extends JDialog implements ActionListener {
 		if(empleado == null) return;
 		defaultTableModel.setRowCount(0);
 		for (Solicitud solicitud : empleado.getSolicitudes()) {
-			Object[] fila = new Object[6];
+			Object[] fila = new Object[5];
 			fila[0] = solicitud.getIdSolicitud();
 			fila[1] = solicitud.getAsunto();
 			fila[2] = solicitud.getEstado();

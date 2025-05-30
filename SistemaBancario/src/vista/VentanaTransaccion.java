@@ -134,11 +134,11 @@ public class VentanaTransaccion extends JDialog implements ActionListener {
 			JOptionPane.showMessageDialog(this, "El campo monto está vacío.", "Información", JOptionPane.INFORMATION_MESSAGE);
 			return;
 		}
-		double monto = Double.parseDouble(txtMonto.getText().trim());
-		if(monto < 0) {
+		double montoInicial = Double.parseDouble(txtMonto.getText().trim()), montoFinal = 0;
+		if(montoInicial < 0) {
 			JOptionPane.showMessageDialog(this, "Monto inválido.", "Información", JOptionPane.INFORMATION_MESSAGE);
 			return;
-		}else if(monto == 0) {
+		}else if(montoInicial == 0) {
 			JOptionPane.showMessageDialog(this, "Monto no puede ser cero.", "Información", JOptionPane.INFORMATION_MESSAGE);
 			return;
 		}
@@ -151,7 +151,7 @@ public class VentanaTransaccion extends JDialog implements ActionListener {
 			if(cuentaOrigen == null) {
 				JOptionPane.showMessageDialog(this, "La cuenta de origen no existe.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
-			}else if(monto > cuentaOrigen.getSaldoDisponible()) {
+			}else if(montoInicial > cuentaOrigen.getSaldoDisponible()) {
 				JOptionPane.showMessageDialog(this, "El saldo de la cuenta de origen es insuficiente.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
@@ -188,21 +188,23 @@ public class VentanaTransaccion extends JDialog implements ActionListener {
 				JOptionPane.showMessageDialog(this, "La cuenta de origen está cancelada.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
-			cuentaOrigen.setSaldoContable(cuentaOrigen.getSaldoContable() - monto);
-			cuentaOrigen.setSaldoDisponible(cuentaOrigen.getSaldoDisponible() - monto);
+			cuentaOrigen.setSaldoContable(cuentaOrigen.getSaldoContable() - montoInicial);
+			cuentaOrigen.setSaldoDisponible(cuentaOrigen.getSaldoDisponible() - montoInicial);
 		}
 		if(cuentaDestino!=null) {
 			if(cuentaDestino.getEstado().equals("cancelada")) {
 				JOptionPane.showMessageDialog(this, "La cuenta de destino está cancelada.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
-			cuentaDestino.setSaldoContable(cuentaDestino.getSaldoContable() + monto);
-			cuentaDestino.setSaldoDisponible(cuentaDestino.getSaldoDisponible() + monto);
+			montoFinal = montoInicial;
+			if(tipo.equals("transferir") || tipo.equals("pagar")) montoFinal = calcularConversión(cuentaOrigen.getMoneda(), cuentaDestino.getMoneda(), montoInicial);
+			cuentaDestino.setSaldoContable(cuentaDestino.getSaldoContable() + montoFinal);
+			cuentaDestino.setSaldoDisponible(cuentaDestino.getSaldoDisponible() + montoFinal);
 		}
 		VentanaAutenticar ventanaAutenticar = new VentanaAutenticar(cliente);
 		ventanaAutenticar.setVisible(true);
 		if(ventanaAutenticar.getEstadoAutenticacion()) {			
-			Transaccion transaccion = new Transaccion(tipo, descripcion, monto);
+			Transaccion transaccion = new Transaccion(tipo, descripcion, montoInicial);
 			transaccion.setEstado("completada");
 			if(cuentaOrigen!=null) cuentaOrigen.agregarTransaccion(transaccion);
 			if(cuentaDestino!=null) cuentaDestino.agregarTransaccion(transaccion);
@@ -212,5 +214,41 @@ public class VentanaTransaccion extends JDialog implements ActionListener {
 			JOptionPane.showMessageDialog(this, "La autenticación falló.", "Información", JOptionPane.INFORMATION_MESSAGE);
 		}
 		dispose();
+	}
+	private double calcularConversión(String monedaOrigen, String monedaDestino, double monto) {
+		final double SOL_TO_DOLAR = 0.27;
+	    final double SOL_TO_EURO = 0.24;
+	    final double SOL_TO_LIBRA = 0.20;
+	    final double DOLAR_TO_SOL = 1 / SOL_TO_DOLAR;
+	    final double DOLAR_TO_EURO = 0.92;
+	    final double DOLAR_TO_LIBRA = 0.79;
+	    final double EURO_TO_SOL = 1 / SOL_TO_EURO;
+	    final double EURO_TO_DOLAR = 1.09;
+	    final double EURO_TO_LIBRA = 0.85;
+	    final double LIBRA_TO_SOL = 1 / SOL_TO_LIBRA;
+	    final double LIBRA_TO_DOLAR = 1.26;
+	    final double LIBRA_TO_EURO = 1.18;
+	    if (monedaOrigen.equals("soles")) {
+	        if (monedaDestino.equals("soles")) return monto;
+	        else if (monedaDestino.equals("dólares")) return monto * SOL_TO_DOLAR;
+	        else if (monedaDestino.equals("euros")) return monto * SOL_TO_EURO;
+	        else if (monedaDestino.equals("libras")) return monto * SOL_TO_LIBRA;
+	    } else if (monedaOrigen.equals("dólares")) {
+	        if (monedaDestino.equals("soles")) return monto * DOLAR_TO_SOL;
+	        else if (monedaDestino.equals("dólares")) return monto;
+	        else if (monedaDestino.equals("euros")) return monto * DOLAR_TO_EURO;
+	        else if (monedaDestino.equals("libras")) return monto * DOLAR_TO_LIBRA;
+	    } else if (monedaOrigen.equals("euros")) {
+	        if (monedaDestino.equals("soles")) return monto * EURO_TO_SOL;
+	        else if (monedaDestino.equals("dólares")) return monto * EURO_TO_DOLAR;
+	        else if (monedaDestino.equals("euros")) return monto;
+	        else if (monedaDestino.equals("libras")) return monto * EURO_TO_LIBRA;
+	    } else if (monedaOrigen.equals("libras")) {
+	        if (monedaDestino.equals("soles")) return monto * LIBRA_TO_SOL;
+	        else if (monedaDestino.equals("dólares")) return monto * LIBRA_TO_DOLAR;
+	        else if (monedaDestino.equals("euros")) return monto * LIBRA_TO_EURO;
+	        else if (monedaDestino.equals("libras")) return monto;
+	    }
+	    return monto;
 	}
 }

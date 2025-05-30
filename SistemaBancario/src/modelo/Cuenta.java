@@ -1,8 +1,8 @@
 package modelo;
 import java.util.Random;
 import java.time.format.DateTimeFormatter;
-import java.time.LocalDate;
 import java.text.NumberFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -13,14 +13,16 @@ public class Cuenta {
 	private LocalDate fechaCreacion;
 	private String estado;
 	private String tipoCuenta;
+	private String moneda;
 	private ArrayList<Transaccion> transacciones;
 
-	public Cuenta(String tipoCuenta) {
+	public Cuenta(String tipoCuenta, String moneda) {
 		this.numeroCuenta = generarNumeroCuenta();
 		this.saldoContable = this.saldoDisponible = 0;
 		this.fechaCreacion = LocalDate.now();
 		this.estado = "activa";
 		this.tipoCuenta = tipoCuenta;
+		this.moneda = moneda;
 		this.transacciones = new ArrayList<Transaccion>();
 	}	
 	
@@ -53,6 +55,46 @@ public class Cuenta {
 	public double getSaldoDisponible() {
 		return saldoDisponible;
 	}
+	@SuppressWarnings("deprecation")
+	public String getSaldoContableFormateado() {
+		Locale locale;
+		switch (moneda) {
+	        case "dólares":
+	        	locale = new Locale("en", "US");
+	            break;
+	        case "euros":
+	        	locale = new Locale("es", "ES");
+	            break;
+	        case "libras":
+	        	locale = new Locale("en", "GB");
+	            break;
+	        default:
+	        	locale = new Locale("es", "PE");
+	            break;
+	    }
+	    NumberFormat numberFormat = NumberFormat.getCurrencyInstance(locale);
+		return numberFormat.format(saldoContable);
+	}
+	@SuppressWarnings("deprecation")
+	public String getSaldoDisponibleFormateado() {
+		Locale locale;
+		switch (moneda) {
+	        case "dólares":
+	        	locale = new Locale("en", "US");
+	            break;
+	        case "euros":
+	        	locale = new Locale("es", "ES");
+	            break;
+	        case "libras":
+	        	locale = new Locale("en", "GB");
+	            break;
+	        default:
+	        	locale = new Locale("es", "PE");
+	            break;
+	    }
+	    NumberFormat numberFormat = NumberFormat.getCurrencyInstance(locale);
+		return numberFormat.format(saldoDisponible);
+	}
 	public String getFechaCreacion() {
 		return fechaCreacion.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 	}
@@ -62,18 +104,13 @@ public class Cuenta {
 	public String getTipoCuenta() {
 		return tipoCuenta;
 	}
-	public String getSaldoContableSoles() {
-		NumberFormat formatoMoneda = NumberFormat.getCurrencyInstance(new Locale("es", "PE"));
-        return formatoMoneda.format(saldoContable);
-	}
-	public String getSaldoDisponibleSoles() {
-		NumberFormat formatoMoneda = NumberFormat.getCurrencyInstance(new Locale("es", "PE"));
-        return formatoMoneda.format(saldoDisponible);
-	}
 	public ArrayList<Transaccion> getTransacciones() {
 		return transacciones;
 	}
 	public void agregarTransaccion(Transaccion transaccion) {
 		transacciones.add(transaccion);
+	}
+	public String getMoneda() {
+		return moneda;
 	}
 }

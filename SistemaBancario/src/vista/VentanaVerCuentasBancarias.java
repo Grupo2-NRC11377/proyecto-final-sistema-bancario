@@ -59,7 +59,7 @@ public class VentanaVerCuentasBancarias extends JDialog implements ActionListene
 				tableCuentasBancarias = new JTable();
 				tableCuentasBancarias.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 				String[] columnas = new String[] {"Número de cuenta", "Tipo de cuenta", "Saldo disponible", "Saldo contable", 
-						"Estado"};
+						"Estado", "Moneda"};
 				defaultTableModel = new DefaultTableModel(columnas, 0) {
 					private static final long serialVersionUID = 1L;
 					public boolean isCellEditable(int row, int column) {
@@ -105,9 +105,10 @@ public class VentanaVerCuentasBancarias extends JDialog implements ActionListene
 			Object[] fila = new Object[6];
 			fila[0] = cuenta.getNumeroCuenta();
 			fila[1] = cuenta.getTipoCuenta();
-			fila[2] = cuenta.getSaldoDisponibleSoles();
-			fila[3] = cuenta.getSaldoContableSoles();
+			fila[2] = cuenta.getSaldoDisponibleFormateado();
+			fila[3] = cuenta.getSaldoContableFormateado();
 			fila[4] = cuenta.getEstado();
+			fila[5] = cuenta.getMoneda();
 			defaultTableModel.addRow(fila);
 		}
 	}

@@ -39,6 +39,8 @@ public class VentanaVerDetallesCB extends JDialog implements ActionListener {
 	private JLabel lblHistorial;
 	private JTable tableHistorial;
 	private DefaultTableModel defaultTableModel;
+	private JLabel lblMoneda;
+	private JTextField txtMoneda;
 
 	public VentanaVerDetallesCB(Cuenta cuenta) {
 		this.cuenta = cuenta;
@@ -88,7 +90,6 @@ public class VentanaVerDetallesCB extends JDialog implements ActionListener {
 		}
 		{
 			txtNumeroCuenta = new JTextField();
-			if(cuenta != null) txtNumeroCuenta.setText(cuenta.getNumeroCuenta());
 			txtNumeroCuenta.setEditable(false);
 			txtNumeroCuenta.setBounds(153, 93, 240, 20);
 			getContentPane().add(txtNumeroCuenta);
@@ -96,7 +97,6 @@ public class VentanaVerDetallesCB extends JDialog implements ActionListener {
 		}
 		{
 			txtSaldoDisponible = new JTextField();
-			if(cuenta != null) txtSaldoDisponible.setText(cuenta.getSaldoDisponibleSoles());
 			txtSaldoDisponible.setEditable(false);
 			txtSaldoDisponible.setColumns(10);
 			txtSaldoDisponible.setBounds(153, 118, 240, 20);
@@ -104,7 +104,6 @@ public class VentanaVerDetallesCB extends JDialog implements ActionListener {
 		}
 		{
 			txtSaldoContable = new JTextField();
-			if(cuenta != null) txtSaldoContable.setText(cuenta.getSaldoContableSoles());
 			txtSaldoContable.setEditable(false);
 			txtSaldoContable.setColumns(10);
 			txtSaldoContable.setBounds(153, 143, 240, 20);
@@ -112,7 +111,6 @@ public class VentanaVerDetallesCB extends JDialog implements ActionListener {
 		}
 		{
 			txtFechaCreacion = new JTextField();
-			if(cuenta != null) txtFechaCreacion.setText(cuenta.getFechaCreacion());
 			txtFechaCreacion.setEditable(false);
 			txtFechaCreacion.setColumns(10);
 			txtFechaCreacion.setBounds(153, 168, 240, 20);
@@ -120,7 +118,6 @@ public class VentanaVerDetallesCB extends JDialog implements ActionListener {
 		}
 		{
 			txtEstado = new JTextField();
-			if(cuenta != null) txtEstado.setText(cuenta.getEstado());
 			txtEstado.setEditable(false);
 			txtEstado.setColumns(10);
 			txtEstado.setBounds(153, 193, 240, 20);
@@ -128,7 +125,7 @@ public class VentanaVerDetallesCB extends JDialog implements ActionListener {
 		}
 		{
 			scrollPane = new JScrollPane();
-			scrollPane.setBounds(28, 275, 644, 231);
+			scrollPane.setBounds(28, 284, 644, 231);
 			getContentPane().add(scrollPane);
 			{
 				tableHistorial = new JTable();
@@ -146,8 +143,21 @@ public class VentanaVerDetallesCB extends JDialog implements ActionListener {
 		}
 		{
 			lblHistorial = new JLabel("Historial:");
-			lblHistorial.setBounds(28, 241, 131, 14);
+			lblHistorial.setBounds(28, 260, 131, 14);
 			getContentPane().add(lblHistorial);
+		}
+		{
+			lblMoneda = new JLabel("Moneda:");
+			lblMoneda.setBounds(28, 225, 131, 14);
+			getContentPane().add(lblMoneda);
+		}
+		{
+			txtMoneda = new JTextField();
+			txtMoneda.setText((String) null);
+			txtMoneda.setEditable(false);
+			txtMoneda.setColumns(10);
+			txtMoneda.setBounds(153, 222, 240, 20);
+			getContentPane().add(txtMoneda);
 		}
 		mostrarDatos();
 		llenarTabla();
@@ -161,11 +171,12 @@ public class VentanaVerDetallesCB extends JDialog implements ActionListener {
 		dispose();
 	}
 	private void mostrarDatos() {
-		txtEstado.setText(cuenta.getEstado());
-		txtFechaCreacion.setText(cuenta.getFechaCreacion());
 		txtNumeroCuenta.setText(cuenta.getNumeroCuenta());
-		txtSaldoContable.setText(cuenta.getSaldoContableSoles());
-		txtSaldoDisponible.setText(cuenta.getSaldoDisponibleSoles());
+		txtSaldoDisponible.setText(cuenta.getSaldoDisponibleFormateado());
+		txtSaldoContable.setText(cuenta.getSaldoContableFormateado());
+		txtFechaCreacion.setText(cuenta.getFechaCreacion());
+		txtEstado.setText(cuenta.getEstado());
+		txtMoneda.setText(cuenta.getMoneda());
 	}
 	private void llenarTabla() {
 		if(cuenta == null) return;
