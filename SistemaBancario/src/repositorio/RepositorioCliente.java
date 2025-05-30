@@ -7,11 +7,6 @@ import modelo.Cliente;
 public class RepositorioCliente {
 	private static ArrayList<Cliente> clientes = new ArrayList<Cliente>();
 
-	static {
-		clientes.add(new Cliente("00000001","Carlos","Martínez Sánchez","955501003","Jirón Desconocido 456, Urb. Modelo, Ciudad Ejemplo","carlos.martinez@email.com","ClaveEjemplo#1"));
-		clientes.add(new Cliente("00000002","Ana","Gonzales Castillo","933112233","Pasaje Inventado 789, Zona Test, Ciudad Ejemplo","ana.gonzales@email.com","ClaveEjemplo#2"));
-	}
-	
 	public static ArrayList<Cliente> getClientes(){
 		return clientes;
 	}

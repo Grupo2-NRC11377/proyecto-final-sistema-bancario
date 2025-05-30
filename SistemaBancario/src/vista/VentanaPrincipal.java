@@ -7,9 +7,12 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import modelo.Cliente;
+import modelo.Cuenta;
 import modelo.Empleado;
 import modelo.Persona;
+import modelo.Solicitud;
 import repositorio.RepositorioCliente;
+import repositorio.RepositorioCuenta;
 import repositorio.RepositorioEmpleado;
 
 import javax.swing.JLabel;
@@ -38,6 +41,39 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 	private JCheckBox chckbxVerContraseña;
 
 	public static void main(String[] args) {
+		Empleado empleado1 = new Empleado("00000001","Juan","Pérez García","987654321","Calle Falsa 123, Distrito Imaginario, Ciudad Ejemplo","juan.perez@empleado.com","ClaveEjemplo#1");
+		Empleado empleado2 = new Empleado("00000002","María","López Rodríguez","912345678","Avenida Siempre Viva 742, Sector Demo, Ciudad Ejemplo","maria.lopez@empleado.com","ClaveEjemplo#2");
+		Cliente cliente1 = new Cliente("00000001","Carlos","Martínez Sánchez","955501003","Jirón Desconocido 456, Urb. Modelo, Ciudad Ejemplo","carlos.martinez@email.com","ClaveEjemplo#1");
+		Cliente cliente2 = new Cliente("00000002","Ana","Gonzales Castillo","933112233","Pasaje Inventado 789, Zona Test, Ciudad Ejemplo","ana.gonzales@email.com","ClaveEjemplo#2");
+		Solicitud solicitud1 = new Solicitud("Apertura de cuenta de ahorro en soles", cliente1, empleado1);
+		Solicitud solicitud2 = new Solicitud("Apertura de cuenta corriente en dólares", cliente1, empleado1);
+		Solicitud solicitud3 = new Solicitud("Apertura de cuenta de ahorro en soles", cliente2, empleado2);
+		Solicitud solicitud4 = new Solicitud("Apertura de cuenta corriente en dólares", cliente2, empleado2);
+		solicitud1.setEstado("aceptada");
+		solicitud2.setEstado("aceptada");
+		solicitud3.setEstado("aceptada");
+		solicitud4.setEstado("aceptada");
+		empleado1.agregarSolicitud(solicitud1);
+		empleado1.agregarSolicitud(solicitud2);
+		empleado2.agregarSolicitud(solicitud3);
+		empleado2.agregarSolicitud(solicitud4);
+		Cuenta cuenta1 = new Cuenta("ahorro", "soles", cliente1);
+		Cuenta cuenta2 = new Cuenta("corriente", "dólares", cliente1);
+		Cuenta cuenta3 = new Cuenta("ahorro", "soles", cliente2);
+		Cuenta cuenta4 = new Cuenta("corriente", "dólares", cliente2);
+		cliente1.agregarCuenta(cuenta1);
+		cliente1.agregarCuenta(cuenta2);
+		cliente2.agregarCuenta(cuenta3);
+		cliente2.agregarCuenta(cuenta4);
+		RepositorioCuenta.agregarCuenta(cuenta1);
+		RepositorioCuenta.agregarCuenta(cuenta2);
+		RepositorioCuenta.agregarCuenta(cuenta3);
+		RepositorioCuenta.agregarCuenta(cuenta4);
+		RepositorioCliente.agregarCliente(cliente1);
+		RepositorioCliente.agregarCliente(cliente2);
+		RepositorioEmpleado.agregarEmpleado(empleado1);
+		RepositorioEmpleado.agregarEmpleado(empleado2);
+		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {

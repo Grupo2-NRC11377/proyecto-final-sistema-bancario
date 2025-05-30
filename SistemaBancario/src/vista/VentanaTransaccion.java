@@ -2,6 +2,7 @@ package vista;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 
 import modelo.Cliente;
 import modelo.Cuenta;
@@ -15,6 +16,8 @@ import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
 import java.awt.event.ActionListener;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.awt.event.ActionEvent;
 
 public class VentanaTransaccion extends JDialog implements ActionListener {
@@ -223,7 +226,34 @@ public class VentanaTransaccion extends JDialog implements ActionListener {
 			}else if(cuentaOrigen==null) {
 				clienteDestino.agregarTransaccion(transaccion);
 			}
-			JOptionPane.showMessageDialog(this, "La autenticación se realizó con éxito, la transacción se ejecutó.", "Información", JOptionPane.INFORMATION_MESSAGE);
+			int seleccion = JOptionPane.showConfirmDialog(this,
+	                "La autenticación se realizó con éxito, la transacción se ejecutó. ¿Deseas descargar el comprobante?",
+	                "Confirmar descarga del comprobante", JOptionPane.YES_NO_OPTION);
+	        if (seleccion == JOptionPane.YES_OPTION) {
+	        	JFileChooser fileChooser = new JFileChooser();
+	    	    fileChooser.setDialogTitle("Descargar comprobante");
+	    	    fileChooser.setSelectedFile(new java.io.File("comprobante-" + transaccion.getIdTransaccion() + ".txt"));
+	    	    seleccion = fileChooser.showSaveDialog(this);
+	    	    if (seleccion == JFileChooser.APPROVE_OPTION) {
+	    	        java.io.File archivo = fileChooser.getSelectedFile();
+	    	        try {
+	    	        	FileWriter writer = new FileWriter(archivo);
+	    	            writer.write("Comprobante de la transacción\n");
+	    	            writer.write("------------------------------\n");
+	    	            writer.write("ID: " + transaccion.getIdTransaccion() + "\n");
+	    	            writer.write("Tipo: " + transaccion.getTipo() + "\n");
+	            		writer.write("Descripción: " + transaccion.getDescripcion() + "\n");
+        				writer.write("Fecha y hora: " + transaccion.getFechaHora() + "\n");
+        				writer.write("Estado: " + transaccion.getEstado() + "\n");
+        				writer.write("Monto: " + transaccion.getMonto() + "\n");
+	    	        	writer.close();
+	    	            JOptionPane.showMessageDialog(this, "Comprobante descargado correctamente.");
+	    	        } catch (IOException ex) {
+	    	            JOptionPane.showMessageDialog(this, "Error al descargar el comprobante.", "Error", JOptionPane.ERROR_MESSAGE);
+	    	            ex.printStackTrace();
+	    	        }
+	    	    }
+	        }
 		}else {
 			JOptionPane.showMessageDialog(this, "La autenticación falló.", "Información", JOptionPane.INFORMATION_MESSAGE);
 		}
