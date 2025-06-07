@@ -17,6 +17,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import java.awt.Color;
 
 public class VentanaVerDetallesCB extends JDialog implements ActionListener {
 	
@@ -43,92 +44,123 @@ public class VentanaVerDetallesCB extends JDialog implements ActionListener {
 	private JTextField txtMoneda;
 
 	public VentanaVerDetallesCB(Cuenta cuenta) {
+		getContentPane().setBackground(new Color(255, 255, 255));
 		this.cuenta = cuenta;
 		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 		setModal(true);
 		setTitle("Ver detalles");
-		setBounds(100, 100, 704, 614);
+		setBounds(100, 100, 820, 630);
 		getContentPane().setLayout(null);
 		{
 			btnCerrar = new JButton("Cerrar");
+			btnCerrar.setBackground(new Color(255, 255, 255));
+			btnCerrar.setForeground(new Color(90, 90, 90));
+			btnCerrar.setFont(new Font("Arial", Font.BOLD, 13));
 			btnCerrar.addActionListener(this);
-			btnCerrar.setBounds(307, 533, 89, 23);
+			btnCerrar.setBounds(327, 505, 150, 35);
 			getContentPane().add(btnCerrar);
 		}
 		{
-			lblCuentaBancaria = new JLabel("");
-			if(cuenta != null) lblCuentaBancaria.setText("Cuenta de " + cuenta.getTipoCuenta());
-			lblCuentaBancaria.setFont(new Font("Tahoma", Font.PLAIN, 20));
+			lblCuentaBancaria = new JLabel("Cuenta de " + cuenta.getTipoCuenta());
+			lblCuentaBancaria.setForeground(new Color(238, 52, 37));
+			lblCuentaBancaria.setFont(new Font("Arial", Font.BOLD, 25));
 			lblCuentaBancaria.setHorizontalAlignment(SwingConstants.CENTER);
-			lblCuentaBancaria.setBounds(163, 29, 378, 34);
+			lblCuentaBancaria.setBounds(274, 50, 256, 30);
 			getContentPane().add(lblCuentaBancaria);
 		}
 		{
 			lblNewLabel = new JLabel("Número de cuenta:");
-			lblNewLabel.setBounds(28, 96, 131, 14);
+			lblNewLabel.setForeground(new Color(90, 90, 90));
+			lblNewLabel.setFont(new Font("Arial", Font.BOLD, 13));
+			lblNewLabel.setBounds(50, 120, 121, 16);
 			getContentPane().add(lblNewLabel);
 		}
 		{
 			lblSaldoDisponible = new JLabel("Saldo disponible:");
-			lblSaldoDisponible.setBounds(28, 121, 131, 14);
+			lblSaldoDisponible.setForeground(new Color(90, 90, 90));
+			lblSaldoDisponible.setFont(new Font("Arial", Font.BOLD, 13));
+			lblSaldoDisponible.setBounds(50, 156, 111, 16);
 			getContentPane().add(lblSaldoDisponible);
 		}
 		{
 			lblSaldoContable = new JLabel("Saldo contable:");
-			lblSaldoContable.setBounds(28, 146, 131, 14);
+			lblSaldoContable.setForeground(new Color(90, 90, 90));
+			lblSaldoContable.setFont(new Font("Arial", Font.BOLD, 13));
+			lblSaldoContable.setBounds(50, 192, 100, 16);
 			getContentPane().add(lblSaldoContable);
 		}
 		{
 			lblFechaDeCreacin = new JLabel("Fecha de creación:");
-			lblFechaDeCreacin.setBounds(28, 171, 131, 14);
+			lblFechaDeCreacin.setForeground(new Color(90, 90, 90));
+			lblFechaDeCreacin.setFont(new Font("Arial", Font.BOLD, 13));
+			lblFechaDeCreacin.setBounds(410, 120, 122, 16);
 			getContentPane().add(lblFechaDeCreacin);
 		}
 		{
 			lblEstado = new JLabel("Estado:");
-			lblEstado.setBounds(28, 196, 131, 14);
+			lblEstado.setForeground(new Color(90, 90, 90));
+			lblEstado.setFont(new Font("Arial", Font.BOLD, 13));
+			lblEstado.setBounds(410, 156, 46, 16);
 			getContentPane().add(lblEstado);
 		}
 		{
 			txtNumeroCuenta = new JTextField();
+			txtNumeroCuenta.setForeground(new Color(90, 90, 90));
+			txtNumeroCuenta.setBackground(new Color(255, 255, 255));
+			txtNumeroCuenta.setFont(new Font("Arial", Font.PLAIN, 13));
 			txtNumeroCuenta.setEditable(false);
-			txtNumeroCuenta.setBounds(153, 93, 240, 20);
+			txtNumeroCuenta.setBounds(190, 116, 200, 25);
 			getContentPane().add(txtNumeroCuenta);
 			txtNumeroCuenta.setColumns(10);
 		}
 		{
 			txtSaldoDisponible = new JTextField();
+			txtSaldoDisponible.setForeground(new Color(90, 90, 90));
+			txtSaldoDisponible.setBackground(new Color(255, 255, 255));
+			txtSaldoDisponible.setFont(new Font("Arial", Font.PLAIN, 13));
 			txtSaldoDisponible.setEditable(false);
 			txtSaldoDisponible.setColumns(10);
-			txtSaldoDisponible.setBounds(153, 118, 240, 20);
+			txtSaldoDisponible.setBounds(190, 152, 200, 25);
 			getContentPane().add(txtSaldoDisponible);
 		}
 		{
 			txtSaldoContable = new JTextField();
+			txtSaldoContable.setForeground(new Color(90, 90, 90));
+			txtSaldoContable.setBackground(new Color(255, 255, 255));
+			txtSaldoContable.setFont(new Font("Arial", Font.PLAIN, 13));
 			txtSaldoContable.setEditable(false);
 			txtSaldoContable.setColumns(10);
-			txtSaldoContable.setBounds(153, 143, 240, 20);
+			txtSaldoContable.setBounds(190, 188, 200, 25);
 			getContentPane().add(txtSaldoContable);
 		}
 		{
 			txtFechaCreacion = new JTextField();
+			txtFechaCreacion.setForeground(new Color(90, 90, 90));
+			txtFechaCreacion.setBackground(new Color(255, 255, 255));
+			txtFechaCreacion.setFont(new Font("Arial", Font.PLAIN, 13));
 			txtFechaCreacion.setEditable(false);
 			txtFechaCreacion.setColumns(10);
-			txtFechaCreacion.setBounds(153, 168, 240, 20);
+			txtFechaCreacion.setBounds(550, 116, 200, 25);
 			getContentPane().add(txtFechaCreacion);
 		}
 		{
 			txtEstado = new JTextField();
+			txtEstado.setForeground(new Color(90, 90, 90));
+			txtEstado.setBackground(new Color(255, 255, 255));
+			txtEstado.setFont(new Font("Arial", Font.PLAIN, 13));
 			txtEstado.setEditable(false);
 			txtEstado.setColumns(10);
-			txtEstado.setBounds(153, 193, 240, 20);
+			txtEstado.setBounds(550, 152, 200, 25);
 			getContentPane().add(txtEstado);
 		}
 		{
 			scrollPane = new JScrollPane();
-			scrollPane.setBounds(28, 284, 644, 231);
+			scrollPane.setBounds(50, 271, 700, 200);
 			getContentPane().add(scrollPane);
 			{
 				tableHistorial = new JTable();
+				tableHistorial.setForeground(new Color(90, 90, 90));
+				tableHistorial.setFont(new Font("Arial", Font.PLAIN, 13));
 				tableHistorial.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 				String[] columnas = new String[] {"Id", "Tipo", "Descripción", "Fecha y hora", "Estado", "Monto"};
 				defaultTableModel = new DefaultTableModel(columnas, 0) {
@@ -143,20 +175,27 @@ public class VentanaVerDetallesCB extends JDialog implements ActionListener {
 		}
 		{
 			lblHistorial = new JLabel("Historial:");
-			lblHistorial.setBounds(28, 260, 131, 14);
+			lblHistorial.setForeground(new Color(90, 90, 90));
+			lblHistorial.setFont(new Font("Arial", Font.BOLD, 13));
+			lblHistorial.setBounds(50, 237, 56, 16);
 			getContentPane().add(lblHistorial);
 		}
 		{
 			lblMoneda = new JLabel("Moneda:");
-			lblMoneda.setBounds(28, 225, 131, 14);
+			lblMoneda.setForeground(new Color(90, 90, 90));
+			lblMoneda.setFont(new Font("Arial", Font.BOLD, 13));
+			lblMoneda.setBounds(410, 192, 55, 16);
 			getContentPane().add(lblMoneda);
 		}
 		{
 			txtMoneda = new JTextField();
+			txtMoneda.setForeground(new Color(90, 90, 90));
+			txtMoneda.setBackground(new Color(255, 255, 255));
+			txtMoneda.setFont(new Font("Arial", Font.PLAIN, 13));
 			txtMoneda.setText((String) null);
 			txtMoneda.setEditable(false);
 			txtMoneda.setColumns(10);
-			txtMoneda.setBounds(153, 222, 240, 20);
+			txtMoneda.setBounds(550, 188, 200, 25);
 			getContentPane().add(txtMoneda);
 		}
 		mostrarDatos();

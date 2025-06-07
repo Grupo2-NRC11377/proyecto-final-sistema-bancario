@@ -19,6 +19,7 @@ import java.awt.event.ActionListener;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.awt.event.ActionEvent;
+import java.awt.Color;
 
 public class VentanaTransaccion extends JDialog implements ActionListener {
 	
@@ -39,81 +40,109 @@ public class VentanaTransaccion extends JDialog implements ActionListener {
 	private JTextField txtNumeroCuentaOrigen;
 
 	public VentanaTransaccion(Cliente cliente, String tipo) {
+		getContentPane().setForeground(new Color(90, 90, 90));
+		getContentPane().setFont(new Font("Arial", Font.PLAIN, 13));
+		getContentPane().setBackground(new Color(255, 255, 255));
 		this.cliente = cliente;
 		this.tipo = tipo.toLowerCase();
 		
 		setTitle("Transacción");
 		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 		setModal(true);
-		setBounds(100, 100, 520, 343);
+		setBounds(100, 100, 530, 410);
 		getContentPane().setLayout(null);
 		{
 			btnCancelar = new JButton("Cancelar");
+			btnCancelar.setBackground(new Color(255, 255, 255));
+			btnCancelar.setForeground(new Color(90, 90, 90));
+			btnCancelar.setFont(new Font("Arial", Font.BOLD, 13));
 			btnCancelar.addActionListener(this);
-			btnCancelar.setBounds(301, 253, 117, 29);
+			btnCancelar.setBounds(309, 290, 150, 35);
 			getContentPane().add(btnCancelar);
 		}
 		{
 			lblTransaccion = new JLabel(tipo);
+			lblTransaccion.setForeground(new Color(238, 52, 37));
 			lblTransaccion.setHorizontalAlignment(SwingConstants.CENTER);
-			lblTransaccion.setFont(new Font("Tahoma", Font.PLAIN, 20));
-			lblTransaccion.setBounds(90, 32, 339, 25);
+			lblTransaccion.setFont(new Font("Arial", Font.BOLD, 25));
+			lblTransaccion.setBounds(187, 50, 129, 30);
 			getContentPane().add(lblTransaccion);
 		}
 		{
 			lblSelecciona = new JLabel("Número de cuenta de origen:");
-			lblSelecciona.setBounds(38, 94, 209, 16);
+			lblSelecciona.setForeground(new Color(90, 90, 90));
+			lblSelecciona.setFont(new Font("Arial", Font.BOLD, 13));
+			lblSelecciona.setBounds(50, 120, 186, 16);
 			getContentPane().add(lblSelecciona);
 		}
 		{
 			lblNumeroCuentaDestino = new JLabel("Número de cuenta de destino:");
-			lblNumeroCuentaDestino.setBounds(38, 127, 209, 16);
+			lblNumeroCuentaDestino.setForeground(new Color(90, 90, 90));
+			lblNumeroCuentaDestino.setFont(new Font("Arial", Font.BOLD, 13));
+			lblNumeroCuentaDestino.setBounds(50, 156, 191, 16);
 			getContentPane().add(lblNumeroCuentaDestino);
 		}
 		{
 			txtNumeroCuentaDestino = new JTextField();
+			txtNumeroCuentaDestino.setBackground(new Color(255, 255, 255));
+			txtNumeroCuentaDestino.setForeground(new Color(90, 90, 90));
+			txtNumeroCuentaDestino.setFont(new Font("Arial", Font.PLAIN, 13));
 			if(tipo.equalsIgnoreCase("retirar")) txtNumeroCuentaDestino.setEnabled(false);
-			else txtNumeroCuentaDestino.setEnabled(true);
-			txtNumeroCuentaDestino.setBounds(259, 122, 217, 26);
+			txtNumeroCuentaDestino.setBounds(259, 152, 200, 25);
 			getContentPane().add(txtNumeroCuentaDestino);
 			txtNumeroCuentaDestino.setColumns(10);
 		}
 		{
 			lblMonto = new JLabel("Monto a " + tipo.toLowerCase() + ":");
-			lblMonto.setBounds(38, 165, 209, 16);
+			lblMonto.setForeground(new Color(90, 90, 90));
+			lblMonto.setFont(new Font("Arial", Font.BOLD, 13));
+			lblMonto.setBounds(50, 192, 129, 16);
 			getContentPane().add(lblMonto);
 		}
 		{
 			txtMonto = new JTextField();
+			txtMonto.setBackground(new Color(255, 255, 255));
+			txtMonto.setForeground(new Color(90, 90, 90));
+			txtMonto.setFont(new Font("Arial", Font.PLAIN, 13));
 			txtMonto.setColumns(10);
-			txtMonto.setBounds(259, 160, 130, 26);
+			txtMonto.setBounds(259, 188, 200, 25);
 			getContentPane().add(txtMonto);
 		}
 		{
 			lblMotivo = new JLabel("Motivo a pagar:");
-			lblMotivo.setBounds(38, 203, 209, 16);
+			lblMotivo.setForeground(new Color(90, 90, 90));
+			lblMotivo.setFont(new Font("Arial", Font.BOLD, 13));
+			lblMotivo.setBounds(50, 228, 99, 16);
 			getContentPane().add(lblMotivo);
 		}
 		{
 			txtMotivoPagar = new JTextField();
-			if(tipo.equalsIgnoreCase("pagar")) txtMotivoPagar.setEnabled(true);
-			else txtMotivoPagar.setEnabled(false);
+			txtMotivoPagar.setBackground(new Color(255, 255, 255));
+			txtMotivoPagar.setForeground(new Color(90, 90, 90));
+			txtMotivoPagar.setFont(new Font("Arial", Font.PLAIN, 13));
+			if(!tipo.equalsIgnoreCase("pagar")) txtMotivoPagar.setEnabled(false);
 			txtMotivoPagar.setColumns(10);
-			txtMotivoPagar.setBounds(259, 198, 217, 26);
+			txtMotivoPagar.setBounds(259, 224, 200, 25);
 			getContentPane().add(txtMotivoPagar);
 		}
 		{
 			btnContinuar = new JButton("Continuar");
+			btnContinuar.setBackground(new Color(238, 52, 37));
+			btnContinuar.setForeground(new Color(255, 255, 255));
+			btnContinuar.setFont(new Font("Arial", Font.BOLD, 13));
 			btnContinuar.addActionListener(this);
-			btnContinuar.setBounds(79, 253, 117, 29);
+			btnContinuar.setBounds(50, 290, 150, 35);
 			getContentPane().add(btnContinuar);
 		}
 		{
 			txtNumeroCuentaOrigen = new JTextField();
+			txtNumeroCuentaOrigen.setBackground(new Color(255, 255, 255));
+			txtNumeroCuentaOrigen.setForeground(new Color(90, 90, 90));
+			txtNumeroCuentaOrigen.setFont(new Font("Arial", Font.PLAIN, 13));
 			if(tipo.equalsIgnoreCase("depositar")) txtNumeroCuentaOrigen.setEnabled(false);
 			else txtNumeroCuentaOrigen.setEnabled(true);
 			txtNumeroCuentaOrigen.setColumns(10);
-			txtNumeroCuentaOrigen.setBounds(259, 89, 217, 26);
+			txtNumeroCuentaOrigen.setBounds(260, 116, 200, 25);
 			getContentPane().add(txtNumeroCuentaOrigen);
 		}
 	}

@@ -17,6 +17,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
+import java.awt.Color;
 
 public class VentanaVerCuentasBancarias extends JDialog implements ActionListener {
 
@@ -31,32 +32,40 @@ public class VentanaVerCuentasBancarias extends JDialog implements ActionListene
 	private JButton btnCancelar;
 
 	public VentanaVerCuentasBancarias(Cliente cliente) {
+		getContentPane().setBackground(new Color(255, 255, 255));
 		this.cliente = cliente;
 		
 		setTitle("Ver cuentas bancarias");
 		setModal(true);
 		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-		setBounds(100, 100, 785, 474);
+		setBounds(100, 100, 820, 530);
 		getContentPane().setLayout(null);
 		{
 			JLabel lblNewLabel = new JLabel("Cuentas bancarias");
+			lblNewLabel.setForeground(new Color(238, 52, 37));
 			lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-			lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
-			lblNewLabel.setBounds(293, 40, 185, 25);
+			lblNewLabel.setFont(new Font("Arial", Font.BOLD, 25));
+			lblNewLabel.setBounds(291, 50, 222, 30);
 			getContentPane().add(lblNewLabel);
 		}
 		{
 			btnCerrar = new JButton("Cerrar");
+			btnCerrar.setForeground(new Color(90, 90, 90));
+			btnCerrar.setBackground(new Color(255, 255, 255));
+			btnCerrar.setFont(new Font("Arial", Font.BOLD, 13));
 			btnCerrar.addActionListener(this);
-			btnCerrar.setBounds(647, 389, 89, 23);
+			btnCerrar.setBounds(600, 406, 150, 35);
 			getContentPane().add(btnCerrar);
 		}
 		{
 			scrollPane = new JScrollPane();
-			scrollPane.setBounds(32, 88, 704, 277);
+			scrollPane.setBounds(50, 120, 700, 250);
 			getContentPane().add(scrollPane);
 			{
 				tableCuentasBancarias = new JTable();
+				tableCuentasBancarias.setForeground(new Color(90, 90, 90));
+				tableCuentasBancarias.setFont(new Font("Arial", Font.PLAIN, 13));
+				tableCuentasBancarias.setBackground(new Color(255, 255, 255));
 				tableCuentasBancarias.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 				String[] columnas = new String[] {"Número de cuenta", "Tipo de cuenta", "Saldo disponible", "Saldo contable", 
 						"Estado", "Moneda"};
@@ -72,14 +81,20 @@ public class VentanaVerCuentasBancarias extends JDialog implements ActionListene
 		}
 		{
 			btnVerDetalles = new JButton("Ver detalles");
+			btnVerDetalles.setBackground(new Color(238, 52, 37));
+			btnVerDetalles.setForeground(new Color(255, 255, 255));
+			btnVerDetalles.setFont(new Font("Arial", Font.BOLD, 13));
 			btnVerDetalles.addActionListener(this);
-			btnVerDetalles.setBounds(32, 389, 128, 23);
+			btnVerDetalles.setBounds(50, 406, 150, 35);
 			getContentPane().add(btnVerDetalles);
 		}
 		{
-			btnCancelar = new JButton("Cancelar");
+			btnCancelar = new JButton("Cancelar cuenta");
+			btnCancelar.setBackground(new Color(230, 230, 230));
+			btnCancelar.setForeground(new Color(90, 90, 90));
+			btnCancelar.setFont(new Font("Arial", Font.BOLD, 13));
 			btnCancelar.addActionListener(this);
-			btnCancelar.setBounds(182, 389, 128, 23);
+			btnCancelar.setBounds(230, 406, 150, 35);
 			getContentPane().add(btnCancelar);
 		}
 	}
@@ -113,36 +128,39 @@ public class VentanaVerCuentasBancarias extends JDialog implements ActionListene
 		}
 	}
 	protected void do_btnVerDetalles_actionPerformed(ActionEvent e) {
-		int posicionFilaSeleccionada = tableCuentasBancarias.getSelectedRow();
-		if(posicionFilaSeleccionada == -1) {
-			JOptionPane.showMessageDialog(this, "Selecciona una cuenta.", "Información", JOptionPane.INFORMATION_MESSAGE);
-			return;
-		}
-		String numeroCuenta = tableCuentasBancarias.getValueAt(posicionFilaSeleccionada, 0).toString();
-		Cuenta cuenta = cliente.buscarCuenta(numeroCuenta);
-		if(cuenta == null) {
-			JOptionPane.showMessageDialog(this, "La cuenta seleccionada no existe.", "Información", JOptionPane.INFORMATION_MESSAGE);
-			return;
-		}
+		Cuenta cuenta = obtenerCuentaBancaria();
+		if(cuenta == null) return;
 		VentanaVerDetallesCB ventanaVerDetallesCB = new VentanaVerDetallesCB(cuenta);
 		ventanaVerDetallesCB.setVisible(true);
 	}
 	protected void do_btnCancelar_actionPerformed(ActionEvent e) {
-		int posicionFilaSeleccionada = tableCuentasBancarias.getSelectedRow();
-		String numeroCuenta = (String) tableCuentasBancarias.getValueAt(posicionFilaSeleccionada, 0);
-        String estado = (String) tableCuentasBancarias.getValueAt(posicionFilaSeleccionada, 4);
-        if ("cancelada".equals(estado)) {
+		Cuenta cuenta = obtenerCuentaBancaria();
+		if(cuenta == null) return;
+		else if (cuenta.getEstado().equals("cancelada")) {
             JOptionPane.showMessageDialog(this, "La cuenta ya está cancelada.", "Información", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
         int respuesta = JOptionPane.showConfirmDialog(this,
-                "¿Está seguro que desea cancelar la cuenta " + numeroCuenta + "?",
+                "¿Está seguro que desea cancelar la cuenta " + cuenta.getNumeroCuenta() + "?",
                 "Confirmar cancelación", JOptionPane.YES_NO_OPTION);
         if (respuesta == JOptionPane.YES_OPTION) {
-        	Cuenta cuenta = cliente.buscarCuenta(numeroCuenta);
         	cuenta.setEstado("cancelada");
         	llenarTabla();
             JOptionPane.showMessageDialog(this, "La cuenta ha sido cancelada exitosamente.", "Información", JOptionPane.INFORMATION_MESSAGE);
         }
+	}
+	private Cuenta obtenerCuentaBancaria() {
+		int posicionFilaSeleccionada = tableCuentasBancarias.getSelectedRow();
+		if(posicionFilaSeleccionada == -1) {
+			JOptionPane.showMessageDialog(this, "Selecciona una cuenta.", "Información", JOptionPane.INFORMATION_MESSAGE);
+			return null;
+		}
+		String numeroCuenta = (String) tableCuentasBancarias.getValueAt(posicionFilaSeleccionada, 0);
+		Cuenta cuenta = cliente.buscarCuenta(numeroCuenta);
+		if(cuenta == null) {
+			JOptionPane.showMessageDialog(this, "La cuenta seleccionada no existe.", "Información", JOptionPane.INFORMATION_MESSAGE);
+			return null;
+		}
+		return cuenta;
 	}
 }

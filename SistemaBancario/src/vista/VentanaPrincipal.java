@@ -11,6 +11,7 @@ import modelo.Cuenta;
 import modelo.Empleado;
 import modelo.Persona;
 import modelo.Solicitud;
+import modelo.Tarjeta;
 import repositorio.RepositorioCliente;
 import repositorio.RepositorioCuenta;
 import repositorio.RepositorioEmpleado;
@@ -23,14 +24,14 @@ import javax.swing.JPasswordField;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
-import javax.swing.SwingConstants;
 import javax.swing.JCheckBox;
+import java.awt.Color;
+import javax.swing.ImageIcon;
 
 public class VentanaPrincipal extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JLabel lblNewLabel;
 	private JButton btnIniciarSesion;
 	private JTextField txtCorreoElectronico;
 	private JLabel lblCorreoElectrnico;
@@ -39,6 +40,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 	private JPasswordField txtContraseña;
 	private JButton btnSalir;
 	private JCheckBox chckbxVerContraseña;
+	private JLabel lblLogo;
 
 	public static void main(String[] args) {
 		Empleado empleado1 = new Empleado("00000001","Juan","Pérez García","987654321","Calle Falsa 123, Distrito Imaginario, Ciudad Ejemplo","juan.perez@empleado.com","ClaveEjemplo#1");
@@ -65,6 +67,10 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 		cliente1.agregarCuenta(cuenta2);
 		cliente2.agregarCuenta(cuenta3);
 		cliente2.agregarCuenta(cuenta4);
+		Tarjeta tarjeta1 = new Tarjeta("crédito", cliente1);
+		Tarjeta tarjeta2 = new Tarjeta("débito", cliente1);
+		cliente1.agregarTarjeta(tarjeta1);
+		cliente1.agregarTarjeta(tarjeta2);
 		RepositorioCuenta.agregarCuenta(cuenta1);
 		RepositorioCuenta.agregarCuenta(cuenta2);
 		RepositorioCuenta.agregarCuenta(cuenta3);
@@ -87,66 +93,90 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 	}
 
 	public VentanaPrincipal() {
+		setBackground(new Color(255, 255, 255));
 		setTitle("Iniciar sesión");
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setBounds(100, 100, 450, 395);
+		setBounds(100, 100, 470, 480);
 		contentPane = new JPanel();
+		contentPane.setBackground(new Color(255, 255, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		{
-			lblNewLabel = new JLabel("Bienvenido/a");
-			lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-			lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
-			lblNewLabel.setBounds(146, 27, 158, 25);
-			contentPane.add(lblNewLabel);
-		}
-		{
 			btnIniciarSesion = new JButton("Iniciar Sesión");
+			btnIniciarSesion.setForeground(new Color(255, 255, 255));
+			btnIniciarSesion.setBackground(new Color(238, 52, 37));
+			btnIniciarSesion.setFont(new Font("Arial", Font.BOLD, 13));
 			btnIniciarSesion.addActionListener(this);
-			btnIniciarSesion.setBounds(125, 199, 200, 35);
+			btnIniciarSesion.setBounds(152, 301, 150, 35);
 			contentPane.add(btnIniciarSesion);
 		}
 		{
-			txtCorreoElectronico = new JTextField();
-			txtCorreoElectronico.setBounds(203, 74, 200, 25);
+			txtCorreoElectronico = new JTextField("carlos.martinez@email.com");
+			txtCorreoElectronico.setForeground(new Color(90, 90, 90));
+			txtCorreoElectronico.setFont(new Font("Arial", Font.PLAIN, 13));
+			txtCorreoElectronico.setBounds(200, 178, 200, 25);
 			contentPane.add(txtCorreoElectronico);
 			txtCorreoElectronico.setColumns(10);
 		}
 		{
 			lblCorreoElectrnico = new JLabel("Correo electrónico:");
-			lblCorreoElectrnico.setBounds(45, 80, 158, 14);
+			lblCorreoElectrnico.setForeground(new Color(90, 90, 90));
+			lblCorreoElectrnico.setFont(new Font("Arial", Font.BOLD, 13));
+			lblCorreoElectrnico.setBackground(new Color(255, 255, 255));
+			lblCorreoElectrnico.setBounds(50, 182, 122, 16);
 			contentPane.add(lblCorreoElectrnico);
 		}
 		{
 			lblNewLabel_1 = new JLabel("Contraseña:");
-			lblNewLabel_1.setBounds(45, 119, 158, 14);
+			lblNewLabel_1.setForeground(new Color(90, 90, 90));
+			lblNewLabel_1.setFont(new Font("Arial", Font.BOLD, 13));
+			lblNewLabel_1.setBackground(new Color(255, 255, 255));
+			lblNewLabel_1.setBounds(50, 221, 76, 16);
 			contentPane.add(lblNewLabel_1);
 		}
 		{
 			btnRegistrarse = new JButton("Registrarse");
+			btnRegistrarse.setForeground(new Color(90, 90, 90));
+			btnRegistrarse.setBackground(new Color(230, 230, 230));
+			btnRegistrarse.setFont(new Font("Arial", Font.BOLD, 13));
 			btnRegistrarse.addActionListener(this);
-			btnRegistrarse.setBounds(125, 245, 200, 35);
+			btnRegistrarse.setBounds(50, 356, 150, 35);
 			contentPane.add(btnRegistrarse);
 		}
 		{
-			txtContraseña = new JPasswordField();
-			txtContraseña.setBounds(203, 113, 200, 25);
+			txtContraseña = new JPasswordField("ClaveEjemplo#1");
+			txtContraseña.setForeground(new Color(90, 90, 90));
+			txtContraseña.setFont(new Font("Arial", Font.PLAIN, 13));
+			txtContraseña.setBounds(200, 217, 200, 25);
 			txtContraseña.setEchoChar('●');
 			contentPane.add(txtContraseña);
 		}
 		{
 			btnSalir = new JButton("Salir");
+			btnSalir.setForeground(new Color(90, 90, 90));
+			btnSalir.setBackground(new Color(255, 255, 255));
+			btnSalir.setFont(new Font("Arial", Font.BOLD, 13));
 			btnSalir.addActionListener(this);
-			btnSalir.setBounds(125, 291, 200, 35);
+			btnSalir.setBounds(250, 356, 150, 35);
 			contentPane.add(btnSalir);
 		}
 		{
 			chckbxVerContraseña = new JCheckBox("Ver contraseña");
+			chckbxVerContraseña.setForeground(new Color(90, 90, 90));
+			chckbxVerContraseña.setFont(new Font("Arial", Font.PLAIN, 11));
+			chckbxVerContraseña.setBackground(new Color(255, 255, 255));
 			chckbxVerContraseña.addActionListener(this);
-			chckbxVerContraseña.setBounds(203, 143, 200, 23);
+			chckbxVerContraseña.setBounds(200, 249, 101, 21);
 			contentPane.add(chckbxVerContraseña);
+		}
+		{
+			lblLogo = new JLabel("");
+			lblLogo.setBackground(new Color(255, 255, 255));
+			lblLogo.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/imagen/logo.jpg")));
+			lblLogo.setBounds(187, 50, 100, 100);
+			contentPane.add(lblLogo);
 		}
 	}
 	public void actionPerformed(ActionEvent e) {

@@ -18,6 +18,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.JTextField;
+import java.awt.Color;
 
 public class VentanaVerClientes extends JDialog implements ActionListener {
 	private static final long serialVersionUID = 1L;
@@ -36,24 +37,29 @@ public class VentanaVerClientes extends JDialog implements ActionListener {
 	private JButton btnVerDetalles;
 
 	public VentanaVerClientes() {
+		getContentPane().setBackground(new Color(255, 255, 255));
 		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 		setModal(true);
 		setTitle("Ver clientes");
-		setBounds(100, 100, 846, 486);
+		setBounds(100, 100, 820, 610);
 		getContentPane().setLayout(null);
 		{
 			lblClientes = new JLabel("Clientes");
+			lblClientes.setForeground(new Color(238, 52, 37));
 			lblClientes.setHorizontalAlignment(SwingConstants.CENTER);
-			lblClientes.setFont(new Font("Tahoma", Font.PLAIN, 20));
-			lblClientes.setBounds(330, 41, 185, 25);
+			lblClientes.setFont(new Font("Arial", Font.BOLD, 25));
+			lblClientes.setBounds(353, 50, 97, 30);
 			getContentPane().add(lblClientes);
 		}
 		{
 			scrollPane = new JScrollPane();
-			scrollPane.setBounds(34, 172, 778, 204);
+			scrollPane.setBounds(50, 261, 700, 200);
 			getContentPane().add(scrollPane);
 			{
 				tableClientes = new JTable();
+				tableClientes.setBackground(new Color(255, 255, 255));
+				tableClientes.setForeground(new Color(90, 90, 90));
+				tableClientes.setFont(new Font("Arial", Font.PLAIN, 13));
 				tableClientes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 				String[] columnas = new String[] {"DNI", "Nombres", "Apellidos", "teléfono", "Dirección", "Correo electrónico"};
 				defaultTableModel = new DefaultTableModel(columnas, 0) {
@@ -68,56 +74,74 @@ public class VentanaVerClientes extends JDialog implements ActionListener {
 		}
 		{
 			btnCerrar = new JButton("Cerrar");
+			btnCerrar.setBackground(new Color(255, 255, 255));
+			btnCerrar.setForeground(new Color(90, 90, 90));
+			btnCerrar.setFont(new Font("Arial", Font.BOLD, 13));
 			btnCerrar.addActionListener(this);
-			btnCerrar.setBounds(723, 402, 89, 23);
+			btnCerrar.setBounds(600, 491, 150, 35);
 			getContentPane().add(btnCerrar);
 		}
 		{
 			lblDni = new JLabel("DNI:");
-			lblDni.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
-			lblDni.setBounds(34, 95, 129, 13);
+			lblDni.setForeground(new Color(90, 90, 90));
+			lblDni.setFont(new Font("Arial", Font.BOLD, 13));
+			lblDni.setBounds(50, 120, 26, 16);
 			getContentPane().add(lblDni);
 		}
 		{
 			txtDni = new JTextField();
+			txtDni.setForeground(new Color(90, 90, 90));
+			txtDni.setFont(new Font("Arial", Font.PLAIN, 13));
 			txtDni.setColumns(10);
-			txtDni.setBounds(80, 88, 150, 26);
+			txtDni.setBounds(160, 116, 200, 25);
 			getContentPane().add(txtDni);
 		}
 		{
 			lblNombres = new JLabel("Nombres:");
-			lblNombres.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
-			lblNombres.setBounds(257, 95, 129, 13);
+			lblNombres.setForeground(new Color(90, 90, 90));
+			lblNombres.setFont(new Font("Arial", Font.BOLD, 13));
+			lblNombres.setBounds(440, 120, 60, 16);
 			getContentPane().add(lblNombres);
 		}
 		{
 			txtNombres = new JTextField();
+			txtNombres.setForeground(new Color(90, 90, 90));
+			txtNombres.setFont(new Font("Arial", Font.PLAIN, 13));
 			txtNombres.setColumns(10);
-			txtNombres.setBounds(337, 88, 179, 26);
+			txtNombres.setBounds(550, 116, 200, 25);
 			getContentPane().add(txtNombres);
 		}
 		{
 			lblApellidos = new JLabel("Apellidos:");
-			lblApellidos.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
-			lblApellidos.setBounds(547, 95, 129, 13);
+			lblApellidos.setForeground(new Color(90, 90, 90));
+			lblApellidos.setFont(new Font("Arial", Font.BOLD, 13));
+			lblApellidos.setBounds(50, 159, 63, 16);
 			getContentPane().add(lblApellidos);
 		}
 		{
 			txtApellidos = new JTextField();
+			txtApellidos.setForeground(new Color(90, 90, 90));
+			txtApellidos.setFont(new Font("Arial", Font.PLAIN, 13));
 			txtApellidos.setColumns(10);
-			txtApellidos.setBounds(633, 88, 179, 26);
+			txtApellidos.setBounds(160, 155, 200, 25);
 			getContentPane().add(txtApellidos);
 		}
 		{
 			btnFiltrar = new JButton("Filtrar");
+			btnFiltrar.setBackground(new Color(238, 52, 37));
+			btnFiltrar.setForeground(new Color(255, 255, 255));
+			btnFiltrar.setFont(new Font("Arial", Font.BOLD, 13));
 			btnFiltrar.addActionListener(this);
-			btnFiltrar.setBounds(378, 126, 89, 23);
+			btnFiltrar.setBounds(327, 205, 150, 35);
 			getContentPane().add(btnFiltrar);
 		}
 		{
 			btnVerDetalles = new JButton("Ver detalles");
+			btnVerDetalles.setBackground(new Color(230, 230, 230));
+			btnVerDetalles.setForeground(new Color(90, 90, 90));
+			btnVerDetalles.setFont(new Font("Arial", Font.BOLD, 13));
 			btnVerDetalles.addActionListener(this);
-			btnVerDetalles.setBounds(34, 399, 117, 29);
+			btnVerDetalles.setBounds(50, 491, 150, 35);
 			getContentPane().add(btnVerDetalles);
 		}
 		llenarTabla();

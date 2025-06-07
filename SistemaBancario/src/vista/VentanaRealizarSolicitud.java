@@ -16,6 +16,7 @@ import javax.swing.JComboBox;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Color;
 
 public class VentanaRealizarSolicitud extends JDialog implements ActionListener {
 	
@@ -31,25 +32,27 @@ public class VentanaRealizarSolicitud extends JDialog implements ActionListener 
 	private JComboBox<String> cbxMonedas;
 
 	public VentanaRealizarSolicitud(String asunto, Cliente cliente) {
+		getContentPane().setBackground(new Color(255, 255, 255));
 		this.asunto = asunto;
 		this.cliente = cliente;
 		
 		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 		setModal(true);
 		setTitle("Realizar solicitud");
-		setBounds(100, 100, 460, 308);
+		setBounds(100, 100, 560, 360);
 		getContentPane().setLayout(null);
 		{
-			lblAsunto = new JLabel("");
-			if(asunto.contains("cuenta")) lblAsunto.setText("¿Qué tipo de cuenta desea solicitar?");
-			else if(asunto.contains("tarjeta")) lblAsunto.setText("¿Qué tipo de tarjeta desea solicitar?");
+			lblAsunto = new JLabel("¿Qué tipo de " + (asunto.contains("tarjeta") ? "tarjeta" : "cuenta") + " desea solicitar?");
+			lblAsunto.setForeground(new Color(238, 52, 37));
 			lblAsunto.setHorizontalAlignment(SwingConstants.CENTER);
-			lblAsunto.setFont(new Font("Tahoma", Font.PLAIN, 20));
-			lblAsunto.setBounds(60, 42, 339, 25);
+			lblAsunto.setFont(new Font("Arial", Font.BOLD, 25));
+			lblAsunto.setBounds(0, 50, 544, 30);
 			getContentPane().add(lblAsunto);
 		}
 		{
 			cbxAsunto = new JComboBox<String>();
+			cbxAsunto.setForeground(new Color(90, 90, 90));
+			cbxAsunto.setFont(new Font("Arial", Font.PLAIN, 13));
 			if(asunto.contains("cuenta")) {
 				String[] tiposCuentas = {"ahorro", "corriente"};
 				for (String tipoCuenta : tiposCuentas) {
@@ -62,36 +65,47 @@ public class VentanaRealizarSolicitud extends JDialog implements ActionListener 
 					cbxAsunto.addItem(tipoTarjeta);
 				}
 			}
-			cbxAsunto.setBounds(135, 91, 189, 27);
+			cbxAsunto.setBounds(197, 120, 150, 25);
 			getContentPane().add(cbxAsunto);
 		}
 		{
 			btnEnviar = new JButton("Enviar");
+			btnEnviar.setForeground(new Color(255, 255, 255));
+			btnEnviar.setBackground(new Color(238, 52, 37));
+			btnEnviar.setFont(new Font("Arial", Font.BOLD, 13));
 			btnEnviar.addActionListener(this);
-			btnEnviar.setBounds(91, 213, 117, 29);
+			btnEnviar.setBounds(50, 240, 150, 35);
 			getContentPane().add(btnEnviar);
 		}
 		{
 			btnCancelar = new JButton("Cancelar");
+			btnCancelar.setBackground(new Color(255, 255, 255));
+			btnCancelar.setForeground(new Color(90, 90, 90));
+			btnCancelar.setFont(new Font("Arial", Font.BOLD, 13));
 			btnCancelar.addActionListener(this);
-			btnCancelar.setBounds(261, 213, 117, 29);
+			btnCancelar.setBounds(345, 240, 150, 35);
 			getContentPane().add(btnCancelar);
 		}
 		{
 			lblMoneda = new JLabel("Moneda:");
-			lblMoneda.setBounds(41, 153, 131, 14);
+			lblMoneda.setForeground(new Color(90, 90, 90));
+			lblMoneda.setFont(new Font("Arial", Font.BOLD, 13));
+			lblMoneda.setBounds(50, 180, 55, 16);
 			getContentPane().add(lblMoneda);
 		}
 		{
 			cbxMonedas = new JComboBox<String>();
+			cbxMonedas.setEnabled(false);
+			cbxMonedas.setForeground(new Color(90, 90, 90));
+			cbxMonedas.setFont(new Font("Arial", Font.PLAIN, 13));
 			if(asunto.contains("cuenta")) {
 				cbxMonedas.setEnabled(true);
 				String[] monedas = {"soles", "dólares", "euros", "libras"};
 				for (String moneda : monedas) {
 					cbxMonedas.addItem(moneda);
 				}
-			} else cbxMonedas.setEnabled(false);
-			cbxMonedas.setBounds(120, 148, 189, 27);
+			}
+			cbxMonedas.setBounds(130, 175, 150, 25);
 			getContentPane().add(cbxMonedas);
 		}
 

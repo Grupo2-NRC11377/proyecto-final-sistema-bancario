@@ -10,6 +10,7 @@ import java.awt.Font;
 import javax.swing.SwingConstants;
 
 import modelo.Persona;
+import java.awt.Color;
 
 public class VentanaVerPerfil extends JDialog implements ActionListener {
 
@@ -31,96 +32,133 @@ public class VentanaVerPerfil extends JDialog implements ActionListener {
 	private JLabel lblDni;
 
 	public VentanaVerPerfil(Persona persona) {
+		getContentPane().setBackground(new Color(255, 255, 255));
+		setBackground(new Color(255, 255, 255));
 		this.persona = persona;
 		setTitle("Ver perfil");
 		setModal(true);
 		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-		setBounds(100, 100, 418, 329);
+		setBounds(100, 100, 470, 480);
 		getContentPane().setLayout(null);
 		{
 			btnCerrar = new JButton("Cerrar");
+			btnCerrar.setForeground(new Color(90, 90, 90));
+			btnCerrar.setBackground(new Color(255, 255, 255));
+			btnCerrar.setFont(new Font("Arial", Font.BOLD, 13));
 			btnCerrar.addActionListener(this);
-			btnCerrar.setBounds(158, 252, 89, 23);
+			btnCerrar.setBounds(152, 359, 150, 35);
 			getContentPane().add(btnCerrar);
 		}
 		{
 			lblNombres = new JLabel("Nombres:");
-			lblNombres.setBounds(34, 105, 115, 14);
+			lblNombres.setForeground(new Color(90, 90, 90));
+			lblNombres.setFont(new Font("Arial", Font.BOLD, 13));
+			lblNombres.setBounds(50, 156, 60, 16);
 			getContentPane().add(lblNombres);
 		}
 		{
 			lblApellidos = new JLabel("Apellidos:");
-			lblApellidos.setBounds(34, 130, 115, 14);
+			lblApellidos.setForeground(new Color(90, 90, 90));
+			lblApellidos.setFont(new Font("Arial", Font.BOLD, 13));
+			lblApellidos.setBounds(50, 192, 63, 16);
 			getContentPane().add(lblApellidos);
 		}
 		{
 			lblTelfono = new JLabel("Teléfono:");
-			lblTelfono.setBounds(34, 155, 115, 14);
+			lblTelfono.setForeground(new Color(90, 90, 90));
+			lblTelfono.setFont(new Font("Arial", Font.BOLD, 13));
+			lblTelfono.setBounds(50, 228, 60, 16);
 			getContentPane().add(lblTelfono);
 		}
 		{
 			lblDireccin = new JLabel("Dirección:");
-			lblDireccin.setBounds(34, 180, 115, 14);
+			lblDireccin.setForeground(new Color(90, 90, 90));
+			lblDireccin.setFont(new Font("Arial", Font.BOLD, 13));
+			lblDireccin.setBounds(50, 264, 64, 16);
 			getContentPane().add(lblDireccin);
 		}
 		{
 			lblCorreoElectrnico = new JLabel("Correo electrónico:");
-			lblCorreoElectrnico.setBounds(34, 205, 152, 14);
+			lblCorreoElectrnico.setForeground(new Color(90, 90, 90));
+			lblCorreoElectrnico.setFont(new Font("Arial", Font.BOLD, 13));
+			lblCorreoElectrnico.setBounds(50, 300, 122, 16);
 			getContentPane().add(lblCorreoElectrnico);
 		}
 		{
 			txtNombres = new JTextField();
+			txtNombres.setBackground(new Color(255, 255, 255));
+			txtNombres.setForeground(new Color(90, 90, 90));
+			txtNombres.setFont(new Font("Arial", Font.PLAIN, 13));
 			txtNombres.setEditable(false);
-			txtNombres.setBounds(181, 102, 209, 20);
+			txtNombres.setBounds(200, 152, 200, 25);
 			getContentPane().add(txtNombres);
 			txtNombres.setColumns(10);
 		}
 		{
 			txtApellidos = new JTextField();
+			txtApellidos.setBackground(new Color(255, 255, 255));
+			txtApellidos.setForeground(new Color(90, 90, 90));
+			txtApellidos.setFont(new Font("Arial", Font.PLAIN, 13));
 			txtApellidos.setEditable(false);
 			txtApellidos.setColumns(10);
-			txtApellidos.setBounds(181, 127, 209, 20);
+			txtApellidos.setBounds(200, 188, 200, 25);
 			getContentPane().add(txtApellidos);
 		}
 		{
 			txtTelefono = new JTextField();
+			txtTelefono.setBackground(new Color(255, 255, 255));
+			txtTelefono.setForeground(new Color(90, 90, 90));
+			txtTelefono.setFont(new Font("Arial", Font.PLAIN, 13));
 			txtTelefono.setEditable(false);
 			txtTelefono.setColumns(10);
-			txtTelefono.setBounds(181, 152, 209, 20);
+			txtTelefono.setBounds(200, 224, 200, 25);
 			getContentPane().add(txtTelefono);
 		}
 		{
 			txtDireccion = new JTextField();
+			txtDireccion.setBackground(new Color(255, 255, 255));
+			txtDireccion.setForeground(new Color(90, 90, 90));
+			txtDireccion.setFont(new Font("Arial", Font.PLAIN, 13));
 			txtDireccion.setEditable(false);
 			txtDireccion.setColumns(10);
-			txtDireccion.setBounds(181, 177, 209, 20);
+			txtDireccion.setBounds(200, 260, 200, 25);
 			getContentPane().add(txtDireccion);
 		}
 		{
 			txtCorreoElectronico = new JTextField();
+			txtCorreoElectronico.setBackground(new Color(255, 255, 255));
+			txtCorreoElectronico.setForeground(new Color(90, 90, 90));
+			txtCorreoElectronico.setFont(new Font("Arial", Font.PLAIN, 13));
 			txtCorreoElectronico.setEditable(false);
 			txtCorreoElectronico.setColumns(10);
-			txtCorreoElectronico.setBounds(181, 202, 209, 20);
+			txtCorreoElectronico.setBounds(200, 296, 200, 25);
 			getContentPane().add(txtCorreoElectronico);
 		}
 		{
 			lblNewLabel = new JLabel("Perfil");
+			lblNewLabel.setBackground(new Color(255, 255, 255));
+			lblNewLabel.setForeground(new Color(238, 52, 37));
 			lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-			lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
-			lblNewLabel.setBounds(153, 25, 96, 23);
+			lblNewLabel.setFont(new Font("Arial", Font.BOLD, 25));
+			lblNewLabel.setBounds(195, 50, 63, 30);
 			getContentPane().add(lblNewLabel);
 		}
 		{
 			txtDni = new JTextField();
+			txtDni.setBackground(new Color(255, 255, 255));
+			txtDni.setForeground(new Color(90, 90, 90));
+			txtDni.setFont(new Font("Arial", Font.PLAIN, 13));
 			txtDni.setEditable(false);
 			txtDni.setText((String) null);
 			txtDni.setColumns(10);
-			txtDni.setBounds(181, 77, 209, 20);
+			txtDni.setBounds(200, 116, 200, 25);
 			getContentPane().add(txtDni);
 		}
 		{
 			lblDni = new JLabel("DNI:");
-			lblDni.setBounds(34, 80, 135, 14);
+			lblDni.setForeground(new Color(90, 90, 90));
+			lblDni.setFont(new Font("Arial", Font.BOLD, 13));
+			lblDni.setBounds(50, 120, 26, 16);
 			getContentPane().add(lblDni);
 		}
 		mostrarDatos();

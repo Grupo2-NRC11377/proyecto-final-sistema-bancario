@@ -13,6 +13,7 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Color;
 
 public class VentanaAutenticar extends JDialog implements ActionListener {
 	
@@ -27,40 +28,52 @@ public class VentanaAutenticar extends JDialog implements ActionListener {
 	private JButton btnCancelar;
 
 	public VentanaAutenticar(Persona persona) {
+		getContentPane().setBackground(new Color(255, 255, 255));
 		this.persona = persona;
-		setTitle("Autenticarse");
+		setTitle("Autenticar");
 		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 		setModal(true);
-		setBounds(100, 100, 412, 238);
+		setBounds(100, 100, 430, 300);
 		getContentPane().setLayout(null);
 		{
 			lblAutenticarse = new JLabel("Autenticarse");
+			lblAutenticarse.setForeground(new Color(238, 52, 37));
 			lblAutenticarse.setHorizontalAlignment(SwingConstants.CENTER);
-			lblAutenticarse.setFont(new Font("Tahoma", Font.PLAIN, 20));
-			lblAutenticarse.setBounds(88, 40, 236, 25);
+			lblAutenticarse.setFont(new Font("Arial", Font.BOLD, 25));
+			lblAutenticarse.setBounds(132, 50, 150, 30);
 			getContentPane().add(lblAutenticarse);
 		}
 		{
 			lblContrasea = new JLabel("Contraseña:");
-			lblContrasea.setBounds(41, 93, 164, 14);
+			lblContrasea.setForeground(new Color(90, 90, 90));
+			lblContrasea.setFont(new Font("Arial", Font.BOLD, 13));
+			lblContrasea.setBounds(50, 120, 76, 16);
 			getContentPane().add(lblContrasea);
 		}
 		{
 			txtContraseña = new JTextField();
+			txtContraseña.setForeground(new Color(90, 90, 90));
+			txtContraseña.setFont(new Font("Arial", Font.PLAIN, 13));
 			txtContraseña.setColumns(10);
-			txtContraseña.setBounds(152, 90, 209, 20);
+			txtContraseña.setBounds(163, 116, 200, 25);
 			getContentPane().add(txtContraseña);
 		}
 		{
 			btnConfirmar = new JButton("Confirmar");
+			btnConfirmar.setBackground(new Color(238, 52, 37));
+			btnConfirmar.setForeground(new Color(255, 255, 255));
+			btnConfirmar.setFont(new Font("Arial", Font.BOLD, 13));
 			btnConfirmar.addActionListener(this);
-			btnConfirmar.setBounds(74, 147, 89, 23);
+			btnConfirmar.setBounds(50, 175, 150, 35);
 			getContentPane().add(btnConfirmar);
 		}
 		{
 			btnCancelar = new JButton("Cancelar");
+			btnCancelar.setForeground(new Color(90, 90, 90));
+			btnCancelar.setBackground(new Color(255, 255, 255));
+			btnCancelar.setFont(new Font("Arial", Font.BOLD, 13));
 			btnCancelar.addActionListener(this);
-			btnCancelar.setBounds(226, 147, 89, 23);
+			btnCancelar.setBounds(213, 175, 150, 35);
 			getContentPane().add(btnCancelar);
 		}
 

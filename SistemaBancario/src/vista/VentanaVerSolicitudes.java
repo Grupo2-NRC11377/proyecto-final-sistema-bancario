@@ -23,6 +23,7 @@ import javax.swing.ListSelectionModel;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.awt.event.ActionEvent;
+import java.awt.Color;
 
 public class VentanaVerSolicitudes extends JDialog implements ActionListener {
 	
@@ -39,26 +40,31 @@ public class VentanaVerSolicitudes extends JDialog implements ActionListener {
 	private JButton btnRechazar;
 
 	public VentanaVerSolicitudes(Empleado empleado) {
+		getContentPane().setBackground(new Color(255, 255, 255));
 		this.empleado = empleado;
 		
 		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 		setModal(true);
 		setTitle("Ver solicitudes");
-		setBounds(100, 100, 789, 483);
+		setBounds(100, 100, 820, 530);
 		getContentPane().setLayout(null);
 		{
 			lblSolicitudes = new JLabel("Solicitudes");
+			lblSolicitudes.setForeground(new Color(238, 52, 37));
 			lblSolicitudes.setHorizontalAlignment(SwingConstants.CENTER);
-			lblSolicitudes.setFont(new Font("Tahoma", Font.PLAIN, 20));
-			lblSolicitudes.setBounds(306, 46, 185, 25);
+			lblSolicitudes.setFont(new Font("Arial", Font.BOLD, 25));
+			lblSolicitudes.setBounds(340, 46, 133, 30);
 			getContentPane().add(lblSolicitudes);
 		}
 		{
 			scrollPane = new JScrollPane();
-			scrollPane.setBounds(45, 94, 704, 277);
+			scrollPane.setBounds(50, 120, 700, 250);
 			getContentPane().add(scrollPane);
 			{
 				tableSolicitudes = new JTable();
+				tableSolicitudes.setForeground(new Color(90, 90, 90));
+				tableSolicitudes.setBackground(new Color(255, 255, 255));
+				tableSolicitudes.setFont(new Font("Arial", Font.PLAIN, 13));
 				tableSolicitudes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 				String[] columnas = new String[] {"Id", "Asunto", "Estado", "Fecha de creación", "Fecha de resolución"};
 				defaultTableModel = new DefaultTableModel(columnas, 0) {
@@ -73,26 +79,38 @@ public class VentanaVerSolicitudes extends JDialog implements ActionListener {
 		}
 		{
 			btnCerrar = new JButton("Cerrar");
+			btnCerrar.setBackground(new Color(255, 255, 255));
+			btnCerrar.setForeground(new Color(90, 90, 90));
+			btnCerrar.setFont(new Font("Arial", Font.BOLD, 13));
 			btnCerrar.addActionListener(this);
-			btnCerrar.setBounds(660, 395, 89, 23);
+			btnCerrar.setBounds(600, 406, 150, 35);
 			getContentPane().add(btnCerrar);
 		}
 		{
 			btnVerCliente = new JButton("Ver perfil del cliente");
+			btnVerCliente.setBackground(new Color(238, 52, 37));
+			btnVerCliente.setForeground(new Color(255, 255, 255));
+			btnVerCliente.setFont(new Font("Arial", Font.BOLD, 13));
 			btnVerCliente.addActionListener(this);
-			btnVerCliente.setBounds(45, 395, 181, 23);
+			btnVerCliente.setBounds(50, 406, 200, 35);
 			getContentPane().add(btnVerCliente);
 		}
 		{
 			btnAceptar = new JButton("Aceptar");
+			btnAceptar.setBackground(new Color(230, 230, 230));
+			btnAceptar.setForeground(new Color(90, 90, 90));
+			btnAceptar.setFont(new Font("Arial", Font.BOLD, 13));
 			btnAceptar.addActionListener(this);
-			btnAceptar.setBounds(238, 395, 128, 23);
+			btnAceptar.setBounds(260, 406, 150, 35);
 			getContentPane().add(btnAceptar);
 		}
 		{
 			btnRechazar = new JButton("Rechazar");
+			btnRechazar.setBackground(new Color(230, 230, 230));
+			btnRechazar.setForeground(new Color(90, 90, 90));
+			btnRechazar.setFont(new Font("Arial", Font.BOLD, 13));
 			btnRechazar.addActionListener(this);
-			btnRechazar.setBounds(378, 395, 128, 23);
+			btnRechazar.setBounds(420, 406, 150, 35);
 			getContentPane().add(btnRechazar);
 		}
 		llenarTabla();
@@ -116,6 +134,7 @@ public class VentanaVerSolicitudes extends JDialog implements ActionListener {
 	}
 	protected void do_btnVerCliente_actionPerformed(ActionEvent e) {
 		Solicitud solicitud = obtenerSolicitud();
+		if(solicitud == null) return;
 		VentanaVerPerfil ventanaVerPerfil = new VentanaVerPerfil(solicitud.getCliente());
 		ventanaVerPerfil.setVisible(true);
 	}
@@ -162,7 +181,12 @@ public class VentanaVerSolicitudes extends JDialog implements ActionListener {
 			return null;
 		}
 		String idSolicitud = tableSolicitudes.getValueAt(posicionFilaSeleccionada, 0).toString();
-		return empleado.buscarSolicitud(idSolicitud);
+		Solicitud solicitud = empleado.buscarSolicitud(idSolicitud);
+		if (solicitud == null) {
+			JOptionPane.showMessageDialog(this, "La solicitud seleccionada no existe.", "Información", JOptionPane.INFORMATION_MESSAGE);
+			return null;
+		}
+		return solicitud;
 	}
 	private void llenarTabla() {
 		if(empleado == null) return;

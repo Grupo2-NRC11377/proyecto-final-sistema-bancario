@@ -19,6 +19,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.SwingConstants;
+import java.awt.Color;
 
 public class VentanaVerTarjetas extends JDialog implements ActionListener {
 	
@@ -37,25 +38,32 @@ public class VentanaVerTarjetas extends JDialog implements ActionListener {
     	
     	setModal(true);
         setTitle("Ver tarjetas bancarias");
-        setBounds(100, 100, 650, 450);
+        setBounds(100, 100, 720, 530);
         getContentPane().setLayout(new BorderLayout());
 		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+        contentPanel.setBackground(new Color(255, 255, 255));
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         getContentPane().add(contentPanel, BorderLayout.CENTER);
         contentPanel.setLayout(null);
 
         btnCerrar = new JButton("Cerrar");
+        btnCerrar.setForeground(new Color(90, 90, 90));
+        btnCerrar.setBackground(new Color(255, 255, 255));
+        btnCerrar.setFont(new Font("Arial", Font.BOLD, 13));
         btnCerrar.addActionListener(this);
-        btnCerrar.setBounds(504, 352, 99, 29);
+        btnCerrar.setBounds(500, 406, 150, 35);
         contentPanel.add(btnCerrar);
 
-        btnBloquear = new JButton("Bloquear Tarjeta");
+        btnBloquear = new JButton("Bloquear tarjeta");
+        btnBloquear.setForeground(new Color(90, 90, 90));
+        btnBloquear.setBackground(new Color(230, 230, 230));
+        btnBloquear.setFont(new Font("Arial", Font.BOLD, 13));
         btnBloquear.addActionListener(this);
-        btnBloquear.setBounds(359, 352, 130, 29);
+        btnBloquear.setBounds(50, 406, 150, 35);
         contentPanel.add(btnBloquear);
 
         JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setBounds(37, 83, 566, 250);
+        scrollPane.setBounds(50, 120, 600, 250);
         contentPanel.add(scrollPane);
 
         String[] columnas = { "Número de tarjeta", "Tipo de tarjeta", "Fecha de Vencimiento", "Estado" };
@@ -66,13 +74,17 @@ public class VentanaVerTarjetas extends JDialog implements ActionListener {
             }
         };
         tableTarjetas = new JTable(tableModel);
+        tableTarjetas.setForeground(new Color(90, 90, 90));
+        tableTarjetas.setBackground(new Color(255, 255, 255));
+        tableTarjetas.setFont(new Font("Arial", Font.PLAIN, 13));
         tableTarjetas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         scrollPane.setViewportView(tableTarjetas);
         {
         	lblTarjetasBancarias = new JLabel("Tarjetas bancarias");
+        	lblTarjetasBancarias.setForeground(new Color(238, 52, 37));
         	lblTarjetasBancarias.setHorizontalAlignment(SwingConstants.CENTER);
-        	lblTarjetasBancarias.setFont(new Font("Tahoma", Font.PLAIN, 20));
-        	lblTarjetasBancarias.setBounds(224, 33, 185, 25);
+        	lblTarjetasBancarias.setFont(new Font("Arial", Font.BOLD, 25));
+        	lblTarjetasBancarias.setBounds(242, 50, 220, 30);
         	contentPanel.add(lblTarjetasBancarias);
         }
 
@@ -103,17 +115,24 @@ public class VentanaVerTarjetas extends JDialog implements ActionListener {
 
     private void bloquearTarjetaSeleccionada() {
         int posicionFilaSeleccionada = tableTarjetas.getSelectedRow();
+        if(posicionFilaSeleccionada == -1) {
+        	JOptionPane.showMessageDialog(this, "Selecciona una tarjeta.", "Información", JOptionPane.INFORMATION_MESSAGE);
+        	return;
+        }
         String numeroTarjeta = (String) tableModel.getValueAt(posicionFilaSeleccionada, 0);
-        String estado = (String) tableModel.getValueAt(posicionFilaSeleccionada, 3);
-        if ("bloqueada".equals(estado)) {
+        Tarjeta tarjeta = cliente.buscarTarjeta(numeroTarjeta);
+        if(tarjeta == null) {
+        	JOptionPane.showMessageDialog(this, "La tarjeta seleccionada no existe.", "Información", JOptionPane.INFORMATION_MESSAGE);
+        	return;
+        }
+        else if (tarjeta.getEstado().equals("bloqueada")) {
             JOptionPane.showMessageDialog(this, "La tarjeta ya está bloqueada.", "Información", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
         int respuesta = JOptionPane.showConfirmDialog(this,
-                "¿Está seguro que desea bloquear la tarjeta " + numeroTarjeta + "?",
+                "¿Está seguro que desea bloquear la tarjeta " + tarjeta.getNumeroTarjeta() + "?",
                 "Confirmar bloqueo", JOptionPane.YES_NO_OPTION);
         if (respuesta == JOptionPane.YES_OPTION) {
-        	Tarjeta tarjeta = cliente.buscarTarjeta(numeroTarjeta);
         	tarjeta.setEstado("bloqueada");
         	llenarTabla();
             JOptionPane.showMessageDialog(this, "La tarjeta ha sido bloqueada exitosamente.", "Información", JOptionPane.INFORMATION_MESSAGE);

@@ -14,7 +14,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import java.awt.Font;
-import javax.swing.JTextField;
+import java.awt.Color;
 
 public class VentanaMenu extends JFrame implements ActionListener {
 
@@ -29,7 +29,6 @@ public class VentanaMenu extends JFrame implements ActionListener {
 	private JMenuItem mntmVerPerfil;
 	private JMenuItem mntmCerrarSesion;
 	private JLabel lblNewLabel;
-	private JTextField txtCliente;
 	private JMenu mnNewMenu_1;
 	private JMenuItem mntmVerCuentasBancarias;
 	private JMenu mnNewMenu_2;
@@ -42,35 +41,54 @@ public class VentanaMenu extends JFrame implements ActionListener {
 	private JMenuItem mntmPagar;
 	private JMenuItem mntmRetirar;
 	private JMenuItem mntmDepositar;
+	private JLabel lblNombresCliente;
+	private JLabel lblApellidosCliente;
 
 	public VentanaMenu(VentanaPrincipal ventanaPrincipal, Cliente cliente) {
+		setBackground(new Color(255, 255, 255));
 		this.ventanaPrincipal = ventanaPrincipal;
 		this.cliente = cliente;
 		
 		setTitle("Menú");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 600, 240);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		setBounds(100, 100, 680, 330);
 		{
 			menuBar = new JMenuBar();
+			menuBar.setBackground(new Color(255, 255, 255));
 			setJMenuBar(menuBar);
 			{
 				mnNewMenu = new JMenu("Perfil");
+				mnNewMenu.setForeground(new Color(90, 90, 90));
+				mnNewMenu.setFont(new Font("Arial", Font.BOLD, 14));
+				mnNewMenu.setBackground(new Color(255, 255, 255));
 				menuBar.add(mnNewMenu);
 				{
 					mntmVerPerfil = new JMenuItem("Ver");
+					mntmVerPerfil.setForeground(new Color(90, 90, 90));
+					mntmVerPerfil.setBackground(new Color(255, 255, 255));
+					mntmVerPerfil.setFont(new Font("Arial", Font.BOLD, 13));
 					mntmVerPerfil.addActionListener(this);
 					mnNewMenu.add(mntmVerPerfil);
 				}
 				{
 					mntmActualizarPerfil = new JMenuItem("Actualizar");
+					mntmActualizarPerfil.setForeground(new Color(90, 90, 90));
+					mntmActualizarPerfil.setBackground(new Color(255, 255, 255));
+					mntmActualizarPerfil.setFont(new Font("Arial", Font.BOLD, 13));
 					mntmActualizarPerfil.addActionListener(this);
 					mnNewMenu.add(mntmActualizarPerfil);
 				}
 				{
 					mntmCerrarSesion = new JMenuItem("Cerrar sesión");
+					mntmCerrarSesion.setForeground(new Color(90, 90, 90));
+					mntmCerrarSesion.setBackground(new Color(255, 255, 255));
+					mntmCerrarSesion.setFont(new Font("Arial", Font.BOLD, 13));
 					mntmCerrarSesion.addActionListener(this);
 					{
 						mntmCambiarContraseña = new JMenuItem("Cambiar contraseña");
+						mntmCambiarContraseña.setForeground(new Color(90, 90, 90));
+						mntmCambiarContraseña.setBackground(new Color(255, 255, 255));
+						mntmCambiarContraseña.setFont(new Font("Arial", Font.BOLD, 13));
 						mntmCambiarContraseña.addActionListener(this);
 						mnNewMenu.add(mntmCambiarContraseña);
 					}
@@ -79,79 +97,123 @@ public class VentanaMenu extends JFrame implements ActionListener {
 			}
 			{
 				mnNewMenu_1 = new JMenu("Cuentas");
+				mnNewMenu_1.setForeground(new Color(90, 90, 90));
+				mnNewMenu_1.setBackground(new Color(255, 255, 255));
+				mnNewMenu_1.setFont(new Font("Arial", Font.BOLD, 14));
 				menuBar.add(mnNewMenu_1);
 				{
 					mntmVerCuentasBancarias = new JMenuItem("Ver");
+					mntmVerCuentasBancarias.setFont(new Font("Arial", Font.BOLD, 13));
+					mntmVerCuentasBancarias.setForeground(new Color(90, 90, 90));
+					mntmVerCuentasBancarias.setBackground(new Color(255, 255, 255));
 					mntmVerCuentasBancarias.addActionListener(this);
 					mnNewMenu_1.add(mntmVerCuentasBancarias);
 				}
 				{
 					mntmSolicitarApertura = new JMenuItem("Solicitar apertura");
+					mntmSolicitarApertura.setFont(new Font("Arial", Font.BOLD, 13));
+					mntmSolicitarApertura.setForeground(new Color(90, 90, 90));
+					mntmSolicitarApertura.setBackground(new Color(255, 255, 255));
 					mntmSolicitarApertura.addActionListener(this);
 					mnNewMenu_1.add(mntmSolicitarApertura);
 				}
 			}
 			{
 				mnNewMenu_2 = new JMenu("Tarjetas");
+				mnNewMenu_2.setForeground(new Color(90, 90, 90));
+				mnNewMenu_2.setBackground(new Color(255, 255, 255));
+				mnNewMenu_2.setFont(new Font("Arial", Font.BOLD, 14));
 				menuBar.add(mnNewMenu_2);
 				{
 					mntmVerTarjetas = new JMenuItem("Ver");
+					mntmVerTarjetas.setFont(new Font("Arial", Font.BOLD, 13));
+					mntmVerTarjetas.setForeground(new Color(90, 90, 90));
+					mntmVerTarjetas.setBackground(new Color(255, 255, 255));
 					mntmVerTarjetas.addActionListener(this);
 					mnNewMenu_2.add(mntmVerTarjetas);
 				}
 				{
 					mntmSolicitarEmision = new JMenuItem("Solicitar emisión");
+					mntmSolicitarEmision.setFont(new Font("Arial", Font.BOLD, 13));
+					mntmSolicitarEmision.setForeground(new Color(90, 90, 90));
+					mntmSolicitarEmision.setBackground(new Color(255, 255, 255));
 					mntmSolicitarEmision.addActionListener(this);
 					mnNewMenu_2.add(mntmSolicitarEmision);
 				}
 			}
 			
 			JMenu mnTransacción = new JMenu("Transacción");
+			mnTransacción.setForeground(new Color(90, 90, 90));
+			mnTransacción.setBackground(new Color(255, 255, 255));
+			mnTransacción.setFont(new Font("Arial", Font.BOLD, 14));
 			menuBar.add(mnTransacción);
 			
 			mntmVerTransacciones = new JMenuItem("Ver");
+			mntmVerTransacciones.setForeground(new Color(90, 90, 90));
+			mntmVerTransacciones.setBackground(new Color(255, 255, 255));
+			mntmVerTransacciones.setFont(new Font("Arial", Font.BOLD, 13));
 			mntmVerTransacciones.addActionListener(this);
 			mnTransacción.add(mntmVerTransacciones);
 			{
 				mntmTransferir = new JMenuItem("Transferir");
+				mntmTransferir.setForeground(new Color(90, 90, 90));
+				mntmTransferir.setBackground(new Color(255, 255, 255));
+				mntmTransferir.setFont(new Font("Arial", Font.BOLD, 13));
 				mntmTransferir.addActionListener(this);
 				mnTransacción.add(mntmTransferir);
 			}
 			{
 				mntmPagar = new JMenuItem("Pagar");
+				mntmPagar.setForeground(new Color(90, 90, 90));
+				mntmPagar.setBackground(new Color(255, 255, 255));
+				mntmPagar.setFont(new Font("Arial", Font.BOLD, 13));
 				mntmPagar.addActionListener(this);
 				mnTransacción.add(mntmPagar);
 			}
 			{
 				mntmRetirar = new JMenuItem("Retirar");
+				mntmRetirar.setForeground(new Color(90, 90, 90));
+				mntmRetirar.setBackground(new Color(255, 255, 255));
+				mntmRetirar.setFont(new Font("Arial", Font.BOLD, 13));
 				mntmRetirar.addActionListener(this);
 				mnTransacción.add(mntmRetirar);
 			}
 			{
 				mntmDepositar = new JMenuItem("Depositar");
+				mntmDepositar.setForeground(new Color(90, 90, 90));
+				mntmDepositar.setBackground(new Color(255, 255, 255));
+				mntmDepositar.setFont(new Font("Arial", Font.BOLD, 13));
 				mntmDepositar.addActionListener(this);
 				mnTransacción.add(mntmDepositar);
 			}
 		}
 		contentPane = new JPanel();
+		contentPane.setBackground(new Color(238, 52, 37));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		{
 			lblNewLabel = new JLabel("Bienvenido/a,");
-			lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 40));
-			lblNewLabel.setBounds(51, 43, 255, 39);
+			lblNewLabel.setForeground(new Color(255, 255, 255));
+			lblNewLabel.setBackground(new Color(255, 255, 255));
+			lblNewLabel.setFont(new Font("Arial", Font.BOLD, 40));
+			lblNewLabel.setBounds(50, 50, 254, 47);
 			contentPane.add(lblNewLabel);
 		}
 		{
-			txtCliente = new JTextField();
-			txtCliente.setText(cliente.getNombres() + " " + cliente.getApellidos());
-			txtCliente.setEditable(false);
-			txtCliente.setFont(new Font("Tahoma", Font.PLAIN, 40));
-			txtCliente.setBounds(51, 101, 477, 39);
-			contentPane.add(txtCliente);
-			txtCliente.setColumns(10);
+			lblNombresCliente = new JLabel(cliente.getNombres());
+			lblNombresCliente.setForeground(new Color(255, 255, 255));
+			lblNombresCliente.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 40));
+			lblNombresCliente.setBounds(50, 108, 560, 47);
+			contentPane.add(lblNombresCliente);
+		}
+		{
+			lblApellidosCliente = new JLabel(cliente.getApellidos());
+			lblApellidosCliente.setForeground(Color.WHITE);
+			lblApellidosCliente.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 40));
+			lblApellidosCliente.setBounds(50, 166, 560, 47);
+			contentPane.add(lblApellidosCliente);
 		}
 	}
 

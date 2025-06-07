@@ -21,6 +21,7 @@ import java.awt.event.ActionEvent;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JCheckBox;
+import java.awt.Color;
 
 public class VentanaRegistrar extends JDialog implements ActionListener {
 
@@ -48,115 +49,155 @@ public class VentanaRegistrar extends JDialog implements ActionListener {
 	private JTextField txtDNI;
 
 	public VentanaRegistrar(VentanaPrincipal ventanaPrincipal) {
+		setBackground(new Color(255, 255, 255));
 		this.ventanaPrincipal = ventanaPrincipal;
 		setTitle("Registrar");
 		setModal(true);
 		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-		setBounds(100, 100, 445, 465);
+		setBounds(100, 100, 470, 530);
 		getContentPane().setLayout(new BorderLayout());
+		contentPanel.setBackground(new Color(255, 255, 255));
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
 		{
 			lblNewLabel = new JLabel("Registrarse");
+			lblNewLabel.setForeground(new Color(238, 52, 37));
 			lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-			lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
-			lblNewLabel.setBounds(165, 22, 114, 35);
+			lblNewLabel.setFont(new Font("Arial", Font.BOLD, 25));
+			lblNewLabel.setBounds(158, 50, 138, 30);
 			contentPanel.add(lblNewLabel);
 		}
 		{
 			lblNewLabel_1 = new JLabel("Nombres:");
-			lblNewLabel_1.setBounds(37, 112, 155, 14);
+			lblNewLabel_1.setForeground(new Color(90, 90, 90));
+			lblNewLabel_1.setFont(new Font("Arial", Font.BOLD, 13));
+			lblNewLabel_1.setBounds(50, 156, 60, 16);
 			contentPanel.add(lblNewLabel_1);
 		}
 		{
 			txtNombres = new JTextField();
-			txtNombres.setBounds(204, 105, 200, 25);
+			txtNombres.setForeground(new Color(90, 90, 90));
+			txtNombres.setFont(new Font("Arial", Font.PLAIN, 13));
+			txtNombres.setBounds(200, 152, 200, 25);
 			contentPanel.add(txtNombres);
 			txtNombres.setColumns(10);
 		}
 		{
 			lblNewLabel_2 = new JLabel("Apellidos:");
-			lblNewLabel_2.setBounds(37, 148, 155, 14);
+			lblNewLabel_2.setForeground(new Color(90, 90, 90));
+			lblNewLabel_2.setFont(new Font("Arial", Font.BOLD, 13));
+			lblNewLabel_2.setBounds(50, 192, 63, 16);
 			contentPanel.add(lblNewLabel_2);
 		}
 		{
 			txtApellidos = new JTextField();
+			txtApellidos.setForeground(new Color(90, 90, 90));
+			txtApellidos.setFont(new Font("Arial", Font.PLAIN, 13));
 			txtApellidos.setColumns(10);
-			txtApellidos.setBounds(204, 141, 200, 25);
+			txtApellidos.setBounds(200, 188, 200, 25);
 			contentPanel.add(txtApellidos);
 		}
 		{
 			lblNewLabel_3 = new JLabel("Teléfono:");
-			lblNewLabel_3.setBounds(37, 182, 150, 14);
+			lblNewLabel_3.setForeground(new Color(90, 90, 90));
+			lblNewLabel_3.setFont(new Font("Arial", Font.BOLD, 13));
+			lblNewLabel_3.setBounds(50, 228, 60, 16);
 			contentPanel.add(lblNewLabel_3);
 		}
 		{
 			txtTelefono = new JTextField();
+			txtTelefono.setForeground(new Color(90, 90, 90));
+			txtTelefono.setFont(new Font("Arial", Font.PLAIN, 13));
 			txtTelefono.setColumns(10);
-			txtTelefono.setBounds(204, 175, 200, 25);
+			txtTelefono.setBounds(200, 224, 200, 25);
 			contentPanel.add(txtTelefono);
 		}
 		{
 			lblNewLabel_4 = new JLabel("Dirección:");
-			lblNewLabel_4.setBounds(37, 218, 155, 14);
+			lblNewLabel_4.setForeground(new Color(90, 90, 90));
+			lblNewLabel_4.setFont(new Font("Arial", Font.BOLD, 13));
+			lblNewLabel_4.setBounds(50, 264, 64, 16);
 			contentPanel.add(lblNewLabel_4);
 		}
 		{
 			txtDireccion = new JTextField();
+			txtDireccion.setForeground(new Color(90, 90, 90));
+			txtDireccion.setFont(new Font("Arial", Font.PLAIN, 13));
 			txtDireccion.setColumns(10);
-			txtDireccion.setBounds(204, 211, 200, 25);
+			txtDireccion.setBounds(200, 260, 200, 25);
 			contentPanel.add(txtDireccion);
 		}
 		{
 			txtCorreoElectronico = new JTextField();
+			txtCorreoElectronico.setForeground(new Color(90, 90, 90));
+			txtCorreoElectronico.setFont(new Font("Arial", Font.PLAIN, 13));
 			txtCorreoElectronico.setColumns(10);
-			txtCorreoElectronico.setBounds(204, 248, 200, 25);
+			txtCorreoElectronico.setBounds(200, 296, 200, 25);
 			contentPanel.add(txtCorreoElectronico);
 		}
 		{
 			lblCorreoElectrnico = new JLabel("Correo electrónico:");
-			lblCorreoElectrnico.setBounds(37, 255, 155, 14);
+			lblCorreoElectrnico.setForeground(new Color(90, 90, 90));
+			lblCorreoElectrnico.setFont(new Font("Arial", Font.BOLD, 13));
+			lblCorreoElectrnico.setBounds(50, 300, 122, 16);
 			contentPanel.add(lblCorreoElectrnico);
 		}
 		{
 			lblNewLabel_5 = new JLabel("Contraseña:");
-			lblNewLabel_5.setBounds(37, 294, 155, 14);
+			lblNewLabel_5.setForeground(new Color(90, 90, 90));
+			lblNewLabel_5.setFont(new Font("Arial", Font.BOLD, 13));
+			lblNewLabel_5.setBounds(50, 336, 76, 16);
 			contentPanel.add(lblNewLabel_5);
 		}
 		{
 			txtContraseña = new JPasswordField();
-			txtContraseña.setBounds(204, 287, 200, 25);
+			txtContraseña.setForeground(new Color(90, 90, 90));
+			txtContraseña.setFont(new Font("Arial", Font.PLAIN, 13));
+			txtContraseña.setBounds(200, 332, 200, 25);
 			txtContraseña.setEchoChar('●');
 			contentPanel.add(txtContraseña);
 		}
 		{
 			btnRegistrarse = new JButton("Registrarse");
+			btnRegistrarse.setForeground(new Color(255, 255, 255));
+			btnRegistrarse.setBackground(new Color(238, 52, 37));
+			btnRegistrarse.setFont(new Font("Arial", Font.BOLD, 13));
 			btnRegistrarse.addActionListener(this);
-			btnRegistrarse.setBounds(53, 366, 150, 35);
+			btnRegistrarse.setBounds(50, 411, 150, 35);
 			contentPanel.add(btnRegistrarse);
 		}
 		{
 			btnCancelar = new JButton("Cancelar");
+			btnCancelar.setBackground(new Color(255, 255, 255));
+			btnCancelar.setForeground(new Color(90, 90, 90));
+			btnCancelar.setFont(new Font("Arial", Font.BOLD, 13));
 			btnCancelar.addActionListener(this);
-			btnCancelar.setBounds(230, 366, 150, 35);
+			btnCancelar.setBounds(250, 411, 150, 35);
 			contentPanel.add(btnCancelar);
 		}
 		{
 			chckbxVerContraseña = new JCheckBox("Ver contraseña");
+			chckbxVerContraseña.setForeground(new Color(90, 90, 90));
+			chckbxVerContraseña.setFont(new Font("Arial", Font.PLAIN, 11));
+			chckbxVerContraseña.setBackground(new Color(255, 255, 255));
 			chckbxVerContraseña.addActionListener(this);
-			chckbxVerContraseña.setBounds(204, 318, 200, 23);
+			chckbxVerContraseña.setBounds(200, 364, 101, 21);
 			contentPanel.add(chckbxVerContraseña);
 		}
 		{
 			lblNewLabel_6 = new JLabel("DNI:");
-			lblNewLabel_6.setBounds(37, 76, 155, 14);
+			lblNewLabel_6.setForeground(new Color(90, 90, 90));
+			lblNewLabel_6.setFont(new Font("Arial", Font.BOLD, 13));
+			lblNewLabel_6.setBounds(50, 120, 26, 16);
 			contentPanel.add(lblNewLabel_6);
 		}
 		{
 			txtDNI = new JTextField();
+			txtDNI.setForeground(new Color(90, 90, 90));
+			txtDNI.setFont(new Font("Arial", Font.PLAIN, 13));
 			txtDNI.setColumns(10);
-			txtDNI.setBounds(204, 69, 200, 25);
+			txtDNI.setBounds(200, 116, 200, 25);
 			contentPanel.add(txtDNI);
 		}
 	}
