@@ -158,7 +158,7 @@ public class VentanaTransaccion extends JDialog implements ActionListener {
 		dispose();
 	}
 	protected void do_btnContinuar_actionPerformed(ActionEvent e) {
-		Cliente clienteOrigen = null, clienteDestino = null;
+		Cliente clienteAutenticar = cliente, clienteOrigen = null, clienteDestino = null;
 		Cuenta cuentaOrigen = null, cuentaDestino = null;
 		String descripcion = "";
 		String numeroOrigen = txtNumeroCuentaOrigen.getText().trim();
@@ -189,10 +189,8 @@ public class VentanaTransaccion extends JDialog implements ActionListener {
 				JOptionPane.showMessageDialog(this, "El saldo de la cuenta de origen es insuficiente.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
-			clienteOrigen = cuentaOrigen.getCliente();
-			if(tipo.equals("transferir")) descripcion = "Número de cuenta de origen: " + numeroOrigen;
-			else if(tipo.equals("pagar")) descripcion = "Número de cuenta de origen: " + numeroOrigen;
-			else descripcion = "Número de cuenta de origen: " + numeroOrigen + ";";
+			clienteAutenticar = clienteOrigen = cuentaOrigen.getCliente();
+			descripcion += "Número de cuenta de origen: " + numeroOrigen + ";";
 		}
 		if(tipo.equals("depositar") || tipo.equals("transferir") || tipo.equals("pagar")){
 			if(numeroDestino.isEmpty()) {
@@ -208,16 +206,15 @@ public class VentanaTransaccion extends JDialog implements ActionListener {
 				return;
 			}
 			clienteDestino = cuentaDestino.getCliente();
-			if(tipo.equals("transferir")) descripcion += "; Número de cuenta de destino: " + numeroDestino + ";";
-			else if(tipo.equals("pagar")) descripcion += "; Número de cuenta de destino: " + numeroDestino + ";";
-			else descripcion = "Número de cuenta de destino: " + numeroDestino + ";";
+			descripcion += "Número de cuenta de destino: " + numeroDestino + ";";
+			if(tipo.equals("depositar")) clienteAutenticar = clienteDestino;
 		}
 		if(tipo.equals("pagar")) {
 			if(motivoPagar.isEmpty()) {
 				JOptionPane.showMessageDialog(this, "El campo motivo a pagar está vacío.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
-			descripcion += "; Motivo: " + motivoPagar + ";";
+			descripcion += "Motivo: " + motivoPagar + ";";
 		}
 		if(cuentaOrigen!=null) {
 			if(cuentaOrigen.getEstado().equals("cancelada")){
@@ -237,13 +234,11 @@ public class VentanaTransaccion extends JDialog implements ActionListener {
 			cuentaDestino.setSaldoContable(cuentaDestino.getSaldoContable() + montoFinal);
 			cuentaDestino.setSaldoDisponible(cuentaDestino.getSaldoDisponible() + montoFinal);
 		}
-		VentanaAutenticar ventanaAutenticar = new VentanaAutenticar(cliente);
+		VentanaAutenticar ventanaAutenticar = new VentanaAutenticar(clienteAutenticar);
 		ventanaAutenticar.setVisible(true);
 		if(ventanaAutenticar.getEstadoAutenticacion()) {			
 			Transaccion transaccion = new Transaccion(tipo, descripcion, montoInicial);
 			transaccion.setEstado("completada");
-			if(cuentaOrigen!=null) cuentaOrigen.agregarTransaccion(transaccion);
-			if(cuentaDestino!=null) cuentaDestino.agregarTransaccion(transaccion);
 			if(clienteOrigen != null && clienteDestino != null) {
 				if(clienteOrigen.equals(clienteDestino)) clienteOrigen.agregarTransaccion(transaccion);
 				else {
@@ -289,37 +284,37 @@ public class VentanaTransaccion extends JDialog implements ActionListener {
 		dispose();
 	}
 	private double calcularConversión(String monedaOrigen, String monedaDestino, double monto) {
-		final double SOL_TO_DOLAR = 0.27;
-	    final double SOL_TO_EURO = 0.24;
-	    final double SOL_TO_LIBRA = 0.20;
-	    final double DOLAR_TO_SOL = 1 / SOL_TO_DOLAR;
-	    final double DOLAR_TO_EURO = 0.92;
-	    final double DOLAR_TO_LIBRA = 0.79;
-	    final double EURO_TO_SOL = 1 / SOL_TO_EURO;
-	    final double EURO_TO_DOLAR = 1.09;
-	    final double EURO_TO_LIBRA = 0.85;
-	    final double LIBRA_TO_SOL = 1 / SOL_TO_LIBRA;
-	    final double LIBRA_TO_DOLAR = 1.26;
-	    final double LIBRA_TO_EURO = 1.18;
+		final double SOL_A_DOLAR = 0.27;
+	    final double SOL_A_EURO = 0.24;
+	    final double SOL_A_LIBRA = 0.20;
+	    final double DOLAR_A_SOL = 1 / SOL_A_DOLAR;
+	    final double DOLAR_A_EURO = 0.92;
+	    final double DOLAR_A_LIBRA = 0.79;
+	    final double EURO_A_SOL = 1 / SOL_A_EURO;
+	    final double EURO_A_DOLAR = 1.09;
+	    final double EURO_A_LIBRA = 0.85;
+	    final double LIBRA_A_SOL = 1 / SOL_A_LIBRA;
+	    final double LIBRA_A_DOLAR = 1.26;
+	    final double LIBRA_A_EURO = 1.18;
 	    if (monedaOrigen.equals("soles")) {
 	        if (monedaDestino.equals("soles")) return monto;
-	        else if (monedaDestino.equals("dólares")) return monto * SOL_TO_DOLAR;
-	        else if (monedaDestino.equals("euros")) return monto * SOL_TO_EURO;
-	        else if (monedaDestino.equals("libras")) return monto * SOL_TO_LIBRA;
+	        else if (monedaDestino.equals("dólares")) return monto * SOL_A_DOLAR;
+	        else if (monedaDestino.equals("euros")) return monto * SOL_A_EURO;
+	        else if (monedaDestino.equals("libras")) return monto * SOL_A_LIBRA;
 	    } else if (monedaOrigen.equals("dólares")) {
-	        if (monedaDestino.equals("soles")) return monto * DOLAR_TO_SOL;
+	        if (monedaDestino.equals("soles")) return monto * DOLAR_A_SOL;
 	        else if (monedaDestino.equals("dólares")) return monto;
-	        else if (monedaDestino.equals("euros")) return monto * DOLAR_TO_EURO;
-	        else if (monedaDestino.equals("libras")) return monto * DOLAR_TO_LIBRA;
+	        else if (monedaDestino.equals("euros")) return monto * DOLAR_A_EURO;
+	        else if (monedaDestino.equals("libras")) return monto * DOLAR_A_LIBRA;
 	    } else if (monedaOrigen.equals("euros")) {
-	        if (monedaDestino.equals("soles")) return monto * EURO_TO_SOL;
-	        else if (monedaDestino.equals("dólares")) return monto * EURO_TO_DOLAR;
+	        if (monedaDestino.equals("soles")) return monto * EURO_A_SOL;
+	        else if (monedaDestino.equals("dólares")) return monto * EURO_A_DOLAR;
 	        else if (monedaDestino.equals("euros")) return monto;
-	        else if (monedaDestino.equals("libras")) return monto * EURO_TO_LIBRA;
+	        else if (monedaDestino.equals("libras")) return monto * EURO_A_LIBRA;
 	    } else if (monedaOrigen.equals("libras")) {
-	        if (monedaDestino.equals("soles")) return monto * LIBRA_TO_SOL;
-	        else if (monedaDestino.equals("dólares")) return monto * LIBRA_TO_DOLAR;
-	        else if (monedaDestino.equals("euros")) return monto * LIBRA_TO_EURO;
+	        if (monedaDestino.equals("soles")) return monto * LIBRA_A_SOL;
+	        else if (monedaDestino.equals("dólares")) return monto * LIBRA_A_DOLAR;
+	        else if (monedaDestino.equals("euros")) return monto * LIBRA_A_EURO;
 	        else if (monedaDestino.equals("libras")) return monto;
 	    }
 	    return monto;

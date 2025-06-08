@@ -2,6 +2,8 @@ package vista;
 
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
@@ -34,6 +36,7 @@ public class VentanaVerTransacciones extends JDialog implements ActionListener {
 	private JButton btnCerrar;
 	private JTable tableTransacciones;
 	private DefaultTableModel defaultTableModel;
+	private JButton btnVerDetalles;
 
 	public VentanaVerTransacciones(Cliente cliente) {
 		getContentPane().setBackground(new Color(255, 255, 255));
@@ -104,7 +107,7 @@ public class VentanaVerTransacciones extends JDialog implements ActionListener {
 				tableTransacciones.setFont(new Font("Arial", Font.PLAIN, 13));
 				tableTransacciones.setBackground(new Color(255, 255, 255));
 				tableTransacciones.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-				String[] columnas = new String[] {"Id", "Tipo", "Descripción", "Fecha y hora", "Estado", "Monto"};
+				String[] columnas = new String[] {"ID", "Tipo", "Fecha y hora", "Estado", "Monto"};
 				defaultTableModel = new DefaultTableModel(columnas, 0) {
 					private static final long serialVersionUID = 1L;
 					public boolean isCellEditable(int row, int column) {
@@ -124,10 +127,22 @@ public class VentanaVerTransacciones extends JDialog implements ActionListener {
 			btnCerrar.setBounds(600, 440, 150, 35);
 			getContentPane().add(btnCerrar);
 		}
+		{
+			btnVerDetalles = new JButton("Ver detalles");
+			btnVerDetalles.addActionListener(this);
+			btnVerDetalles.setForeground(new Color(90, 90, 90));
+			btnVerDetalles.setFont(new Font("Arial", Font.BOLD, 13));
+			btnVerDetalles.setBackground(new Color(230, 230, 230));
+			btnVerDetalles.setBounds(50, 446, 150, 35);
+			getContentPane().add(btnVerDetalles);
+		}
 		llenarTabla();
 	}
 
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnVerDetalles) {
+			do_btnVerDetalles_actionPerformed(e);
+		}
 		if (e.getSource() == btnFiltrar) {
 			do_btnFiltrar_actionPerformed(e);
 		}
@@ -142,13 +157,12 @@ public class VentanaVerTransacciones extends JDialog implements ActionListener {
 		if(cliente == null) return;
 		defaultTableModel.setRowCount(0);
 		for (Transaccion transaccion : cliente.getTransacciones()) {
-			Object[] fila = new Object[6];
+			Object[] fila = new Object[5];
 			fila[0] = transaccion.getIdTransaccion();
 			fila[1] = transaccion.getTipo();
-			fila[2] = transaccion.getDescripcion();
-			fila[3] = transaccion.getFechaHora();
-			fila[4] = transaccion.getEstado();
-			fila[5] = transaccion.getMonto();
+			fila[2] = transaccion.getFechaHora();
+			fila[3] = transaccion.getEstado();
+			fila[4] = transaccion.getMonto();
 			defaultTableModel.addRow(fila);
 		}
 	}
@@ -166,15 +180,29 @@ public class VentanaVerTransacciones extends JDialog implements ActionListener {
 		    boolean coincideTipo = !filtrarPorTipo || transaccion.getTipo().equals(tipo);
 		    boolean coincideDescripcion = !filtrarPorDescripcion || transaccion.getDescripcion().contains(descripcion);
 		    if (coincideTipo && coincideDescripcion) {
-		    	Object[] fila = new Object[6];
+		    	Object[] fila = new Object[5];
 				fila[0] = transaccion.getIdTransaccion();
 				fila[1] = transaccion.getTipo();
-				fila[2] = transaccion.getDescripcion();
-				fila[3] = transaccion.getFechaHora();
-				fila[4] = transaccion.getEstado();
-				fila[5] = transaccion.getMonto();
+				fila[2] = transaccion.getFechaHora();
+				fila[3] = transaccion.getEstado();
+				fila[4] = transaccion.getMonto();
 		        defaultTableModel.addRow(fila);
 		    }
 		}
+	}
+	protected void do_btnVerDetalles_actionPerformed(ActionEvent e) {
+		int posicionFilaSeleccionada = tableTransacciones.getSelectedRow();
+		if(posicionFilaSeleccionada == -1) {
+			JOptionPane.showMessageDialog(this, "Selecciona una transacción.", "Información", JOptionPane.INFORMATION_MESSAGE);
+			return;
+		}
+		String id = (String) tableTransacciones.getValueAt(posicionFilaSeleccionada, 0);
+		Transaccion transaccion = cliente.buscarTransaccion(id);
+		if(transaccion == null) {
+			JOptionPane.showMessageDialog(this, "La transacción seleccionada no existe.", "Información", JOptionPane.INFORMATION_MESSAGE);
+			return;
+		}
+		VentanaVerTransaccion ventanaVerTransaccion = new VentanaVerTransaccion(transaccion);
+		ventanaVerTransaccion.setVisible(true);
 	}
 }
