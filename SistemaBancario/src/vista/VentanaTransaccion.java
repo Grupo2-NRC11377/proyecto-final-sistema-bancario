@@ -18,6 +18,8 @@ import javax.swing.JTextField;
 import java.awt.event.ActionListener;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.NumberFormat;
+import java.util.Locale;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
 
@@ -168,11 +170,11 @@ public class VentanaTransaccion extends JDialog implements ActionListener {
 			JOptionPane.showMessageDialog(this, "El campo monto está vacío.", "Información", JOptionPane.INFORMATION_MESSAGE);
 			return;
 		}
-		double montoInicial = Double.parseDouble(txtMonto.getText().trim()), montoFinal = 0;
-		if(montoInicial < 0) {
+		double montoEnviado = Double.parseDouble(txtMonto.getText().trim()), montoRecibido = 0;
+		if(montoEnviado < 0) {
 			JOptionPane.showMessageDialog(this, "Monto inválido.", "Información", JOptionPane.INFORMATION_MESSAGE);
 			return;
-		}else if(montoInicial == 0) {
+		}else if(montoEnviado == 0) {
 			JOptionPane.showMessageDialog(this, "Monto no puede ser cero.", "Información", JOptionPane.INFORMATION_MESSAGE);
 			return;
 		}
@@ -185,7 +187,7 @@ public class VentanaTransaccion extends JDialog implements ActionListener {
 			if(cuentaOrigen == null) {
 				JOptionPane.showMessageDialog(this, "La cuenta de origen no existe.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
-			}else if(montoInicial > cuentaOrigen.getSaldoDisponible()) {
+			}else if(montoEnviado > cuentaOrigen.getSaldoDisponible()) {
 				JOptionPane.showMessageDialog(this, "El saldo de la cuenta de origen es insuficiente.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
@@ -221,23 +223,30 @@ public class VentanaTransaccion extends JDialog implements ActionListener {
 				JOptionPane.showMessageDialog(this, "La cuenta de origen está cancelada.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
-			cuentaOrigen.setSaldoContable(cuentaOrigen.getSaldoContable() - montoInicial);
-			cuentaOrigen.setSaldoDisponible(cuentaOrigen.getSaldoDisponible() - montoInicial);
+			cuentaOrigen.setSaldoContable(cuentaOrigen.getSaldoContable() - montoEnviado);
+			cuentaOrigen.setSaldoDisponible(cuentaOrigen.getSaldoDisponible() - montoEnviado);
 		}
 		if(cuentaDestino!=null) {
 			if(cuentaDestino.getEstado().equals("cancelada")) {
 				JOptionPane.showMessageDialog(this, "La cuenta de destino está cancelada.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
-			montoFinal = montoInicial;
-			if(tipo.equals("transferir") || tipo.equals("pagar")) montoFinal = calcularConversión(cuentaOrigen.getMoneda(), cuentaDestino.getMoneda(), montoInicial);
-			cuentaDestino.setSaldoContable(cuentaDestino.getSaldoContable() + montoFinal);
-			cuentaDestino.setSaldoDisponible(cuentaDestino.getSaldoDisponible() + montoFinal);
+			montoRecibido = montoEnviado;
+			if(tipo.equals("transferir") || tipo.equals("pagar")) {
+				String monedaOrigen = cuentaOrigen.getMoneda();
+				String monedaDestino = cuentaDestino.getMoneda();
+				montoRecibido = calcularConversión(monedaOrigen, monedaDestino, montoEnviado);
+				descripcion += "Monto enviado: " + obtenerMontoFormateado(monedaOrigen, montoEnviado) + 
+						";Monto recibido: " + obtenerMontoFormateado(monedaDestino, montoRecibido) + 
+						";Cambio: " + monedaOrigen + " - " + monedaDestino;
+			}
+			cuentaDestino.setSaldoContable(cuentaDestino.getSaldoContable() + montoRecibido);
+			cuentaDestino.setSaldoDisponible(cuentaDestino.getSaldoDisponible() + montoRecibido);
 		}
 		VentanaAutenticar ventanaAutenticar = new VentanaAutenticar(clienteAutenticar);
 		ventanaAutenticar.setVisible(true);
 		if(ventanaAutenticar.getEstadoAutenticacion()) {			
-			Transaccion transaccion = new Transaccion(tipo, descripcion, montoInicial);
+			Transaccion transaccion = new Transaccion(tipo, descripcion, montoEnviado);
 			transaccion.setEstado("completada");
 			if(clienteOrigen != null && clienteDestino != null) {
 				if(clienteOrigen.equals(clienteDestino)) clienteOrigen.agregarTransaccion(transaccion);
@@ -318,5 +327,25 @@ public class VentanaTransaccion extends JDialog implements ActionListener {
 	        else if (monedaDestino.equals("libras")) return monto;
 	    }
 	    return monto;
+	}
+	@SuppressWarnings("deprecation")
+	private String obtenerMontoFormateado(String moneda, double monto) {
+		Locale locale;
+		switch (moneda) {
+	        case "dólares":
+	        	locale = new Locale("en", "US");
+	            break;
+	        case "euros":
+	        	locale = new Locale("es", "ES");
+	            break;
+	        case "libras":
+	        	locale = new Locale("en", "GB");
+	            break;
+	        default:
+	        	locale = new Locale("es", "PE");
+	            break;
+	    }
+	    NumberFormat numberFormat = NumberFormat.getCurrencyInstance(locale);
+		return numberFormat.format(monto);
 	}
 }
