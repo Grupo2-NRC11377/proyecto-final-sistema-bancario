@@ -45,8 +45,8 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 	public static void main(String[] args) {
 		Empleado empleado1 = new Empleado("00000001","Juan","Pérez García","987654321","Calle Falsa 123, Distrito Imaginario, Ciudad Ejemplo","juan.perez@empleado.com","ClaveEjemplo#1");
 		Empleado empleado2 = new Empleado("00000002","María","López Rodríguez","912345678","Avenida Siempre Viva 742, Sector Demo, Ciudad Ejemplo","maria.lopez@empleado.com","ClaveEjemplo#2");
-		Cliente cliente1 = new Cliente("00000001","Carlos","Martínez Sánchez","955501003","Jirón Desconocido 456, Urb. Modelo, Ciudad Ejemplo","carlos.martinez@email.com","ClaveEjemplo#1");
-		Cliente cliente2 = new Cliente("00000002","Ana","Gonzales Castillo","933112233","Pasaje Inventado 789, Zona Test, Ciudad Ejemplo","ana.gonzales@email.com","ClaveEjemplo#2");
+		Cliente cliente1 = new Cliente("0000001","Carlos","Martínez Sánchez","955501003","Jirón Desconocido 456, Urb. Modelo, Ciudad Ejemplo","carlos.martinez@email.com","ClaveEjemplo#1");
+		Cliente cliente2 = new Cliente("0000002","Ana","Gonzales Castillo","933112233","Pasaje Inventado 789, Zona Test, Ciudad Ejemplo","ana.gonzales@email.com","ClaveEjemplo#2");
 		Solicitud solicitud1 = new Solicitud("Apertura de cuenta de ahorro en soles", cliente1, empleado1);
 		Solicitud solicitud2 = new Solicitud("Apertura de cuenta corriente en dólares", cliente1, empleado1);
 		Solicitud solicitud3 = new Solicitud("Apertura de cuenta de ahorro en soles", cliente2, empleado2);
