@@ -13,28 +13,22 @@ public class RepositorioCliente {
 	private static ArrayList<Cliente> clientes = new ArrayList<Cliente>();
 
 	public static ArrayList<Cliente> getClientes(){
-		ArrayList<Cliente> clientes = new ArrayList<>();
 		try {
 			Connection cnx = ConexiónMySQL.getconexión();
-			CallableStatement csta = cnx.prepareCall("{call sp_listar_clientes()}");
-			ResultSet rs = csta.executeQuery();
-			while (rs.next()) {
-				String dni = rs.getString("dni");
-				PreparedStatement ps = cnx.prepareStatement("SELECT * FROM persona WHERE dni = ?");
-				ps.setString(1, dni);
-				ResultSet rsPersona = ps.executeQuery();
-				if (rsPersona.next()) {
-					Cliente cliente = new Cliente(
-						dni,
-						rsPersona.getString("nombres"),
-						rsPersona.getString("apellidos"),
-						rsPersona.getString("telefono"),
-						rsPersona.getString("direccion"),
-						rsPersona.getString("correo"),
-						rsPersona.getString("contraseña")
-					);
-					clientes.add(cliente);
-				}
+			CallableStatement csta = cnx.prepareCall("{CALL sp_listarCliente()}");
+			ResultSet resultSet = csta.executeQuery();
+			Cliente cliente;
+			while (resultSet.next()) {
+				cliente = new Cliente();
+				cliente.setIdPersona(resultSet.getString(1));
+				cliente.setDni(resultSet.getString(2));
+				cliente.setNombres(resultSet.getString(3));
+				cliente.setApellidos(resultSet.getString(4));
+				cliente.setTelefono(resultSet.getString(5));
+				cliente.setDireccion(resultSet.getString(6));
+				cliente.setCorreo(resultSet.getString(7));
+				cliente.setContraseña(resultSet.getString(8));
+				clientes.add(cliente);
 			}
 		} catch (Exception e) {
 			System.out.println("Error al obtener clientes: " + e);
@@ -45,14 +39,15 @@ public class RepositorioCliente {
 	public static void agregarCliente(Cliente cliente) {
 		try {
 			Connection cnx = ConexiónMySQL.getconexión();
-			CallableStatement csta = cnx.prepareCall("{call sp_insertar_cliente(?,?,?,?,?,?,?)}");
-			csta.setString(1, cliente.getDni());
-			csta.setString(2, cliente.getNombres());
-			csta.setString(3, cliente.getApellidos());
-			csta.setString(4, cliente.getTelefono());
-			csta.setString(5, cliente.getDireccion());
-			csta.setString(6, cliente.getCorreo());
-			csta.setString(7, cliente.getContraseña());
+			CallableStatement csta = cnx.prepareCall("{CALL sp_insertarCliente(?,?,?,?,?,?,?,?)}");
+			csta.setString(1, cliente.getIdPersona());
+			csta.setString(2, cliente.getDni());
+			csta.setString(3, cliente.getNombres());
+			csta.setString(4, cliente.getApellidos());
+			csta.setString(5, cliente.getTelefono());
+			csta.setString(6, cliente.getDireccion());
+			csta.setString(7, cliente.getCorreo());
+			csta.setString(8, cliente.getContraseña());
 			csta.executeUpdate();
 		} catch (Exception e) {
 			System.out.println("Error al insertar cliente: " + e);
@@ -63,19 +58,19 @@ public class RepositorioCliente {
 		Cliente cliente = null;
 		try {
 			Connection cnx = ConexiónMySQL.getconexión();
-			PreparedStatement ps = cnx.prepareStatement("{call sp_buscar_cliente_correo(?)}?");
+			PreparedStatement ps = cnx.prepareStatement("{CALL sp_buscarCorreoCliente(?)}");
 			ps.setString(1, correo);
-			ResultSet rs = ps.executeQuery();
-			if (rs.next()) {
-				cliente = new Cliente(
-					rs.getString("dni"),
-					rs.getString("nombres"),
-					rs.getString("apellidos"),
-					rs.getString("telefono"),
-					rs.getString("direccion"),
-					rs.getString("correo"),
-					rs.getString("contraseña")
-				);
+			ResultSet resultSet = ps.executeQuery();
+			if (resultSet.next()) {
+				cliente = new Cliente();
+				cliente.setIdPersona(resultSet.getString(1));
+				cliente.setDni(resultSet.getString(2));
+				cliente.setNombres(resultSet.getString(3));
+				cliente.setApellidos(resultSet.getString(4));
+				cliente.setTelefono(resultSet.getString(5));
+				cliente.setDireccion(resultSet.getString(6));
+				cliente.setCorreo(resultSet.getString(7));
+				cliente.setContraseña(resultSet.getString(8));
 			}
 		} catch (Exception e) {
 			System.out.println("Error al buscar cliente por correo: " + e);
@@ -86,20 +81,20 @@ public class RepositorioCliente {
 		Cliente cliente = null;
 		try {
 			Connection cnx = ConexiónMySQL.getconexión();
-			PreparedStatement ps = cnx.prepareStatement("{call sp_buscar_cliente_correo_contraseña(?,?)}");
+			PreparedStatement ps = cnx.prepareStatement("{CALL sp_buscarCorreoContraseñaCliente(?,?)}");
 			ps.setString(1, correo);
 			ps.setString(2, contraseña);
-			ResultSet rs = ps.executeQuery();
-			if (rs.next()) {
-				cliente = new Cliente(
-					rs.getString("dni"),
-					rs.getString("nombres"),
-					rs.getString("apellidos"),
-					rs.getString("telefono"),
-					rs.getString("direccion"),
-					rs.getString("correo"),
-					rs.getString("contraseña")
-				);
+			ResultSet resultSet = ps.executeQuery();
+			if (resultSet.next()) {
+				cliente = new Cliente();
+				cliente.setIdPersona(resultSet.getString(1));
+				cliente.setDni(resultSet.getString(2));
+				cliente.setNombres(resultSet.getString(3));
+				cliente.setApellidos(resultSet.getString(4));
+				cliente.setTelefono(resultSet.getString(5));
+				cliente.setDireccion(resultSet.getString(6));
+				cliente.setCorreo(resultSet.getString(7));
+				cliente.setContraseña(resultSet.getString(8));
 			}
 		} catch (Exception e) {
 			System.out.println("Error al buscar cliente por correo y contraseña: " + e);
@@ -110,19 +105,19 @@ public class RepositorioCliente {
 		Cliente cliente = null;
 		try {
 			Connection cnx = ConexiónMySQL.getconexión();
-			PreparedStatement ps = cnx.prepareStatement("{call sp_buscar_cliente_dni(?)}");
+			PreparedStatement ps = cnx.prepareStatement("{CALL sp_buscarDniCliente(?)}");
 			ps.setString(1, dni);
-			ResultSet rs = ps.executeQuery();
-			if (rs.next()) {
-				cliente = new Cliente(
-					rs.getString("dni"),
-					rs.getString("nombres"),
-					rs.getString("apellidos"),
-					rs.getString("telefono"),
-					rs.getString("direccion"),
-					rs.getString("correo"),
-					rs.getString("contraseña")
-				);
+			ResultSet resultSet = ps.executeQuery();
+			if (resultSet.next()) {
+				cliente = new Cliente();
+				cliente.setIdPersona(resultSet.getString(1));
+				cliente.setDni(resultSet.getString(2));
+				cliente.setNombres(resultSet.getString(3));
+				cliente.setApellidos(resultSet.getString(4));
+				cliente.setTelefono(resultSet.getString(5));
+				cliente.setDireccion(resultSet.getString(6));
+				cliente.setCorreo(resultSet.getString(7));
+				cliente.setContraseña(resultSet.getString(8));
 			}
 		} catch (Exception e) {
 			System.out.println("Error al buscar cliente por DNI: " + e);

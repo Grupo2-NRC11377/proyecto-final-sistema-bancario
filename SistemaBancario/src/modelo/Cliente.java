@@ -5,6 +5,12 @@ public class Cliente extends Persona {
 	private ArrayList<Cuenta> cuentas;
 	private ArrayList<Tarjeta> tarjetas;
 	private ArrayList<Transaccion> transacciones;
+	
+	public Cliente() {
+		cuentas = new ArrayList<Cuenta>();
+		tarjetas = new ArrayList<Tarjeta>();
+		transacciones = new ArrayList<Transaccion>();
+	}
 
     public Cliente(String dni, String nombres, String apellidos, String telefono, String direccion, String correo,
 			String contraseña) {

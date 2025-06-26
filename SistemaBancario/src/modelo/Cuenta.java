@@ -49,6 +49,9 @@ public class Cuenta {
 		this.estado = estado;
 	}
 	public String getNumeroCuenta() {
+		return numeroCuenta;
+	}
+	public String getNumeroCuentaFormateado() {
 		return numeroCuenta.substring(0, 3) + "-" + numeroCuenta.substring(3);
 	}
 	public double getSaldoContable() {

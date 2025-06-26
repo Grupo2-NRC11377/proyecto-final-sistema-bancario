@@ -1,6 +1,9 @@
 package modelo;
 
+import java.util.UUID;
+
 public class Persona {
+	protected String idPersona;
 	protected String dni;
 	protected String nombres;
 	protected String apellidos;
@@ -8,8 +11,10 @@ public class Persona {
 	protected String direccion;
 	protected String correo;
 	protected String contraseña;
+	public Persona() {}
 	public Persona(String dni, String nombres, String apellidos, String telefono, String direccion, String correo,
 			String contraseña) {
+		this.idPersona = UUID.randomUUID().toString();
 		this.dni = dni;
 		this.nombres = nombres;
 		this.apellidos = apellidos;
@@ -17,6 +22,12 @@ public class Persona {
 		this.direccion = direccion;
 		this.correo = correo;
 		this.contraseña = contraseña;
+	}
+	public String getIdPersona() {
+		return idPersona;
+	}
+	public void setIdPersona(String idPersona) {
+		this.idPersona = idPersona;
 	}
 	public String getDni() {
 		return dni;
