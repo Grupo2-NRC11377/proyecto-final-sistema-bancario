@@ -56,4 +56,8 @@ public class Tarjeta {
 	public Cliente getCliente() {
 		return cliente;
 	}
+	
+	public void setFechaVencimiento(LocalDateTime fechaVencimiento) {
+	    this.fechaVencimiento = fechaVencimiento;
+	}
 }
