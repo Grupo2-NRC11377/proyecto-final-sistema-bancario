@@ -11,14 +11,16 @@ public class Transaccion {
 	private LocalDateTime fechaHora;
 	private String estado;
 	private double monto;
+	private Cliente Cliente;
 	
-	public Transaccion(String tipo, String descripcion, double monto) {
+	public Transaccion(String tipo, String descripcion, double monto, Cliente Cliente) {
 		this.idTransaccion = UUID.randomUUID().toString();
 		this.tipo = tipo;
 		this.descripcion = descripcion;
 		this.fechaHora = LocalDateTime.now();
 		this.estado = "pendiente";
 		this.monto = monto;
+		this.Cliente= Cliente;
 	}
 
 	public String getIdTransaccion() {
@@ -47,6 +49,9 @@ public class Transaccion {
 
 	public void setEstado(String estado) {
 		this.estado = estado;
+	}
+	public Cliente getCliente() {
+		return Cliente;
 	}
 	
 }
