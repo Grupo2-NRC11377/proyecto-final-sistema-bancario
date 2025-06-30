@@ -282,6 +282,16 @@ CALL sp_insertarTransaccion('2', 'depositar', 'Número de cuenta de destino: 2;'
 CALL sp_insertarTransaccion('3', 'depositar', 'Número de cuenta de destino: 3;', now(), 'completada', 1200, '4');
 CALL sp_insertarTransaccion('4', 'depositar', 'Número de cuenta de destino: 4;', now(), 'completada', 900, '4');
 
+SELECT * FROM solicitudes s 
+
+JOIN empleados e ON s.id_empleado = e.id_persona 
+JOIN personas p1 ON e.id_persona = p1.id_persona 
+
+JOIN clientes c ON s.id_cliente = c.id_persona
+JOIN personas p2 ON c.id_persona = p2.id_persona
+
+ WHERE s.id_solicitud = 5;
+
 /*
 SELECT * FROM personas;
 CALL sp_listarEmpleado();
