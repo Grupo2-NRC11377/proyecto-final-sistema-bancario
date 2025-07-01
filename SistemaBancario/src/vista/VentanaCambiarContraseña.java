@@ -3,7 +3,11 @@ package vista;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 
+import modelo.Cliente;
+import modelo.Empleado;
 import modelo.Persona;
+import repositorio.RepositorioCliente;
+import repositorio.RepositorioEmpleado;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -125,12 +129,6 @@ public class VentanaCambiarContraseña extends JDialog implements ActionListener
 			do_btnCancelar_actionPerformed(e);
 		}
 	}
-	private void limpiar() {
-		txtContraseñaActual.setText("");
-		txtNuevaContreña.setText("");
-		txtRepetirContraseña.setText("");
-	}
-
 	protected void do_btnCancelar_actionPerformed(ActionEvent e) {
 		dispose();
 	}
@@ -138,21 +136,24 @@ public class VentanaCambiarContraseña extends JDialog implements ActionListener
 		String contraseñaActual = txtContraseñaActual.getText();
 		String nuevaContraseña = txtNuevaContreña.getText();
 		String repetirContraseña = txtRepetirContraseña.getText();
-		
-		if (contraseñaActual.isEmpty() || nuevaContraseña.isEmpty() || repetirContraseña.isEmpty()){
+		if (contraseñaActual.isEmpty() || 
+				nuevaContraseña.isEmpty() || 
+				repetirContraseña.isEmpty()){
 			JOptionPane.showMessageDialog(this, "Los campos no deben estar vacíos.", "Información", JOptionPane.INFORMATION_MESSAGE);
+			return;
 		}
 		else if (!contraseñaActual.equals(persona.getContraseña())) {
-			JOptionPane.showMessageDialog(this, "La contraseña anterior es incorrecta, vuelva a intentarlo.", "Información", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(this, "La contraseña actual es incorrecta, vuelva a intentarlo.", "Información", JOptionPane.INFORMATION_MESSAGE);
+			return;
 		}
 		else if (!nuevaContraseña.equals(repetirContraseña)) {
 			JOptionPane.showMessageDialog(this, "Las nuevas contraseñas no coinciden.", "Información", JOptionPane.INFORMATION_MESSAGE);
+			return;
 		}
-		else {
-			persona.setContraseña(repetirContraseña);
-			JOptionPane.showMessageDialog(this, "¡Contraseña fue cambiada correctamente!", "Información", JOptionPane.INFORMATION_MESSAGE);
-			limpiar();
-		}
-
+		persona.setContraseña(repetirContraseña);
+		if(persona.getCorreo().contains("@empleado")) RepositorioEmpleado.actualizarEmpleado((Empleado) persona);
+		else RepositorioCliente.actualizarCliente((Cliente) persona);
+		JOptionPane.showMessageDialog(this, "¡La contraseña fue cambiada correctamente!", "Información", JOptionPane.INFORMATION_MESSAGE);
+		dispose();
 	}
 }

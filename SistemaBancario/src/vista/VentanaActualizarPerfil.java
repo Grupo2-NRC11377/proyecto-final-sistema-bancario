@@ -2,6 +2,9 @@ package vista;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+
+import modelo.Cliente;
+import modelo.Empleado;
 import modelo.Persona;
 import repositorio.RepositorioCliente;
 import repositorio.RepositorioEmpleado;
@@ -15,8 +18,10 @@ import javax.swing.JTextField;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
+import java.awt.event.KeyListener;
+import java.awt.event.KeyEvent;
 
-public class VentanaActualizarPerfil extends JDialog implements ActionListener {
+public class VentanaActualizarPerfil extends JDialog implements ActionListener, KeyListener {
 	
 	private Persona persona;
 
@@ -83,6 +88,7 @@ public class VentanaActualizarPerfil extends JDialog implements ActionListener {
 		}
 		{
 			txtNombres = new JTextField();
+			txtNombres.addKeyListener(this);
 			txtNombres.setText((String) null);
 			txtNombres.setForeground(new Color(90, 90, 90));
 			txtNombres.setFont(new Font("Arial", Font.PLAIN, 13));
@@ -93,6 +99,7 @@ public class VentanaActualizarPerfil extends JDialog implements ActionListener {
 		}
 		{
 			txtApellidos = new JTextField();
+			txtApellidos.addKeyListener(this);
 			txtApellidos.setText((String) null);
 			txtApellidos.setForeground(new Color(90, 90, 90));
 			txtApellidos.setFont(new Font("Arial", Font.PLAIN, 13));
@@ -103,6 +110,7 @@ public class VentanaActualizarPerfil extends JDialog implements ActionListener {
 		}
 		{
 			txtTelefono = new JTextField();
+			txtTelefono.addKeyListener(this);
 			txtTelefono.setText((String) null);
 			txtTelefono.setForeground(new Color(90, 90, 90));
 			txtTelefono.setFont(new Font("Arial", Font.PLAIN, 13));
@@ -142,6 +150,7 @@ public class VentanaActualizarPerfil extends JDialog implements ActionListener {
 		}
 		{
 			txtDni = new JTextField();
+			txtDni.addKeyListener(this);
 			txtDni.setText((String) null);
 			txtDni.setForeground(new Color(90, 90, 90));
 			txtDni.setFont(new Font("Arial", Font.PLAIN, 13));
@@ -205,38 +214,88 @@ public class VentanaActualizarPerfil extends JDialog implements ActionListener {
 		String telefono = txtTelefono.getText().trim();
 		String direccion = txtDireccion.getText().trim();
 		String correo = txtCorreoElectronico.getText().trim();
-		if(!dni.isEmpty() && !dni.equals(persona.getDni())) {
-			if(RepositorioCliente.buscarClientePorDni(dni) != null ||
-				RepositorioEmpleado.buscarEmpleadoPorDni(dni) != null) {
-				JOptionPane.showMessageDialog(this,"DNI ya registrado.", "Información", JOptionPane.INFORMATION_MESSAGE);
-				return;
-			}else if(dni.length() != 8) {
-				JOptionPane.showMessageDialog(this, "DNI inválido.", "Información", JOptionPane.INFORMATION_MESSAGE);
-				return;
-			}
-			persona.setDni(dni);
-		}
-		if(!nombres.isEmpty() && !nombres.equalsIgnoreCase(persona.getNombres())) persona.setNombres(nombres);
-		if(!apellidos.isEmpty() && !apellidos.equalsIgnoreCase(persona.getApellidos())) persona.setApellidos(apellidos);
-		if(!telefono.isEmpty() && !telefono.equals(persona.getTelefono())) {
-			if(telefono.length() != 9) {
-				JOptionPane.showMessageDialog(this, "Número de teléfono inválido.", "Información", JOptionPane.INFORMATION_MESSAGE);
-				return;
-			}
-			persona.setTelefono(telefono);
-		}
-		if(!direccion.isEmpty() && !direccion.equalsIgnoreCase(persona.getDireccion())) persona.setDireccion(direccion);
-		if(!correo.isEmpty() && !correo.equalsIgnoreCase(persona.getCorreo())) {
-			if(RepositorioCliente.buscarCliente(correo) != persona ||
-				RepositorioEmpleado.buscarEmpleado(correo) != persona) {
+		if(dni.isEmpty() || 
+				nombres.isEmpty() || 
+				apellidos.isEmpty() || 
+				telefono.isEmpty() ||
+				direccion.isEmpty() ||
+				correo.isEmpty()) {
+			JOptionPane.showMessageDialog(this, "No debe dejar campos vacíos.", "Información", JOptionPane.INFORMATION_MESSAGE);
+			return;
+		} else if(!persona.getDni().equals(dni) &&
+				(RepositorioCliente.consultarClienteDni(dni) != null ||
+				RepositorioEmpleado.consultarEmpleadoDni(dni) != null)) {
+			JOptionPane.showMessageDialog(this,"DNI ya registrado.", "Información", JOptionPane.INFORMATION_MESSAGE);
+			return;
+		} else if(dni.length() != 8) {
+			JOptionPane.showMessageDialog(this, "DNI inválido.", "Información", JOptionPane.INFORMATION_MESSAGE);
+			return;
+		} else if(telefono.length() != 9) {
+			JOptionPane.showMessageDialog(this, "Número de teléfono inválido.", "Información", JOptionPane.INFORMATION_MESSAGE);
+			return;
+		} else if(!persona.getCorreo().equals(correo) && 
+				(RepositorioCliente.consultarCliente(correo) != null ||
+				RepositorioEmpleado.consultarEmpleado(correo) != null)) {
 				JOptionPane.showMessageDialog(this,"Correo electrónico ya registrado.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
-			} else if(!correo.contains("@")) {
-				JOptionPane.showMessageDialog(this, "Correo electrónico inválido.", "Información", JOptionPane.INFORMATION_MESSAGE);
-				return;
-			}
-			persona.setCorreo(correo);
+		} else if(!correo.contains("@")) {
+			JOptionPane.showMessageDialog(this, "Correo electrónico inválido.", "Información", JOptionPane.INFORMATION_MESSAGE);
+			return;
 		}
+		persona.setDni(dni);
+		persona.setNombres(nombres);
+		persona.setApellidos(apellidos);
+		persona.setTelefono(telefono);
+		persona.setDireccion(direccion);
+		persona.setCorreo(correo);
+		if(persona.getCorreo().contains("@empleado")) RepositorioEmpleado.actualizarEmpleado((Empleado) persona);
+		else RepositorioCliente.actualizarCliente((Cliente) persona);
 		JOptionPane.showMessageDialog(this,"Datos actualizados correctamente");
+	}
+	public void keyPressed(KeyEvent e) {
+	}
+	public void keyReleased(KeyEvent e) {
+	}
+	public void keyTyped(KeyEvent e) {
+		if (e.getSource() == txtTelefono) {
+			do_txtTelefono_keyTyped(e);
+		}
+		if (e.getSource() == txtApellidos) {
+			do_txtApellidos_keyTyped(e);
+		}
+		if (e.getSource() == txtNombres) {
+			do_txtNombres_keyTyped(e);
+		}
+		if (e.getSource() == txtDni) {
+			do_txtDni_keyTyped(e);
+		}
+	}
+	protected void do_txtDni_keyTyped(KeyEvent e) {
+		char caracteres = e.getKeyChar();
+		if(Character.isAlphabetic(caracteres)) {
+			e.consume();
+			JOptionPane.showMessageDialog(this, "No debe ingresar letras.", "Información", JOptionPane.INFORMATION_MESSAGE);
+		}
+	}
+	protected void do_txtNombres_keyTyped(KeyEvent e) {
+		char caracteres = e.getKeyChar();
+		if(Character.isDigit(caracteres)) {
+			e.consume();
+			JOptionPane.showMessageDialog(this, "No debe ingresar números.", "Información", JOptionPane.INFORMATION_MESSAGE);
+		}
+	}
+	protected void do_txtApellidos_keyTyped(KeyEvent e) {
+		char caracteres = e.getKeyChar();
+		if(Character.isDigit(caracteres)) {
+			e.consume();
+			JOptionPane.showMessageDialog(this, "No debe ingresar números.", "Información", JOptionPane.INFORMATION_MESSAGE);
+		}
+	}
+	protected void do_txtTelefono_keyTyped(KeyEvent e) {
+		char caracteres = e.getKeyChar();
+		if(Character.isAlphabetic(caracteres)) {
+			e.consume();
+			JOptionPane.showMessageDialog(this, "No debe ingresar letras.", "Información", JOptionPane.INFORMATION_MESSAGE);
+		}
 	}
 }

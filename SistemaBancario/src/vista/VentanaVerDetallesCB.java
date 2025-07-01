@@ -44,8 +44,8 @@ public class VentanaVerDetallesCB extends JDialog implements ActionListener {
 	private JTextField txtMoneda;
 
 	public VentanaVerDetallesCB(Cuenta cuenta) {
-		getContentPane().setBackground(new Color(255, 255, 255));
 		this.cuenta = cuenta;
+		getContentPane().setBackground(new Color(255, 255, 255));
 		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 		setModal(true);
 		setTitle("Ver detalles");
@@ -159,6 +159,7 @@ public class VentanaVerDetallesCB extends JDialog implements ActionListener {
 			getContentPane().add(scrollPane);
 			{
 				tableHistorial = new JTable();
+				tableHistorial.setFillsViewportHeight(true);
 				tableHistorial.setForeground(new Color(90, 90, 90));
 				tableHistorial.setFont(new Font("Arial", Font.PLAIN, 13));
 				tableHistorial.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -213,17 +214,16 @@ public class VentanaVerDetallesCB extends JDialog implements ActionListener {
 		txtNumeroCuenta.setText(cuenta.getNumeroCuenta());
 		txtSaldoDisponible.setText(cuenta.getSaldoDisponibleFormateado());
 		txtSaldoContable.setText(cuenta.getSaldoContableFormateado());
-		txtFechaCreacion.setText(cuenta.getFechaCreacion());
+		txtFechaCreacion.setText(cuenta.getFechaCreacionFormateada());
 		txtEstado.setText(cuenta.getEstado());
 		txtMoneda.setText(cuenta.getMoneda());
 	}
 	private void llenarTabla() {
-		if(cuenta == null) return;
 		defaultTableModel.setRowCount(0);
 		for (Transaccion transaccion : cuenta.getTransacciones()) {
 			Object[] fila = new Object[6];
 			fila[0] = transaccion.getIdTransaccion();
-			fila[1] = transaccion.getTipo();
+			fila[1] = transaccion.getTipoTransaccion();
 			fila[2] = transaccion.getDescripcion();
 			fila[3] = transaccion.getFechaHora();
 			fila[4] = transaccion.getEstado();

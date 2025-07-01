@@ -272,7 +272,6 @@ public class VentanaMenu extends JFrame implements ActionListener {
 	}
 	protected void do_mntmVerCuentasBancarias_actionPerformed(ActionEvent e) {
 		VentanaVerCuentasBancarias ventanaVerCuentasBancarias = new VentanaVerCuentasBancarias(cliente);
-		ventanaVerCuentasBancarias.llenarTabla();
 		ventanaVerCuentasBancarias.setVisible(true);
 	}
 	protected void do_mntmVerTarjetas_actionPerformed(ActionEvent e) {		VentanaVerTarjetas ventanaVerTarjetas = new VentanaVerTarjetas(cliente);

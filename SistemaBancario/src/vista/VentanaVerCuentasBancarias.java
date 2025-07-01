@@ -11,9 +11,11 @@ import javax.swing.table.DefaultTableModel;
 
 import modelo.Cliente;
 import modelo.Cuenta;
+import repositorio.RepositorioCuenta;
 
 import javax.swing.JTable;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
@@ -63,6 +65,7 @@ public class VentanaVerCuentasBancarias extends JDialog implements ActionListene
 			getContentPane().add(scrollPane);
 			{
 				tableCuentasBancarias = new JTable();
+				tableCuentasBancarias.setFillsViewportHeight(true);
 				tableCuentasBancarias.setForeground(new Color(90, 90, 90));
 				tableCuentasBancarias.setFont(new Font("Arial", Font.PLAIN, 13));
 				tableCuentasBancarias.setBackground(new Color(255, 255, 255));
@@ -97,6 +100,7 @@ public class VentanaVerCuentasBancarias extends JDialog implements ActionListene
 			btnCancelar.setBounds(230, 406, 150, 35);
 			getContentPane().add(btnCancelar);
 		}
+		llenarTabla();
 	}
 	
 	public void actionPerformed(ActionEvent e) {
@@ -114,9 +118,13 @@ public class VentanaVerCuentasBancarias extends JDialog implements ActionListene
 		dispose();
 	}
 	public void llenarTabla() {
-		if(cliente == null) return;
+		ArrayList<Cuenta> cuentas = cliente.getCuentas();
+		if(cuentas.size() == 0) {
+			cuentas = RepositorioCuenta.consultarCuenta(cliente.getIdPersona());
+			cliente.setCuentas(cuentas);
+		}
 		defaultTableModel.setRowCount(0);
-		for (Cuenta cuenta : cliente.getCuentas()) {
+		for (Cuenta cuenta : cuentas) {
 			Object[] fila = new Object[6];
 			fila[0] = cuenta.getNumeroCuenta();
 			fila[1] = cuenta.getTipoCuenta();
@@ -145,6 +153,7 @@ public class VentanaVerCuentasBancarias extends JDialog implements ActionListene
                 "Confirmar cancelación", JOptionPane.YES_NO_OPTION);
         if (respuesta == JOptionPane.YES_OPTION) {
         	cuenta.setEstado("cancelada");
+        	RepositorioCuenta.actualizarCuenta(cuenta);
         	llenarTabla();
             JOptionPane.showMessageDialog(this, "La cuenta ha sido cancelada exitosamente.", "Información", JOptionPane.INFORMATION_MESSAGE);
         }

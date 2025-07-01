@@ -183,8 +183,8 @@ public class VentanaVerTransaccion extends JDialog implements ActionListener {
 	}
 	private void mostrarDatos() {
 		txtId.setText(transaccion.getIdTransaccion());
-		txtTipo.setText(transaccion.getTipo());
-		txtFechaHora.setText(transaccion.getFechaHora());
+		txtTipo.setText(transaccion.getTipoTransaccion());
+		txtFechaHora.setText(transaccion.getFechaHoraFormateada());
 		txtEstado.setText(transaccion.getEstado());
 		txtMonto.setText(Double.toString(transaccion.getMonto()));
 		String[] textoSeparado = transaccion.getDescripcion().split(";");

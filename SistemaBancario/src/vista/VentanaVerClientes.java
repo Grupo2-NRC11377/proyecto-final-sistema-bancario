@@ -19,8 +19,11 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.JTextField;
 import java.awt.Color;
+import java.awt.event.KeyListener;
+import java.util.ArrayList;
+import java.awt.event.KeyEvent;
 
-public class VentanaVerClientes extends JDialog implements ActionListener {
+public class VentanaVerClientes extends JDialog implements ActionListener, KeyListener {
 	private static final long serialVersionUID = 1L;
 	private JLabel lblClientes;
 	private JScrollPane scrollPane;
@@ -57,11 +60,12 @@ public class VentanaVerClientes extends JDialog implements ActionListener {
 			getContentPane().add(scrollPane);
 			{
 				tableClientes = new JTable();
+				tableClientes.setFillsViewportHeight(true);
 				tableClientes.setBackground(new Color(255, 255, 255));
 				tableClientes.setForeground(new Color(90, 90, 90));
 				tableClientes.setFont(new Font("Arial", Font.PLAIN, 13));
 				tableClientes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-				String[] columnas = new String[] {"DNI", "Nombres", "Apellidos", "teléfono", "Dirección", "Correo electrónico"};
+				String[] columnas = new String[] {"DNI", "Nombres", "Apellidos", "Teléfono", "Dirección", "Correo electrónico"};
 				defaultTableModel = new DefaultTableModel(columnas, 0) {
 					private static final long serialVersionUID = 1L;
 					public boolean isCellEditable(int row, int column) {
@@ -90,6 +94,7 @@ public class VentanaVerClientes extends JDialog implements ActionListener {
 		}
 		{
 			txtDni = new JTextField();
+			txtDni.addKeyListener(this);
 			txtDni.setForeground(new Color(90, 90, 90));
 			txtDni.setFont(new Font("Arial", Font.PLAIN, 13));
 			txtDni.setColumns(10);
@@ -105,6 +110,7 @@ public class VentanaVerClientes extends JDialog implements ActionListener {
 		}
 		{
 			txtNombres = new JTextField();
+			txtNombres.addKeyListener(this);
 			txtNombres.setForeground(new Color(90, 90, 90));
 			txtNombres.setFont(new Font("Arial", Font.PLAIN, 13));
 			txtNombres.setColumns(10);
@@ -120,6 +126,7 @@ public class VentanaVerClientes extends JDialog implements ActionListener {
 		}
 		{
 			txtApellidos = new JTextField();
+			txtApellidos.addKeyListener(this);
 			txtApellidos.setForeground(new Color(90, 90, 90));
 			txtApellidos.setFont(new Font("Arial", Font.PLAIN, 13));
 			txtApellidos.setColumns(10);
@@ -144,7 +151,7 @@ public class VentanaVerClientes extends JDialog implements ActionListener {
 			btnVerDetalles.setBounds(50, 491, 150, 35);
 			getContentPane().add(btnVerDetalles);
 		}
-		llenarTabla();
+		llenarTabla("","","");
 	}
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnVerDetalles) {
@@ -160,9 +167,12 @@ public class VentanaVerClientes extends JDialog implements ActionListener {
 	protected void do_btnCerrar_actionPerformed(ActionEvent e) {
 		dispose();
 	}
-	public void llenarTabla() {
+	public void llenarTabla(String dni, String nombres, String apellidos) {
+		ArrayList<Cliente> clientes = new ArrayList<Cliente>();
+		if(dni.isEmpty() && nombres.isEmpty() && apellidos.isEmpty()) clientes = RepositorioCliente.listarCliente();
+		else clientes = RepositorioCliente.consultarCliente(dni, nombres, apellidos);
 		defaultTableModel.setRowCount(0);
-		for (Cliente cliente : RepositorioCliente.getClientes()) {
+		for (Cliente cliente : clientes) {
 			Object[] fila = new Object[6];
 			fila[0] = cliente.getDni();
 			fila[1] = cliente.getNombres();
@@ -177,29 +187,7 @@ public class VentanaVerClientes extends JDialog implements ActionListener {
 		String dni = txtDni.getText().trim();
 		String nombres = txtNombres.getText().trim();
 		String apellidos = txtApellidos.getText().trim();
-		defaultTableModel.setRowCount(0);
-		boolean filtrarPorDni = !dni.isEmpty();
-		boolean filtrarPorNombres = !nombres.isEmpty();
-		boolean filtrarPorApellidos = !apellidos.isEmpty();
-		if (!filtrarPorDni && !filtrarPorNombres && !filtrarPorApellidos) {
-		    llenarTabla();
-		    return;
-		}
-		for (Cliente cliente : RepositorioCliente.getClientes()) {
-		    boolean coincideDni = !filtrarPorDni || cliente.getDni().equals(dni);
-		    boolean coincideNombres = !filtrarPorNombres || cliente.getNombres().contains(nombres);
-		    boolean coincideApellidos = !filtrarPorApellidos || cliente.getApellidos().contains(apellidos);
-		    if (coincideDni && coincideNombres && coincideApellidos) {
-		    	Object[] fila = new Object[6];
-				fila[0] = cliente.getDni();
-				fila[1] = cliente.getNombres();
-				fila[2] = cliente.getApellidos();
-				fila[3] = cliente.getTelefono();
-				fila[4] = cliente.getDireccion();
-				fila[5] = cliente.getCorreo();
-				defaultTableModel.addRow(fila);
-		    }
-		}
+		llenarTabla(dni, nombres, apellidos);
 	}
 	protected void do_btnVerDetalles_actionPerformed(ActionEvent e) {
 		int posicionFilaSeleccionada = tableClientes.getSelectedRow();
@@ -208,12 +196,48 @@ public class VentanaVerClientes extends JDialog implements ActionListener {
 			return;
 		}
 		String correo = tableClientes.getValueAt(posicionFilaSeleccionada, 5).toString();
-		Cliente cliente = RepositorioCliente.buscarCliente(correo);
+		Cliente cliente = RepositorioCliente.consultarCliente(correo);
 		if(cliente == null) {
 			JOptionPane.showMessageDialog(this, "El cliente seleccionado no existe.", "Información", JOptionPane.INFORMATION_MESSAGE);
 			return;
 		}
 		VentanaVerDetallesCliente ventanaVerDetallesCliente = new VentanaVerDetallesCliente(cliente);
 		ventanaVerDetallesCliente.setVisible(true);
+	}
+	public void keyPressed(KeyEvent e) {
+	}
+	public void keyReleased(KeyEvent e) {
+	}
+	public void keyTyped(KeyEvent e) {
+		if (e.getSource() == txtApellidos) {
+			do_txtApellidos_keyTyped(e);
+		}
+		if (e.getSource() == txtNombres) {
+			do_txtNombres_keyTyped(e);
+		}
+		if (e.getSource() == txtDni) {
+			do_txtDni_keyTyped(e);
+		}
+	}
+	protected void do_txtDni_keyTyped(KeyEvent e) {
+		char caracteres = e.getKeyChar();
+		if(Character.isAlphabetic(caracteres)) {
+			e.consume();
+			JOptionPane.showMessageDialog(this, "No debe ingresar letras.", "Información", JOptionPane.INFORMATION_MESSAGE);
+		}
+	}
+	protected void do_txtNombres_keyTyped(KeyEvent e) {
+		char caracteres = e.getKeyChar();
+		if(Character.isDigit(caracteres)) {
+			e.consume();
+			JOptionPane.showMessageDialog(this, "No debe ingresar números.", "Información", JOptionPane.INFORMATION_MESSAGE);
+		}
+	}
+	protected void do_txtApellidos_keyTyped(KeyEvent e) {
+		char caracteres = e.getKeyChar();
+		if(Character.isDigit(caracteres)) {
+			e.consume();
+			JOptionPane.showMessageDialog(this, "No debe ingresar números.", "Información", JOptionPane.INFORMATION_MESSAGE);
+		}
 	}
 }

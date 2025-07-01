@@ -153,7 +153,7 @@ public class VentanaVerSolicitudes extends JDialog implements ActionListener {
 			if(solicitud.getAsunto().contains("corriente")) cuenta = new Cuenta("corriente", moneda, cliente);
 			else if(solicitud.getAsunto().contains("ahorro")) cuenta = new Cuenta("ahorro", moneda, cliente);
 			cliente.agregarCuenta(cuenta);
-			RepositorioCuenta.agregarCuenta(cuenta);
+			RepositorioCuenta.insertarCuenta(cuenta);
 		}
 		else if (solicitud.getAsunto().contains("tarjeta")) {
 			if(solicitud.getAsunto().contains("débito")) cliente.agregarTarjeta(new Tarjeta("débito", cliente));

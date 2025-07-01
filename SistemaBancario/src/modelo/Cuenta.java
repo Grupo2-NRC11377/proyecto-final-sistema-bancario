@@ -16,18 +16,73 @@ public class Cuenta {
 	private String moneda;
 	private Cliente cliente;
 	private ArrayList<Transaccion> transacciones;
-
+	public Cuenta() {
+		transacciones = new ArrayList<Transaccion>();
+	}
 	public Cuenta(String tipoCuenta, String moneda, Cliente cliente) {
-		this.numeroCuenta = generarNumeroCuenta();
-		this.saldoContable = this.saldoDisponible = 0;
-		this.fechaCreacion = LocalDate.now();
-		this.estado = "activa";
+		numeroCuenta = generarNumeroCuenta();
+		saldoContable = saldoDisponible = 0;
+		fechaCreacion = LocalDate.now();
+		estado = "activa";
 		this.tipoCuenta = tipoCuenta;
 		this.moneda = moneda;
 		this.cliente = cliente;
-		this.transacciones = new ArrayList<Transaccion>();
-	}	
-	
+		transacciones = new ArrayList<Transaccion>();
+	}
+	public String getNumeroCuenta() {
+		return numeroCuenta;
+	}
+	public void setNumeroCuenta(String numeroCuenta) {
+		this.numeroCuenta = numeroCuenta;
+	}
+	public double getSaldoContable() {
+		return saldoContable;
+	}
+	public void setSaldoContable(double saldoContable) {
+		this.saldoContable = saldoContable;
+	}
+	public double getSaldoDisponible() {
+		return saldoDisponible;
+	}
+	public void setSaldoDisponible(double saldoDisponible) {
+		this.saldoDisponible = saldoDisponible;
+	}
+	public LocalDate getFechaCreacion() {
+		return fechaCreacion;
+	}
+	public void setFechaCreacion(LocalDate fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
+	}
+	public String getEstado() {
+		return estado;
+	}
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
+	public String getTipoCuenta() {
+		return tipoCuenta;
+	}
+	public void setTipoCuenta(String tipoCuenta) {
+		this.tipoCuenta = tipoCuenta;
+	}
+	public String getMoneda() {
+		return moneda;
+	}
+	public void setMoneda(String moneda) {
+		this.moneda = moneda;
+	}
+	public Cliente getCliente() {
+		return cliente;
+	}
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
+	}
+	public ArrayList<Transaccion> getTransacciones() {
+		return transacciones;
+	}
+	public void setTransacciones(ArrayList<Transaccion> transacciones) {
+		this.transacciones = transacciones;
+	}
 	private String generarNumeroCuenta() {
 		Random rand = new Random();
 		String numero = "";
@@ -38,27 +93,11 @@ public class Cuenta {
 	    }
 		return numero;
 	}
-	
-	public void setSaldoContable(double saldoContable) {
-		this.saldoContable = saldoContable;
-	}
-	public void setSaldoDisponible(double saldoDisponible) {
-		this.saldoDisponible = saldoDisponible;
-	}
-	public void setEstado(String estado) {
-		this.estado = estado;
-	}
-	public String getNumeroCuenta() {
-		return numeroCuenta;
-	}
 	public String getNumeroCuentaFormateado() {
 		return numeroCuenta.substring(0, 3) + "-" + numeroCuenta.substring(3);
 	}
-	public double getSaldoContable() {
-		return saldoContable;
-	}
-	public double getSaldoDisponible() {
-		return saldoDisponible;
+	public String getFechaCreacionFormateada() {
+		return fechaCreacion.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 	}
 	@SuppressWarnings("deprecation")
 	public String getSaldoContableFormateado() {
@@ -99,26 +138,5 @@ public class Cuenta {
 	    }
 	    NumberFormat numberFormat = NumberFormat.getCurrencyInstance(locale);
 		return numberFormat.format(saldoDisponible);
-	}
-	public String getFechaCreacion() {
-		return fechaCreacion.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-	}
-	public String getEstado() {
-		return estado;
-	}
-	public String getTipoCuenta() {
-		return tipoCuenta;
-	}
-	public ArrayList<Transaccion> getTransacciones() {
-		return transacciones;
-	}
-	public void agregarTransaccion(Transaccion transaccion) {
-		transacciones.add(transaccion);
-	}
-	public String getMoneda() {
-		return moneda;
-	}
-	public Cliente getCliente() {
-		return cliente;
 	}
 }

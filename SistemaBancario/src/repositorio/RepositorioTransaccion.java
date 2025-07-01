@@ -5,114 +5,158 @@ import java.util.ArrayList;
 
 import conexión.ConexiónMySQL;
 import modelo.Cliente;
-import modelo.Cuenta;
-import modelo.Tarjeta;
 import modelo.Transaccion;
 
 public class RepositorioTransaccion {
-	 public static ArrayList<Transaccion> getTransaccions() {
-	        ArrayList<Transaccion> transacciones = new ArrayList<>();
-	        try (Connection cnx = ConexiónMySQL.getconexión();
-	             CallableStatement stmt = cnx.prepareCall("{CALL sp_listarTransaccion()}")) {
-
-	            ResultSet rs = stmt.executeQuery();
-
-	            while (rs.next()) {
-	                Cliente cliente = new Cliente();
-	                cliente.setIdPersona(rs.getString(7)); //id del cliente
-	                
-	                Transaccion transaccion = new Transaccion(rs.getString(2), rs.getString(3), rs.getDouble(6), cliente);
-	                
-	                transaccion.getClass().getDeclaredField("idTransaccion").setAccessible(true);
-	                transaccion.getClass().getDeclaredField("idTransaccion").set(transaccion, rs.getString(1));
-	                
-	                
-	                transaccion.setEstado(rs.getString(5));
-	                transaccion.getClass().getDeclaredField("getFechaHora").setAccessible(true);
-	                transaccion.getClass().getDeclaredField("getFechaHora").set(transaccion, rs.getDate(4).toLocalDate());
-
-	                transacciones.add(transaccion);
-	            }
-
-	        } catch (Exception e) {
-	            System.out.println("Error al listar las transacciones: " + e);
-	        }
-	        return transacciones;
-	    }
-	 public static boolean agregarTransaccion(Transaccion transaccion) {
-	        try (Connection cnx = ConexiónMySQL.getconexión();
-	             CallableStatement stmt = cnx.prepareCall("{CALL sp_insertarTransaccion(?, ?, ?, ?, ?, ?, ?)}")) {
-
-	            stmt.setString(1, transaccion.getIdTransaccion());
-	            stmt.setString(2, transaccion.getTipo());
-	            stmt.setString(3, transaccion.getDescripcion());
-	            stmt.setDate(4, Date.valueOf(transaccion.getFechaHora()));
-	            stmt.setString(5, transaccion.getEstado());
-	            stmt.setDouble(6, transaccion.getMonto());
-	            stmt.setString(7, transaccion.getCliente().getIdPersona());
-
-	            return stmt.executeUpdate() > 0;
-
-	        } catch (Exception e) {
-	            System.out.println("Error al insertar la transacción: " + e);
-	            return false;
-	        }
-	    }
-	 public static boolean eliminarTransaccion(String idtransaccion) {
-	        try (Connection cnx = ConexiónMySQL.getconexión();
-	             CallableStatement stmt = cnx.prepareCall("{sp_eliminarTransaccion(?)}")) {
-
-	            stmt.setString(1, idtransaccion);
-	            return stmt.executeUpdate() > 0;
-
-	        } catch (Exception e) {
-	            System.out.println("Error al eliminar transaccion: " + e);
-	            return false;
-	        }
-	    }
-	 
-	 public static boolean actualizarTransaccion(String idtransaccion, String estadoactua) {
-	        try (Connection cnx = ConexiónMySQL.getconexión();
-	             CallableStatement stmt = cnx.prepareCall("{CALL sp_actualizarTransaccion(?, ?)}")) {
-
-	            stmt.setString(1, idtransaccion);
-	            stmt.setString(2, estadoactua);
-	            return stmt.executeUpdate() > 0;
-
-	        } catch (Exception e) {
-	            System.out.println("Error al actualizar estado de transacción: " + e);
-	            return false;
-	        }
-	    }
-	 public static Transaccion buscarTransaccion(String idTransaccion) {
-	        Transaccion transaccion = null;
-	        try (Connection cnx = ConexiónMySQL.getconexión();
-	             CallableStatement cstmt = cnx.prepareCall("{CALL sp_buscarIdTransaccion(?)}")) {
-
-	            cstmt.setString(1, idTransaccion);
-	            ResultSet rs = cstmt.executeQuery();
-
-	            if (rs.next()) {
-	                Cliente cliente = new Cliente();
-	                cliente.setIdPersona(rs.getString(7));
-
-	                transaccion = new Transaccion(rs.getString(2), rs.getString(3), rs.getDouble(6), cliente);
-	                
-	                transaccion.getClass().getDeclaredField("idTransaccion").setAccessible(true);
-	                transaccion.getClass().getDeclaredField("idTransaccion").set(transaccion, rs.getString(1));
-	                
-	                
-	                transaccion.setEstado(rs.getString(5));
-	                transaccion.getClass().getDeclaredField("getFechaHora").setAccessible(true);
-	                transaccion.getClass().getDeclaredField("getFechaHora").set(transaccion, rs.getDate(4).toLocalDate());
-	            }
-
-	        } catch (Exception e) {
-	            System.out.println("Error al buscar una transacción: " + e);
-	        } return transaccion;
-	    }
-
-	 
-	
-
+	public static ArrayList<Transaccion> listarTransaccion() {
+    	Connection connection = null;
+    	CallableStatement callableStatement = null;
+        ArrayList<Transaccion> transacciones = new ArrayList<Transaccion>();
+        try {
+        	connection = ConexiónMySQL.getconexión();
+        	callableStatement = connection.prepareCall("{CALL sp_listarTransaccion()}");
+            ResultSet resultSet = callableStatement.executeQuery();
+            Transaccion transaccion;
+            while (resultSet.next()) {
+            	Cliente cliente = new Cliente();
+                cliente.setIdPersona(resultSet.getString("id_persona"));
+                cliente.setDni(resultSet.getString("dni"));
+                cliente.setNombres(resultSet.getString("nombres"));
+                cliente.setApellidos(resultSet.getString("apellidos"));
+                cliente.setTelefono(resultSet.getString("telefono"));
+                cliente.setDireccion(resultSet.getString("direccion"));
+                cliente.setCorreo(resultSet.getString("correo"));
+                cliente.setContraseña(resultSet.getString("contraseña"));
+                transaccion = new Transaccion();
+                transaccion.setIdTransaccion(resultSet.getString("id_transaccion"));
+                transaccion.setTipoTransaccion(resultSet.getString("tipo_transaccion"));
+                transaccion.setDescripcion(resultSet.getString("descripcion"));
+                transaccion.setFechaHora(resultSet.getTimestamp("fecha_hora").toLocalDateTime());
+                transaccion.setEstado(resultSet.getString("estado"));
+                transaccion.setMonto(resultSet.getDouble("monto"));
+                transaccion.setCliente(cliente);
+                transacciones.add(transaccion);
+            }
+        } catch (Exception e) {
+            System.out.println("Error al listar transacción: " + e);
+        } finally {
+			try {
+				if(connection != null) connection.close();
+				if(callableStatement != null) callableStatement.close();
+			} catch (Exception e) {
+				System.out.println("Error: " + e);
+			}
+		}
+        return transacciones;
+	}
+	public static void insertarTransaccion(Transaccion transaccion) {
+    	Connection connection = null;
+    	CallableStatement callableStatement = null;
+        try {
+        	String procedimientoAlmacenado = "{CALL sp_insertarTransaccion(?, ?, ?, ?, ?, ?, ?)}";
+        	connection = ConexiónMySQL.getconexión();
+            callableStatement = connection.prepareCall(procedimientoAlmacenado);
+            callableStatement.setString(1, transaccion.getIdTransaccion());
+            callableStatement.setString(2, transaccion.getTipoTransaccion());
+            callableStatement.setString(3, transaccion.getDescripcion());
+            callableStatement.setTimestamp(4, Timestamp.valueOf((transaccion.getFechaHora())));
+            callableStatement.setString(5, transaccion.getEstado());
+            callableStatement.setDouble(6, transaccion.getMonto());
+            callableStatement.setString(7, transaccion.getCliente().getIdPersona());
+            callableStatement.executeQuery();
+        } catch (Exception e) {
+            System.out.println("Error al insertar transacción: " + e);
+        } finally {
+			try {
+				if(connection != null) connection.close();
+				if(callableStatement != null) callableStatement.close();
+			} catch (Exception e) {
+				System.out.println("Error: " + e);
+			}
+		}
+	}
+	public static void eliminarTransaccion(String idTransaccion) {
+    	Connection connection = null;
+    	CallableStatement callableStatement = null;
+        try {
+        	String procedimientoAlmacenado = "{CALL sp_eliminarTransaccion(?)}";
+        	connection = ConexiónMySQL.getconexión();
+        	callableStatement = connection.prepareCall(procedimientoAlmacenado);
+        	callableStatement.setString(1, idTransaccion);
+        	callableStatement.executeQuery();
+        } catch (Exception e) {
+            System.out.println("Error al eliminar transacción: " + e);
+        } finally {
+			try {
+				if(connection != null) connection.close();
+				if(callableStatement != null) callableStatement.close();
+			} catch (Exception e) {
+				System.out.println("Error: " + e);
+			}
+		}
+    }
+	public static void actualizarTransaccion(Transaccion transaccion) {
+    	Connection connection = null;
+    	CallableStatement callableStatement = null;
+        try {
+        	String procedimientoAlmacenado = "{CALL sp_actualizarTransaccion(?, ?)}";
+        	connection = ConexiónMySQL.getconexión();
+        	callableStatement = connection.prepareCall(procedimientoAlmacenado);
+        	callableStatement.setString(1, transaccion.getIdTransaccion());
+        	callableStatement.setString(2, transaccion.getEstado());
+        	callableStatement.executeQuery();
+        } catch (Exception e) {
+            System.out.println("Error al actualizar transacción: " + e);
+        } finally {
+			try {
+				if(connection != null) connection.close();
+				if(callableStatement != null) callableStatement.close();
+			} catch (Exception e) {
+				System.out.println("Error: " + e);
+			}
+		}
+    }
+	public static Transaccion consultarIdTransaccion(String idTransaccion) {
+    	Connection connection = null;
+    	CallableStatement callableStatement = null;
+    	ResultSet resultSet = null;
+    	Transaccion transaccion= null;
+        try {
+        	String procedimientoAlmacenado = "{CALL sp_consultarIdTransaccion(?)}";
+        	connection = ConexiónMySQL.getconexión();
+        	callableStatement = connection.prepareCall(procedimientoAlmacenado);
+        	callableStatement.setString(1, idTransaccion);
+            resultSet = callableStatement.executeQuery();
+            if (resultSet.next()) {
+            	Cliente cliente = new Cliente();
+                cliente.setIdPersona(resultSet.getString("id_persona"));
+                cliente.setDni(resultSet.getString("dni"));
+                cliente.setNombres(resultSet.getString("nombres"));
+                cliente.setApellidos(resultSet.getString("apellidos"));
+                cliente.setTelefono(resultSet.getString("telefono"));
+                cliente.setDireccion(resultSet.getString("direccion"));
+                cliente.setCorreo(resultSet.getString("correo"));
+                cliente.setContraseña(resultSet.getString("contraseña"));
+                transaccion = new Transaccion();
+                transaccion.setIdTransaccion(resultSet.getString("id_transaccion"));
+                transaccion.setTipoTransaccion(resultSet.getString("tipo_transaccion"));
+                transaccion.setDescripcion(resultSet.getString("descripcion"));
+                transaccion.setFechaHora(resultSet.getTimestamp("fecha_hora").toLocalDateTime());
+                transaccion.setEstado(resultSet.getString("estado"));
+                transaccion.setMonto(resultSet.getDouble("monto"));
+                transaccion.setCliente(cliente);
+            }
+        } catch (Exception e) {
+            System.out.println("Error al consultar id de transacción: " + e);
+        } finally {
+			try {
+				if(connection != null) connection.close();
+				if(callableStatement != null) callableStatement.close();
+				if(resultSet != null) resultSet.close();
+			} catch (Exception e) {
+				System.out.println("Error: " + e);
+			}
+		}
+        return transaccion;
+    }
 }

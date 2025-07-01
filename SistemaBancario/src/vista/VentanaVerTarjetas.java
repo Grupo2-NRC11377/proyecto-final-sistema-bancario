@@ -13,8 +13,10 @@ import javax.swing.table.DefaultTableModel;
 
 import modelo.Cliente;
 import modelo.Tarjeta;
+import repositorio.RepositorioTarjeta;
 
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import java.awt.Font;
@@ -74,6 +76,7 @@ public class VentanaVerTarjetas extends JDialog implements ActionListener {
             }
         };
         tableTarjetas = new JTable(tableModel);
+        tableTarjetas.setFillsViewportHeight(true);
         tableTarjetas.setForeground(new Color(90, 90, 90));
         tableTarjetas.setBackground(new Color(255, 255, 255));
         tableTarjetas.setFont(new Font("Arial", Font.PLAIN, 13));
@@ -92,15 +95,18 @@ public class VentanaVerTarjetas extends JDialog implements ActionListener {
     }
 
     private void llenarTabla() {
-        if (cliente == null) return;
+    	ArrayList<Tarjeta> tarjetas = cliente.getTarjetas();
+		if(tarjetas.size() == 0) {
+			tarjetas = RepositorioTarjeta.consultarTarjeta(cliente.getIdPersona());
+			cliente.setTarjetas(tarjetas);
+		}
         tableModel.setRowCount(0);
-        for (Tarjeta tarjeta : cliente.getTarjetas()) {
-        	Object[] fila = new Object[] {
-                    tarjeta.getNumeroTarjeta(),     
-                    tarjeta.getTipoTarjeta(),           
-                    tarjeta.getFechaVencimiento(),   
-                    tarjeta.getEstado()               
-                };
+        for (Tarjeta tarjeta : tarjetas) {
+        	Object[] fila = new Object[4];
+        	fila[0] = tarjeta.getNumeroTarjeta();
+        	fila[1] = tarjeta.getTipoTarjeta();
+        	fila[2] = tarjeta.getFechaVencimiento();
+        	fila[3] = tarjeta.getEstado();
             tableModel.addRow(fila);
         }
     }
@@ -134,6 +140,7 @@ public class VentanaVerTarjetas extends JDialog implements ActionListener {
                 "Confirmar bloqueo", JOptionPane.YES_NO_OPTION);
         if (respuesta == JOptionPane.YES_OPTION) {
         	tarjeta.setEstado("bloqueada");
+        	RepositorioTarjeta.actualizarTarjeta(tarjeta);
         	llenarTabla();
             JOptionPane.showMessageDialog(this, "La tarjeta ha sido bloqueada exitosamente.", "Información", JOptionPane.INFORMATION_MESSAGE);
         }

@@ -183,7 +183,7 @@ public class VentanaTransaccion extends JDialog implements ActionListener {
 				JOptionPane.showMessageDialog(this, "El campo número de cuenta de origen está vacío.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
-			cuentaOrigen = RepositorioCuenta.buscarCuenta(numeroOrigen);
+			cuentaOrigen = RepositorioCuenta.consultarNumeroCuenta(numeroOrigen);
 			if(cuentaOrigen == null) {
 				JOptionPane.showMessageDialog(this, "La cuenta de origen no existe.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
@@ -199,7 +199,7 @@ public class VentanaTransaccion extends JDialog implements ActionListener {
 				JOptionPane.showMessageDialog(this, "El campo número de cuenta de destino está vacío.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
-			cuentaDestino = RepositorioCuenta.buscarCuenta(numeroDestino);
+			cuentaDestino = RepositorioCuenta.consultarNumeroCuenta(numeroDestino);
 			if(cuentaDestino == null) {
 				JOptionPane.showMessageDialog(this, "La cuenta de destino no existe.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
@@ -274,7 +274,7 @@ public class VentanaTransaccion extends JDialog implements ActionListener {
 	    	            writer.write("Comprobante de la transacción\n");
 	    	            writer.write("------------------------------\n");
 	    	            writer.write("ID: " + transaccion.getIdTransaccion() + "\n");
-	    	            writer.write("Tipo: " + transaccion.getTipo() + "\n");
+	    	            writer.write("Tipo: " + transaccion.getTipoTransaccion() + "\n");
 	            		writer.write("Descripción: " + transaccion.getDescripcion() + "\n");
         				writer.write("Fecha y hora: " + transaccion.getFechaHora() + "\n");
         				writer.write("Estado: " + transaccion.getEstado() + "\n");

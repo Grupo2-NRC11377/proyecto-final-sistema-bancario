@@ -5,6 +5,8 @@ import javax.swing.JDialog;
 import modelo.Cliente;
 import modelo.Cuenta;
 import modelo.Tarjeta;
+import repositorio.RepositorioCuenta;
+import repositorio.RepositorioTarjeta;
 
 import javax.swing.JLabel;
 import java.awt.Font;
@@ -16,6 +18,7 @@ import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
 
@@ -192,6 +195,7 @@ public class VentanaVerDetallesCliente extends JDialog implements ActionListener
 			getContentPane().add(scrollPane);
 			{
 				tableCuentasCliente = new JTable();
+				tableCuentasCliente.setFillsViewportHeight(true);
 				tableCuentasCliente.setForeground(new Color(90, 90, 90));
 				tableCuentasCliente.setFont(new Font("Arial", Font.PLAIN, 13));
 				tableCuentasCliente.setBackground(new Color(255, 255, 255));
@@ -213,6 +217,7 @@ public class VentanaVerDetallesCliente extends JDialog implements ActionListener
 			getContentPane().add(scrollPane_1);
 			{
 				tableTarjetasCliente = new JTable();
+				tableTarjetasCliente.setFillsViewportHeight(true);
 				tableTarjetasCliente.setForeground(new Color(90, 90, 90));
 				tableTarjetasCliente.setFont(new Font("Arial", Font.PLAIN, 13));
 				tableTarjetasCliente.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -265,9 +270,13 @@ public class VentanaVerDetallesCliente extends JDialog implements ActionListener
 		txtCorreo.setText(cliente.getCorreo());		
 	}
 	private void llenarTablaCuentas() {
-		if(cliente == null) return;
+		ArrayList<Cuenta> cuentas = cliente.getCuentas();
+		if(cuentas.size() == 0) {
+			cuentas = RepositorioCuenta.consultarCuenta(cliente.getIdPersona());
+			cliente.setCuentas(cuentas);
+		}
 		defaultTableModelCuentas.setRowCount(0);
-		for (Cuenta cuenta : cliente.getCuentas()) {
+		for (Cuenta cuenta : cuentas) {
 			Object[] fila = new Object[3];
 			fila[0] = cuenta.getNumeroCuenta();
 			fila[1] = cuenta.getTipoCuenta();
@@ -276,14 +285,18 @@ public class VentanaVerDetallesCliente extends JDialog implements ActionListener
 		}
 	}
 	private void llenarTablaTarjetas() {
-		if(cliente == null) return;
-		defaultTableModelTarjetas.setRowCount(0);
-		for (Tarjeta tarjeta : cliente.getTarjetas()) {
-			Object[] fila = new Object[3];
-			fila[0] = tarjeta.getNumeroTarjeta();
-			fila[1] = tarjeta.getTipoTarjeta();
-			fila[2] = tarjeta.getEstado();
-			defaultTableModelTarjetas.addRow(fila);
+		ArrayList<Tarjeta> tarjetas = cliente.getTarjetas();
+		if(tarjetas.size() == 0) {
+			tarjetas = RepositorioTarjeta.consultarTarjeta(cliente.getIdPersona());
+			cliente.setTarjetas(tarjetas);
 		}
+        defaultTableModelTarjetas.setRowCount(0);
+        for (Tarjeta tarjeta : tarjetas) {
+        	Object[] fila = new Object[3];
+        	fila[0] = tarjeta.getNumeroTarjeta();
+        	fila[1] = tarjeta.getTipoTarjeta();
+        	fila[2] = tarjeta.getEstado();
+        	defaultTableModelTarjetas.addRow(fila);
+        }
 	}
 }

@@ -22,8 +22,10 @@ import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JCheckBox;
 import java.awt.Color;
+import java.awt.event.KeyListener;
+import java.awt.event.KeyEvent;
 
-public class VentanaRegistrar extends JDialog implements ActionListener {
+public class VentanaRegistrar extends JDialog implements ActionListener, KeyListener {
 
 	private VentanaPrincipal ventanaPrincipal;
 	
@@ -77,6 +79,7 @@ public class VentanaRegistrar extends JDialog implements ActionListener {
 		}
 		{
 			txtNombres = new JTextField();
+			txtNombres.addKeyListener(this);
 			txtNombres.setForeground(new Color(90, 90, 90));
 			txtNombres.setFont(new Font("Arial", Font.PLAIN, 13));
 			txtNombres.setBounds(200, 152, 200, 25);
@@ -92,6 +95,7 @@ public class VentanaRegistrar extends JDialog implements ActionListener {
 		}
 		{
 			txtApellidos = new JTextField();
+			txtApellidos.addKeyListener(this);
 			txtApellidos.setForeground(new Color(90, 90, 90));
 			txtApellidos.setFont(new Font("Arial", Font.PLAIN, 13));
 			txtApellidos.setColumns(10);
@@ -107,6 +111,7 @@ public class VentanaRegistrar extends JDialog implements ActionListener {
 		}
 		{
 			txtTelefono = new JTextField();
+			txtTelefono.addKeyListener(this);
 			txtTelefono.setForeground(new Color(90, 90, 90));
 			txtTelefono.setFont(new Font("Arial", Font.PLAIN, 13));
 			txtTelefono.setColumns(10);
@@ -194,6 +199,7 @@ public class VentanaRegistrar extends JDialog implements ActionListener {
 		}
 		{
 			txtDNI = new JTextField();
+			txtDNI.addKeyListener(this);
 			txtDNI.setForeground(new Color(90, 90, 90));
 			txtDNI.setFont(new Font("Arial", Font.PLAIN, 13));
 			txtDNI.setColumns(10);
@@ -239,23 +245,23 @@ public class VentanaRegistrar extends JDialog implements ActionListener {
 			}else if(dni.length() != 8) {
 				JOptionPane.showMessageDialog(this, "DNI inválido.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
-			}else if(RepositorioEmpleado.buscarEmpleado(correoElectronico) != null ||
-					RepositorioCliente.buscarCliente(correoElectronico) != null) {
+			}else if(RepositorioEmpleado.consultarEmpleado(correoElectronico) != null ||
+					RepositorioCliente.consultarCliente(correoElectronico) != null) {
 				JOptionPane.showMessageDialog(this, "Correo electrónico ya registrado.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
-			}else if(RepositorioEmpleado.buscarEmpleadoPorDni(dni) != null ||
-					RepositorioCliente.buscarClientePorDni(dni) != null) {
+			}else if(RepositorioEmpleado.consultarEmpleadoDni(dni) != null ||
+					RepositorioCliente.consultarClienteDni(dni) != null) {
 				JOptionPane.showMessageDialog(this, "DNI ya registrado.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
 			if(correoElectronico.contains("@empleado")) {
 				Empleado empleado= new Empleado(dni, nombres, apellidos, telefono, direccion, correoElectronico, new String(contraseña));
-				RepositorioEmpleado.agregarEmpleado(empleado);
+				RepositorioEmpleado.insertarEmpleado(empleado);
 				VentanaMenuEmpleado ventanaMenuEmpleado = new VentanaMenuEmpleado(ventanaPrincipal, empleado);
 				ventanaMenuEmpleado.setVisible(true);
 			}else {
 				Cliente cliente = new Cliente(dni, nombres, apellidos, telefono, direccion, correoElectronico, new String(contraseña));
-				RepositorioCliente.agregarCliente(cliente);
+				RepositorioCliente.insertarCliente(cliente);
 				VentanaMenu menu = new VentanaMenu(ventanaPrincipal, cliente);
 				menu.setVisible(true);
 			}
@@ -281,5 +287,51 @@ public class VentanaRegistrar extends JDialog implements ActionListener {
 	protected void do_chckbxVerContraseña_actionPerformed(ActionEvent e) {
 		if(chckbxVerContraseña.isSelected()) txtContraseña.setEchoChar((char) 0);
 		else txtContraseña.setEchoChar('●');
+	}
+	public void keyPressed(KeyEvent e) {
+	}
+	public void keyReleased(KeyEvent e) {
+	}
+	public void keyTyped(KeyEvent e) {
+		if (e.getSource() == txtTelefono) {
+			do_txtTelefono_keyTyped(e);
+		}
+		if (e.getSource() == txtApellidos) {
+			do_txtApellidos_keyTyped(e);
+		}
+		if (e.getSource() == txtNombres) {
+			do_txtNombres_keyTyped(e);
+		}
+		if (e.getSource() == txtDNI) {
+			do_txtDNI_keyTyped(e);
+		}
+	}
+	protected void do_txtDNI_keyTyped(KeyEvent e) {
+		char caracteres = e.getKeyChar();
+		if(Character.isAlphabetic(caracteres)) {
+			e.consume();
+			JOptionPane.showMessageDialog(this, "No debe ingresar letras.", "Información", JOptionPane.INFORMATION_MESSAGE);
+		}
+	}
+	protected void do_txtNombres_keyTyped(KeyEvent e) {
+		char caracteres = e.getKeyChar();
+		if(Character.isDigit(caracteres)) {
+			e.consume();
+			JOptionPane.showMessageDialog(this, "No debe ingresar números.", "Información", JOptionPane.INFORMATION_MESSAGE);
+		}
+	}
+	protected void do_txtApellidos_keyTyped(KeyEvent e) {
+		char caracteres = e.getKeyChar();
+		if(Character.isDigit(caracteres)) {
+			e.consume();
+			JOptionPane.showMessageDialog(this, "No debe ingresar números.", "Información", JOptionPane.INFORMATION_MESSAGE);
+		}
+	}
+	protected void do_txtTelefono_keyTyped(KeyEvent e) {
+		char caracteres = e.getKeyChar();
+		if(Character.isAlphabetic(caracteres)) {
+			e.consume();
+			JOptionPane.showMessageDialog(this, "No debe ingresar letras.", "Información", JOptionPane.INFORMATION_MESSAGE);
+		}
 	}
 }

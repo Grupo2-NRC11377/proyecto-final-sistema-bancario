@@ -124,7 +124,7 @@ public class VentanaRealizarSolicitud extends JDialog implements ActionListener 
 	protected void do_btnEnviar_actionPerformed(ActionEvent e) {
 		String tipo = (String) cbxAsunto.getSelectedItem();
 		String moneda = (String) cbxMonedas.getSelectedItem();
-		Empleado empleado = RepositorioEmpleado.obtenerEmpleadoAleatorio();
+		Empleado empleado = RepositorioEmpleado.consultarEmpleadoAleatorio();
     	if(empleado == null) {
     		JOptionPane.showMessageDialog(this, "No hay empleados disponibles, vuelva a intentarlo más tarde.", "Información", JOptionPane.INFORMATION_MESSAGE);
     		return;

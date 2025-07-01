@@ -1,9 +1,6 @@
 package repositorio;
 
 import java.sql.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 
 import conexión.ConexiónMySQL;
@@ -11,111 +8,195 @@ import modelo.Cliente;
 import modelo.Tarjeta;
 
 public class RepositorioTarjeta {
-
-    public static ArrayList<Tarjeta> getTarjetas() {
-        ArrayList<Tarjeta> tarjetas = new ArrayList<>();
-        try (Connection cnx = ConexiónMySQL.getconexión();
-             CallableStatement stmt = cnx.prepareCall("{CALL sp_listarTarjeta()}")) {
-
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                Cliente cliente = new Cliente();
-                cliente.setIdPersona(rs.getString(5)); // id_cliente
-
-                Tarjeta tarjeta = new Tarjeta(
-                    rs.getString(3), // tipo_tarjeta
-                    cliente
-                );
-
-                tarjeta.setEstado(rs.getString(2));
-                tarjeta.setFechaVencimiento(rs.getDate(4).toLocalDate().atStartOfDay());
-
-                tarjeta.getClass().getDeclaredField("numeroTarjeta").setAccessible(true);
-                tarjeta.getClass().getDeclaredField("numeroTarjeta").set(tarjeta, rs.getString(1));
-
+	public static ArrayList<Tarjeta> listarTarjeta() {
+    	Connection connection = null;
+    	CallableStatement callableStatement = null;
+        ArrayList<Tarjeta> tarjetas = new ArrayList<Tarjeta>();
+        try {
+        	connection = ConexiónMySQL.getconexión();
+        	callableStatement = connection.prepareCall("{CALL sp_listarTarjeta()}");
+            ResultSet resultSet = callableStatement.executeQuery();
+            Tarjeta tarjeta;
+            while (resultSet.next()) {
+            	Cliente cliente = new Cliente();
+                cliente.setIdPersona(resultSet.getString("id_persona"));
+                cliente.setDni(resultSet.getString("dni"));
+                cliente.setNombres(resultSet.getString("nombres"));
+                cliente.setApellidos(resultSet.getString("apellidos"));
+                cliente.setTelefono(resultSet.getString("telefono"));
+                cliente.setDireccion(resultSet.getString("direccion"));
+                cliente.setCorreo(resultSet.getString("correo"));
+                cliente.setContraseña(resultSet.getString("contraseña"));
+                tarjeta = new Tarjeta();
+                tarjeta.setNumeroTarjeta(resultSet.getString("numero_tarjeta"));
+                tarjeta.setFechaVencimiento(resultSet.getDate("fecha_vencimiento").toLocalDate());
+                tarjeta.setEstado(resultSet.getString("estado"));
+                tarjeta.setTipoTarjeta(resultSet.getString("tipo_tarjeta"));
+                tarjeta.setCliente(cliente);
                 tarjetas.add(tarjeta);
             }
-
         } catch (Exception e) {
-            System.out.println("Error al listar tarjetas: " + e);
-        }
+            System.out.println("Error al listar tarjeta: " + e);
+        } finally {
+			try {
+				if(connection != null) connection.close();
+				if(callableStatement != null) callableStatement.close();
+			} catch (Exception e) {
+				System.out.println("Error: " + e);
+			}
+		}
         return tarjetas;
     }
-
-    public static boolean agregarTarjeta(Tarjeta tarjeta) {
-        try (Connection cnx = ConexiónMySQL.getconexión();
-             CallableStatement stmt = cnx.prepareCall("{CALL sp_insertarTarjeta(?, ?, ?, ?, ?)}")) {
-
-            stmt.setString(1, tarjeta.getNumeroTarjeta().replaceAll(" ", ""));
-            stmt.setString(2, tarjeta.getEstado());
-            stmt.setString(3, tarjeta.getTipoTarjeta());
-            stmt.setDate(4, Date.valueOf(tarjeta.getFechaVencimiento().substring(3) + "-"
-                                         + tarjeta.getFechaVencimiento().substring(0, 2) + "-01"));
-            stmt.setString(5, tarjeta.getCliente().getIdPersona());
-
-            return stmt.executeUpdate() > 0;
-
+	public static void insertarTarjeta(Tarjeta tarjeta) {
+    	Connection connection = null;
+    	CallableStatement callableStatement = null;
+        try {
+        	String procedimientoAlmacenado = "{CALL sp_insertarTarjeta(?, ?, ?, ?, ?)}";
+        	connection = ConexiónMySQL.getconexión();
+            callableStatement = connection.prepareCall(procedimientoAlmacenado);
+            callableStatement.setString(1, tarjeta.getNumeroTarjeta());
+            callableStatement.setDate(2, Date.valueOf(tarjeta.getFechaVencimiento()));
+            callableStatement.setString(3, tarjeta.getTipoTarjeta());
+            callableStatement.setString(4, tarjeta.getEstado());
+            callableStatement.setString(5, tarjeta.getCliente().getIdPersona());
+            callableStatement.executeQuery();
         } catch (Exception e) {
-            System.out.println("Error al agregar tarjeta: " + e);
-            return false;
-        }
+            System.out.println("Error al insertar tarjeta: " + e);
+        } finally {
+			try {
+				if(connection != null) connection.close();
+				if(callableStatement != null) callableStatement.close();
+			} catch (Exception e) {
+				System.out.println("Error: " + e);
+			}
+		}
     }
-
-    public static boolean actualizarEstadoTarjeta(String numeroTarjeta, String nuevoEstado) {
-        try (Connection cnx = ConexiónMySQL.getconexión();
-             CallableStatement stmt = cnx.prepareCall("{CALL sp_actualizarTarjeta(?, ?)}")) {
-
-            stmt.setString(1, numeroTarjeta.replaceAll(" ", ""));
-            stmt.setString(2, nuevoEstado);
-            return stmt.executeUpdate() > 0;
-
+	public static void actualizarTarjeta(Tarjeta tarjeta) {
+    	Connection connection = null;
+    	CallableStatement callableStatement = null;
+        try {
+        	String procedimientoAlmacenado = "{CALL sp_actualizarTarjeta(?, ?)}";
+        	connection = ConexiónMySQL.getconexión();
+        	callableStatement = connection.prepareCall(procedimientoAlmacenado);
+        	callableStatement.setString(1, tarjeta.getNumeroTarjeta());
+        	callableStatement.setString(2, tarjeta.getEstado());
+        	callableStatement.executeQuery();
         } catch (Exception e) {
-            System.out.println("Error al actualizar estado de tarjeta: " + e);
-            return false;
-        }
+            System.out.println("Error al actualizar tarjeta: " + e);
+        } finally {
+			try {
+				if(connection != null) connection.close();
+				if(callableStatement != null) callableStatement.close();
+			} catch (Exception e) {
+				System.out.println("Error: " + e);
+			}
+		}
     }
-
-    public static boolean eliminarTarjeta(String numeroTarjeta) {
-        try (Connection cnx = ConexiónMySQL.getconexión();
-             CallableStatement stmt = cnx.prepareCall("{CALL sp_eliminarTarjeta(?)}")) {
-
-            stmt.setString(1, numeroTarjeta.replaceAll(" ", ""));
-            return stmt.executeUpdate() > 0;
-
+	public static void eliminarTarjeta(String numeroTarjeta) {
+    	Connection connection = null;
+    	CallableStatement callableStatement = null;
+        try {
+        	String procedimientoAlmacenado = "{CALL sp_eliminarTarjeta(?)}";
+        	connection = ConexiónMySQL.getconexión();
+        	callableStatement = connection.prepareCall(procedimientoAlmacenado);
+        	callableStatement.setString(1, numeroTarjeta);
+        	callableStatement.executeQuery();
         } catch (Exception e) {
             System.out.println("Error al eliminar tarjeta: " + e);
-            return false;
-        }
+        } finally {
+			try {
+				if(connection != null) connection.close();
+				if(callableStatement != null) callableStatement.close();
+			} catch (Exception e) {
+				System.out.println("Error: " + e);
+			}
+		}
     }
-
-    public static Tarjeta buscarTarjeta(String numeroTarjeta) {
+	public static Tarjeta consultarNumeroTarjeta(String numeroTarjeta) {
+    	Connection connection = null;
+    	CallableStatement callableStatement = null;
+    	ResultSet resultSet = null;
         Tarjeta tarjeta = null;
-        try (Connection cnx = ConexiónMySQL.getconexión();
-             CallableStatement stmt = cnx.prepareCall("{CALL sp_buscarIdTarjeta(?)}")) {
-
-            stmt.setString(1, numeroTarjeta.replaceAll(" ", ""));
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                Cliente cliente = new Cliente();
-                cliente.setIdPersona(rs.getString(5));
-
-                tarjeta = new Tarjeta(
-                    rs.getString(3),
-                    cliente
-                );
-
-                tarjeta.setEstado(rs.getString(2));
-                tarjeta.setFechaVencimiento(rs.getDate(4).toLocalDate().atStartOfDay());
-
-                tarjeta.getClass().getDeclaredField("numeroTarjeta").setAccessible(true);
-                tarjeta.getClass().getDeclaredField("numeroTarjeta").set(tarjeta, rs.getString(1));
+        try {
+        	String procedimientoAlmacenado = "{CALL sp_consultarNumeroTarjeta(?)}";
+        	connection = ConexiónMySQL.getconexión();
+        	callableStatement = connection.prepareCall(procedimientoAlmacenado);
+        	callableStatement.setString(1, numeroTarjeta);
+            resultSet = callableStatement.executeQuery();
+            if (resultSet.next()) {
+            	Cliente cliente = new Cliente();
+                cliente.setIdPersona(resultSet.getString("id_persona"));
+                cliente.setDni(resultSet.getString("dni"));
+                cliente.setNombres(resultSet.getString("nombres"));
+                cliente.setApellidos(resultSet.getString("apellidos"));
+                cliente.setTelefono(resultSet.getString("telefono"));
+                cliente.setDireccion(resultSet.getString("direccion"));
+                cliente.setCorreo(resultSet.getString("correo"));
+                cliente.setContraseña(resultSet.getString("contraseña"));
+                tarjeta = new Tarjeta();
+                tarjeta.setNumeroTarjeta(resultSet.getString("numero_tarjeta"));
+                tarjeta.setFechaVencimiento(resultSet.getDate("fecha_vencimiento").toLocalDate());
+                tarjeta.setEstado(resultSet.getString("estado"));
+                tarjeta.setTipoTarjeta(resultSet.getString("tipo_tarjeta"));
+                tarjeta.setCliente(cliente);
             }
-
         } catch (Exception e) {
-            System.out.println("Error al buscar tarjeta: " + e);
-        }
+            System.out.println("Error al consultar número de tarjeta: " + e);
+        } finally {
+			try {
+				if(connection != null) connection.close();
+				if(callableStatement != null) callableStatement.close();
+				if(resultSet != null) resultSet.close();
+			} catch (Exception e) {
+				System.out.println("Error: " + e);
+			}
+		}
         return tarjeta;
+    }
+	public static ArrayList<Tarjeta> consultarTarjeta(String idCliente) {
+    	Connection connection = null;
+    	PreparedStatement preparedStatement = null;
+    	ResultSet resultSet = null;
+    	ArrayList<Tarjeta> tarjetas = new ArrayList<Tarjeta>();
+        try {
+        	String consulta = "SELECT * FROM tarjetas t "
+        			+ "INNER JOIN clientes c ON c.id_persona = t.id_cliente "
+        			+ "INNER JOIN personas p ON p.id_persona = c.id_persona "
+        			+ "WHERE t.id_cliente = ?;";
+        	connection = ConexiónMySQL.getconexión();
+        	preparedStatement = connection.prepareCall(consulta);
+        	preparedStatement.setString(1, idCliente);
+            resultSet = preparedStatement.executeQuery();
+            Tarjeta tarjeta;
+            while (resultSet.next()) {
+            	Cliente cliente = new Cliente();
+                cliente.setIdPersona(resultSet.getString("id_persona"));
+                cliente.setDni(resultSet.getString("dni"));
+                cliente.setNombres(resultSet.getString("nombres"));
+                cliente.setApellidos(resultSet.getString("apellidos"));
+                cliente.setTelefono(resultSet.getString("telefono"));
+                cliente.setDireccion(resultSet.getString("direccion"));
+                cliente.setCorreo(resultSet.getString("correo"));
+                cliente.setContraseña(resultSet.getString("contraseña"));
+                tarjeta = new Tarjeta();
+                tarjeta.setNumeroTarjeta(resultSet.getString("numero_tarjeta"));
+                tarjeta.setFechaVencimiento(resultSet.getDate("fecha_vencimiento").toLocalDate());
+                tarjeta.setEstado(resultSet.getString("estado"));
+                tarjeta.setTipoTarjeta(resultSet.getString("tipo_tarjeta"));
+                tarjeta.setCliente(cliente);
+                tarjetas.add(tarjeta);
+            }
+        } catch (Exception e) {
+            System.out.println("Error al consultar tarjeta por id del cliente: " + e);
+        } finally {
+			try {
+				if(connection != null) connection.close();
+				if(preparedStatement != null) preparedStatement.close();
+				if(resultSet != null) resultSet.close();
+			} catch (Exception e) {
+				System.out.println("Error: " + e);
+			}
+		}
+        return tarjetas;
     }
 }

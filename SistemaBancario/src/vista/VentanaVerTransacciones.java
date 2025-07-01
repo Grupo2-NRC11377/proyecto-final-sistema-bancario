@@ -159,7 +159,7 @@ public class VentanaVerTransacciones extends JDialog implements ActionListener {
 		for (Transaccion transaccion : cliente.getTransacciones()) {
 			Object[] fila = new Object[5];
 			fila[0] = transaccion.getIdTransaccion();
-			fila[1] = transaccion.getTipo();
+			fila[1] = transaccion.getTipoTransaccion();
 			fila[2] = transaccion.getFechaHora();
 			fila[3] = transaccion.getEstado();
 			fila[4] = transaccion.getMonto();
@@ -177,12 +177,12 @@ public class VentanaVerTransacciones extends JDialog implements ActionListener {
 		    return;
 		}
 		for (Transaccion transaccion : cliente.getTransacciones()) {
-		    boolean coincideTipo = !filtrarPorTipo || transaccion.getTipo().equals(tipo);
+		    boolean coincideTipo = !filtrarPorTipo || transaccion.getTipoTransaccion().equals(tipo);
 		    boolean coincideDescripcion = !filtrarPorDescripcion || transaccion.getDescripcion().contains(descripcion);
 		    if (coincideTipo && coincideDescripcion) {
 		    	Object[] fila = new Object[5];
 				fila[0] = transaccion.getIdTransaccion();
-				fila[1] = transaccion.getTipo();
+				fila[1] = transaccion.getTipoTransaccion();
 				fila[2] = transaccion.getFechaHora();
 				fila[3] = transaccion.getEstado();
 				fila[4] = transaccion.getMonto();
