@@ -13,12 +13,6 @@ public class ConexiónMySQL {
 			System.out.println("Conexión realizada corectamente");
 		} catch (Exception e) {
 			System.out.println("Error: " + e);
-		} finally {
-			try {
-				if(connection != null) connection.close();
-			} catch (Exception e) {
-				System.out.println("Error: " + e);
-			}
 		}
 		return connection;
 	}
