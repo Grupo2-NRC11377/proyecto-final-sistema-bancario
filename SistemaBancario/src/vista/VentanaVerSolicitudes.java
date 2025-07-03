@@ -1,4 +1,6 @@
 package vista;
+import repositorio.RepositorioSolicitud;
+import repositorio.RepositorioTarjeta;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -22,6 +24,7 @@ import javax.swing.ListSelectionModel;
 
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
 
@@ -189,7 +192,10 @@ public class VentanaVerSolicitudes extends JDialog implements ActionListener {
 		return solicitud;
 	}
 	private void llenarTabla() {
-		if(empleado == null) return;
+		ArrayList<Solicitud> solicitudes = empleado.getSolicitudes();
+		if(solicitudes.size() == 0) {
+			solicitudes = RepositorioSolicitud.getSolicituds();
+		}
 		defaultTableModel.setRowCount(0);
 		for (Solicitud solicitud : empleado.getSolicitudes()) {
 			Object[] fila = new Object[5];

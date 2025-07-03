@@ -10,17 +10,17 @@ public class Solicitud {
 	private String estado;
 	private LocalDate fechaCreacion;
 	private LocalDate fechaResolucion;
-	private Cliente cliente;
-	private Empleado empleado;
-	
+	private Cliente Cliente;
+	private Empleado Empleado;
+	public Solicitud() {}
 	public Solicitud(String asunto, Cliente cliente, Empleado empleado) {
 		this.idSolicitud = UUID.randomUUID().toString();
 		this.asunto = asunto;
 		this.estado = "pendiente";
 		this.fechaCreacion = LocalDate.now();
 		this.fechaResolucion = null;
-		this.cliente = cliente;
-		this.empleado = empleado;
+		this.Cliente = cliente;
+		this.Empleado = empleado;
 	}
 	
 	public void setEstado(String estado) {
@@ -30,7 +30,12 @@ public class Solicitud {
 	public void setFechaResolucion(LocalDate fechaResolucion) {
 		this.fechaResolucion = fechaResolucion;
 	}
-
+	public void setFechaCreacion(LocalDate fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
+	}
+	public void setIdSolicitud(String idSolicitud) {
+		this.idSolicitud = idSolicitud;
+	}
 	public String getIdSolicitud() {
 		return idSolicitud;
 	}
@@ -52,11 +57,17 @@ public class Solicitud {
 	}
 
 	public Cliente getCliente() {
-		return cliente;
+		return Cliente;
+	}
+	public void setCliente(Cliente cliente) {
+		Cliente = cliente;
 	}
 
 	public Empleado getEmpleado() {
-		return empleado;
+		return Empleado;
+	}
+	public void setEmpleado(Empleado empleado) {
+		Empleado = empleado;
 	}
 	
 }
