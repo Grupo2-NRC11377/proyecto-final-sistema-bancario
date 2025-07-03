@@ -1,4 +1,6 @@
 package vista;
+import repositorio.RepositorioSolicitud;
+import repositorio.RepositorioTarjeta;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -11,8 +13,6 @@ import modelo.Persona;
 import modelo.Solicitud;
 import modelo.Tarjeta;
 import repositorio.RepositorioCuenta;
-import repositorio.RepositorioSolicitud;
-import repositorio.RepositorioTarjeta;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
