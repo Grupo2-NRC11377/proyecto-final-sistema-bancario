@@ -12,8 +12,10 @@ import javax.swing.table.DefaultTableModel;
 
 import modelo.Cuenta;
 import modelo.Transaccion;
+import repositorio.RepositorioTransaccion;
 
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -219,13 +221,18 @@ public class VentanaVerDetallesCB extends JDialog implements ActionListener {
 		txtMoneda.setText(cuenta.getMoneda());
 	}
 	private void llenarTabla() {
+		ArrayList<Transaccion> transacciones = cuenta.getTransacciones();
+		if(transacciones.size() == 0) {
+			transacciones = RepositorioTransaccion.consultarTransaccionNumeroCuenta(cuenta.getNumeroCuenta());
+			cuenta.setTransacciones(transacciones);
+		}
 		defaultTableModel.setRowCount(0);
-		for (Transaccion transaccion : cuenta.getTransacciones()) {
+		for (Transaccion transaccion : transacciones) {
 			Object[] fila = new Object[6];
 			fila[0] = transaccion.getIdTransaccion();
 			fila[1] = transaccion.getTipoTransaccion();
 			fila[2] = transaccion.getDescripcion();
-			fila[3] = transaccion.getFechaHora();
+			fila[3] = transaccion.getFechaHoraFormateada();
 			fila[4] = transaccion.getEstado();
 			fila[5] = transaccion.getMonto();
 			defaultTableModel.addRow(fila);

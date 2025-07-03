@@ -10,6 +10,7 @@ import javax.swing.table.DefaultTableModel;
 
 import modelo.Cliente;
 import modelo.Transaccion;
+import repositorio.RepositorioTransaccion;
 
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
@@ -18,6 +19,7 @@ import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
 
@@ -39,9 +41,9 @@ public class VentanaVerTransacciones extends JDialog implements ActionListener {
 	private JButton btnVerDetalles;
 
 	public VentanaVerTransacciones(Cliente cliente) {
-		getContentPane().setBackground(new Color(255, 255, 255));
 		this.cliente = cliente;
 		
+		getContentPane().setBackground(new Color(255, 255, 255));
 		setTitle("Ver transacciones");
 		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 		setModal(true);
@@ -103,11 +105,12 @@ public class VentanaVerTransacciones extends JDialog implements ActionListener {
 			getContentPane().add(scrollPane);
 			{
 				tableTransacciones = new JTable();
+				tableTransacciones.setFillsViewportHeight(true);
 				tableTransacciones.setForeground(new Color(90, 90, 90));
 				tableTransacciones.setFont(new Font("Arial", Font.PLAIN, 13));
 				tableTransacciones.setBackground(new Color(255, 255, 255));
 				tableTransacciones.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-				String[] columnas = new String[] {"ID", "Tipo", "Fecha y hora", "Estado", "Monto"};
+				String[] columnas = new String[] {"ID", "Tipo", "Descripción", "Fecha y hora", "Estado", "Monto"};
 				defaultTableModel = new DefaultTableModel(columnas, 0) {
 					private static final long serialVersionUID = 1L;
 					public boolean isCellEditable(int row, int column) {
@@ -136,7 +139,7 @@ public class VentanaVerTransacciones extends JDialog implements ActionListener {
 			btnVerDetalles.setBounds(50, 446, 150, 35);
 			getContentPane().add(btnVerDetalles);
 		}
-		llenarTabla();
+		llenarTabla("","");
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -153,42 +156,29 @@ public class VentanaVerTransacciones extends JDialog implements ActionListener {
 	protected void do_btnCerrar_actionPerformed(ActionEvent e) {
 		dispose();
 	}
-	private void llenarTabla() {
-		if(cliente == null) return;
+	private void llenarTabla(String tipoTransaccion, String descripcion) {
+		ArrayList<Transaccion> transacciones = new ArrayList<Transaccion>();
+		if(tipoTransaccion.isEmpty() && descripcion.isEmpty()) {
+			transacciones = RepositorioTransaccion.consultarTransaccion(cliente.getIdPersona());
+			cliente.setTransacciones(transacciones);
+		}
+		else transacciones = RepositorioTransaccion.consultarTransaccion(cliente.getIdPersona(), tipoTransaccion, descripcion);
 		defaultTableModel.setRowCount(0);
-		for (Transaccion transaccion : cliente.getTransacciones()) {
-			Object[] fila = new Object[5];
+		for (Transaccion transaccion : transacciones) {
+			Object[] fila = new Object[6];
 			fila[0] = transaccion.getIdTransaccion();
 			fila[1] = transaccion.getTipoTransaccion();
-			fila[2] = transaccion.getFechaHora();
-			fila[3] = transaccion.getEstado();
-			fila[4] = transaccion.getMonto();
+			fila[2] = transaccion.getDescripcion();
+			fila[3] = transaccion.getFechaHoraFormateada();
+			fila[4] = transaccion.getEstado();
+			fila[5] = transaccion.getMonto();
 			defaultTableModel.addRow(fila);
 		}
 	}
 	protected void do_btnFiltrar_actionPerformed(ActionEvent e) {
-		String tipo = (String) cbxTipoTransaccion.getSelectedItem();
+		String tipoTransaccion = (String) cbxTipoTransaccion.getSelectedItem();
 		String descripcion = txtDescripcion.getText().trim();
-		defaultTableModel.setRowCount(0);
-		boolean filtrarPorTipo = !tipo.equals("todos");
-		boolean filtrarPorDescripcion = !descripcion.isEmpty();
-		if (!filtrarPorTipo && !filtrarPorDescripcion) {
-		    llenarTabla();
-		    return;
-		}
-		for (Transaccion transaccion : cliente.getTransacciones()) {
-		    boolean coincideTipo = !filtrarPorTipo || transaccion.getTipoTransaccion().equals(tipo);
-		    boolean coincideDescripcion = !filtrarPorDescripcion || transaccion.getDescripcion().contains(descripcion);
-		    if (coincideTipo && coincideDescripcion) {
-		    	Object[] fila = new Object[5];
-				fila[0] = transaccion.getIdTransaccion();
-				fila[1] = transaccion.getTipoTransaccion();
-				fila[2] = transaccion.getFechaHora();
-				fila[3] = transaccion.getEstado();
-				fila[4] = transaccion.getMonto();
-		        defaultTableModel.addRow(fila);
-		    }
-		}
+		llenarTabla((tipoTransaccion.equals("todos") ? "" : tipoTransaccion), descripcion);
 	}
 	protected void do_btnVerDetalles_actionPerformed(ActionEvent e) {
 		int posicionFilaSeleccionada = tableTransacciones.getSelectedRow();

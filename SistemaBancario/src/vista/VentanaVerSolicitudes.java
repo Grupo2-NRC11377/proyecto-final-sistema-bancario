@@ -7,9 +7,12 @@ import javax.swing.table.DefaultTableModel;
 import modelo.Cliente;
 import modelo.Cuenta;
 import modelo.Empleado;
+import modelo.Persona;
 import modelo.Solicitud;
 import modelo.Tarjeta;
 import repositorio.RepositorioCuenta;
+import repositorio.RepositorioSolicitud;
+import repositorio.RepositorioTarjeta;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -22,12 +25,13 @@ import javax.swing.ListSelectionModel;
 
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
 
 public class VentanaVerSolicitudes extends JDialog implements ActionListener {
 	
-	private Empleado empleado;
+	private Persona persona;
 
 	private static final long serialVersionUID = 1L;
 	private JLabel lblSolicitudes;
@@ -39,10 +43,10 @@ public class VentanaVerSolicitudes extends JDialog implements ActionListener {
 	private JButton btnAceptar;
 	private JButton btnRechazar;
 
-	public VentanaVerSolicitudes(Empleado empleado) {
-		getContentPane().setBackground(new Color(255, 255, 255));
-		this.empleado = empleado;
+	public VentanaVerSolicitudes(Persona persona) {
+		this.persona = persona;
 		
+		getContentPane().setBackground(new Color(255, 255, 255));
 		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 		setModal(true);
 		setTitle("Ver solicitudes");
@@ -62,6 +66,7 @@ public class VentanaVerSolicitudes extends JDialog implements ActionListener {
 			getContentPane().add(scrollPane);
 			{
 				tableSolicitudes = new JTable();
+				tableSolicitudes.setFillsViewportHeight(true);
 				tableSolicitudes.setForeground(new Color(90, 90, 90));
 				tableSolicitudes.setBackground(new Color(255, 255, 255));
 				tableSolicitudes.setFont(new Font("Arial", Font.PLAIN, 13));
@@ -86,32 +91,34 @@ public class VentanaVerSolicitudes extends JDialog implements ActionListener {
 			btnCerrar.setBounds(600, 406, 150, 35);
 			getContentPane().add(btnCerrar);
 		}
-		{
-			btnVerCliente = new JButton("Ver perfil del cliente");
-			btnVerCliente.setBackground(new Color(238, 52, 37));
-			btnVerCliente.setForeground(new Color(255, 255, 255));
-			btnVerCliente.setFont(new Font("Arial", Font.BOLD, 13));
-			btnVerCliente.addActionListener(this);
-			btnVerCliente.setBounds(50, 406, 200, 35);
-			getContentPane().add(btnVerCliente);
-		}
-		{
-			btnAceptar = new JButton("Aceptar");
-			btnAceptar.setBackground(new Color(230, 230, 230));
-			btnAceptar.setForeground(new Color(90, 90, 90));
-			btnAceptar.setFont(new Font("Arial", Font.BOLD, 13));
-			btnAceptar.addActionListener(this);
-			btnAceptar.setBounds(260, 406, 150, 35);
-			getContentPane().add(btnAceptar);
-		}
-		{
-			btnRechazar = new JButton("Rechazar");
-			btnRechazar.setBackground(new Color(230, 230, 230));
-			btnRechazar.setForeground(new Color(90, 90, 90));
-			btnRechazar.setFont(new Font("Arial", Font.BOLD, 13));
-			btnRechazar.addActionListener(this);
-			btnRechazar.setBounds(420, 406, 150, 35);
-			getContentPane().add(btnRechazar);
+		if(persona.getCorreo().contains("@empleado")){
+			{
+				btnVerCliente = new JButton("Ver perfil del cliente");
+				btnVerCliente.setBackground(new Color(238, 52, 37));
+				btnVerCliente.setForeground(new Color(255, 255, 255));
+				btnVerCliente.setFont(new Font("Arial", Font.BOLD, 13));
+				btnVerCliente.addActionListener(this);
+				btnVerCliente.setBounds(50, 406, 200, 35);
+				getContentPane().add(btnVerCliente);
+			}
+			{
+				btnAceptar = new JButton("Aceptar");
+				btnAceptar.setBackground(new Color(230, 230, 230));
+				btnAceptar.setForeground(new Color(90, 90, 90));
+				btnAceptar.setFont(new Font("Arial", Font.BOLD, 13));
+				btnAceptar.addActionListener(this);
+				btnAceptar.setBounds(260, 406, 150, 35);
+				getContentPane().add(btnAceptar);
+			}
+			{
+				btnRechazar = new JButton("Rechazar");
+				btnRechazar.setBackground(new Color(230, 230, 230));
+				btnRechazar.setForeground(new Color(90, 90, 90));
+				btnRechazar.setFont(new Font("Arial", Font.BOLD, 13));
+				btnRechazar.addActionListener(this);
+				btnRechazar.setBounds(420, 406, 150, 35);
+				getContentPane().add(btnRechazar);
+			}
 		}
 		llenarTabla();
 	}
@@ -156,11 +163,15 @@ public class VentanaVerSolicitudes extends JDialog implements ActionListener {
 			RepositorioCuenta.insertarCuenta(cuenta);
 		}
 		else if (solicitud.getAsunto().contains("tarjeta")) {
-			if(solicitud.getAsunto().contains("débito")) cliente.agregarTarjeta(new Tarjeta("débito", cliente));
-			else if(solicitud.getAsunto().contains("crédito")) cliente.agregarTarjeta(new Tarjeta("crédito", cliente));
+			Tarjeta tarjeta = null;
+			if(solicitud.getAsunto().contains("débito")) tarjeta = new Tarjeta("débito", cliente);
+			else if(solicitud.getAsunto().contains("crédito")) tarjeta = new Tarjeta("crédito", cliente);
+			cliente.agregarTarjeta(tarjeta);
+			RepositorioTarjeta.insertarTarjeta(tarjeta);
 		}
 		solicitud.setEstado("aceptada");
 		solicitud.setFechaResolucion(LocalDate.now());
+		RepositorioSolicitud.actualizarSolicitud(solicitud);
 		llenarTabla();
 	}
 	protected void do_btnRechazar_actionPerformed(ActionEvent e) {
@@ -172,6 +183,8 @@ public class VentanaVerSolicitudes extends JDialog implements ActionListener {
 		}
 		solicitud.setEstado("rechazada");
 		solicitud.setFechaResolucion(LocalDate.now());
+		System.out.println(solicitud.getEstado());
+		RepositorioSolicitud.actualizarSolicitud(solicitud);
 		llenarTabla();
 	}
 	private Solicitud obtenerSolicitud() {
@@ -181,7 +194,12 @@ public class VentanaVerSolicitudes extends JDialog implements ActionListener {
 			return null;
 		}
 		String idSolicitud = tableSolicitudes.getValueAt(posicionFilaSeleccionada, 0).toString();
-		Solicitud solicitud = empleado.buscarSolicitud(idSolicitud);
+		Solicitud solicitud = null;
+		if(persona.getCorreo().contains("@empleado")) {
+			solicitud = ((Empleado) persona).buscarSolicitud(idSolicitud);
+		} else {
+			solicitud = ((Empleado) persona).buscarSolicitud(idSolicitud);
+		}
 		if (solicitud == null) {
 			JOptionPane.showMessageDialog(this, "La solicitud seleccionada no existe.", "Información", JOptionPane.INFORMATION_MESSAGE);
 			return null;
@@ -189,15 +207,29 @@ public class VentanaVerSolicitudes extends JDialog implements ActionListener {
 		return solicitud;
 	}
 	private void llenarTabla() {
-		if(empleado == null) return;
+		ArrayList<Solicitud> solicitudes;
+		if(persona.getCorreo().contains("@empleado")) {
+			solicitudes = ((Empleado) persona).getSolicitudes();
+		} else {
+			solicitudes = ((Cliente) persona).getSolicitudes();
+		}
+		if(solicitudes.size() == 0) {
+			if(persona.getCorreo().contains("@empleado")) {
+				solicitudes = RepositorioSolicitud.consultarSolicitudEmpleado(persona.getIdPersona());
+				((Empleado) persona).setSolicitudes(solicitudes);
+			} else {
+				solicitudes = RepositorioSolicitud.consultarSolicitudCliente(persona.getIdPersona());
+				((Cliente) persona).setSolicitudes(solicitudes);
+			}
+		}
 		defaultTableModel.setRowCount(0);
-		for (Solicitud solicitud : empleado.getSolicitudes()) {
+		for (Solicitud solicitud : solicitudes) {
 			Object[] fila = new Object[5];
 			fila[0] = solicitud.getIdSolicitud();
 			fila[1] = solicitud.getAsunto();
 			fila[2] = solicitud.getEstado();
-			fila[3] = solicitud.getFechaCreacion();
-			fila[4] = solicitud.getFechaResolucion();
+			fila[3] = solicitud.getFechaCreacionFormateada();
+			fila[4] = solicitud.getFechaResolucionFormateada();
 			defaultTableModel.addRow(fila);
 		}
 	}

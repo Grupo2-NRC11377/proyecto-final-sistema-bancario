@@ -118,11 +118,8 @@ public class VentanaVerCuentasBancarias extends JDialog implements ActionListene
 		dispose();
 	}
 	public void llenarTabla() {
-		ArrayList<Cuenta> cuentas = cliente.getCuentas();
-		if(cuentas.size() == 0) {
-			cuentas = RepositorioCuenta.consultarCuenta(cliente.getIdPersona());
-			cliente.setCuentas(cuentas);
-		}
+		ArrayList<Cuenta> cuentas = RepositorioCuenta.consultarCuenta(cliente.getIdPersona());
+		cliente.setCuentas(cuentas);
 		defaultTableModel.setRowCount(0);
 		for (Cuenta cuenta : cuentas) {
 			Object[] fila = new Object[6];

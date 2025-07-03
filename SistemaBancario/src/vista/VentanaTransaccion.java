@@ -8,6 +8,7 @@ import modelo.Cliente;
 import modelo.Cuenta;
 import modelo.Transaccion;
 import repositorio.RepositorioCuenta;
+import repositorio.RepositorioTransaccion;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -31,7 +32,7 @@ public class VentanaTransaccion extends JDialog implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	private JButton btnCancelar;
 	private JLabel lblTransaccion;
-	private JLabel lblSelecciona;
+	private JLabel lblNumeroCuentaOrigen;
 	private JLabel lblNumeroCuentaDestino;
 	private JTextField txtNumeroCuentaDestino;
 	private JLabel lblMonto;
@@ -42,12 +43,12 @@ public class VentanaTransaccion extends JDialog implements ActionListener {
 	private JTextField txtNumeroCuentaOrigen;
 
 	public VentanaTransaccion(Cliente cliente, String tipo) {
-		getContentPane().setForeground(new Color(90, 90, 90));
-		getContentPane().setFont(new Font("Arial", Font.PLAIN, 13));
-		getContentPane().setBackground(new Color(255, 255, 255));
 		this.cliente = cliente;
 		this.tipo = tipo.toLowerCase();
 		
+		getContentPane().setForeground(new Color(90, 90, 90));
+		getContentPane().setFont(new Font("Arial", Font.PLAIN, 13));
+		getContentPane().setBackground(new Color(255, 255, 255));
 		setTitle("Transacción");
 		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 		setModal(true);
@@ -70,29 +71,23 @@ public class VentanaTransaccion extends JDialog implements ActionListener {
 			lblTransaccion.setBounds(187, 50, 129, 30);
 			getContentPane().add(lblTransaccion);
 		}
-		{
-			lblSelecciona = new JLabel("Número de cuenta de origen:");
-			lblSelecciona.setForeground(new Color(90, 90, 90));
-			lblSelecciona.setFont(new Font("Arial", Font.BOLD, 13));
-			lblSelecciona.setBounds(50, 120, 186, 16);
-			getContentPane().add(lblSelecciona);
-		}
-		{
-			lblNumeroCuentaDestino = new JLabel("Número de cuenta de destino:");
-			lblNumeroCuentaDestino.setForeground(new Color(90, 90, 90));
-			lblNumeroCuentaDestino.setFont(new Font("Arial", Font.BOLD, 13));
-			lblNumeroCuentaDestino.setBounds(50, 156, 191, 16);
-			getContentPane().add(lblNumeroCuentaDestino);
-		}
-		{
-			txtNumeroCuentaDestino = new JTextField();
-			txtNumeroCuentaDestino.setBackground(new Color(255, 255, 255));
-			txtNumeroCuentaDestino.setForeground(new Color(90, 90, 90));
-			txtNumeroCuentaDestino.setFont(new Font("Arial", Font.PLAIN, 13));
-			if(tipo.equalsIgnoreCase("retirar")) txtNumeroCuentaDestino.setEnabled(false);
-			txtNumeroCuentaDestino.setBounds(259, 152, 200, 25);
-			getContentPane().add(txtNumeroCuentaDestino);
-			txtNumeroCuentaDestino.setColumns(10);
+		if(!tipo.equalsIgnoreCase("retirar")){
+			{
+				lblNumeroCuentaDestino = new JLabel("Número de cuenta de destino:");
+				lblNumeroCuentaDestino.setForeground(new Color(90, 90, 90));
+				lblNumeroCuentaDestino.setFont(new Font("Arial", Font.BOLD, 13));
+				lblNumeroCuentaDestino.setBounds(50, 156, 191, 16);
+				getContentPane().add(lblNumeroCuentaDestino);
+			}
+			{
+				txtNumeroCuentaDestino = new JTextField();
+				txtNumeroCuentaDestino.setBackground(new Color(255, 255, 255));
+				txtNumeroCuentaDestino.setForeground(new Color(90, 90, 90));
+				txtNumeroCuentaDestino.setFont(new Font("Arial", Font.PLAIN, 13));
+				txtNumeroCuentaDestino.setBounds(259, 152, 200, 25);
+				getContentPane().add(txtNumeroCuentaDestino);
+				txtNumeroCuentaDestino.setColumns(10);
+			}
 		}
 		{
 			lblMonto = new JLabel("Monto a " + tipo.toLowerCase() + ":");
@@ -110,22 +105,23 @@ public class VentanaTransaccion extends JDialog implements ActionListener {
 			txtMonto.setBounds(259, 188, 200, 25);
 			getContentPane().add(txtMonto);
 		}
-		{
-			lblMotivo = new JLabel("Motivo a pagar:");
-			lblMotivo.setForeground(new Color(90, 90, 90));
-			lblMotivo.setFont(new Font("Arial", Font.BOLD, 13));
-			lblMotivo.setBounds(50, 228, 99, 16);
-			getContentPane().add(lblMotivo);
-		}
-		{
-			txtMotivoPagar = new JTextField();
-			txtMotivoPagar.setBackground(new Color(255, 255, 255));
-			txtMotivoPagar.setForeground(new Color(90, 90, 90));
-			txtMotivoPagar.setFont(new Font("Arial", Font.PLAIN, 13));
-			if(!tipo.equalsIgnoreCase("pagar")) txtMotivoPagar.setEnabled(false);
-			txtMotivoPagar.setColumns(10);
-			txtMotivoPagar.setBounds(259, 224, 200, 25);
-			getContentPane().add(txtMotivoPagar);
+		if(tipo.equalsIgnoreCase("pagar")){
+			{
+				lblMotivo = new JLabel("Motivo a pagar:");
+				lblMotivo.setForeground(new Color(90, 90, 90));
+				lblMotivo.setFont(new Font("Arial", Font.BOLD, 13));
+				lblMotivo.setBounds(50, 228, 99, 16);
+				getContentPane().add(lblMotivo);
+			}
+			{
+				txtMotivoPagar = new JTextField();
+				txtMotivoPagar.setBackground(new Color(255, 255, 255));
+				txtMotivoPagar.setForeground(new Color(90, 90, 90));
+				txtMotivoPagar.setFont(new Font("Arial", Font.PLAIN, 13));
+				txtMotivoPagar.setColumns(10);
+				txtMotivoPagar.setBounds(259, 224, 200, 25);
+				getContentPane().add(txtMotivoPagar);
+			}
 		}
 		{
 			btnContinuar = new JButton("Continuar");
@@ -136,16 +132,23 @@ public class VentanaTransaccion extends JDialog implements ActionListener {
 			btnContinuar.setBounds(50, 290, 150, 35);
 			getContentPane().add(btnContinuar);
 		}
-		{
-			txtNumeroCuentaOrigen = new JTextField();
-			txtNumeroCuentaOrigen.setBackground(new Color(255, 255, 255));
-			txtNumeroCuentaOrigen.setForeground(new Color(90, 90, 90));
-			txtNumeroCuentaOrigen.setFont(new Font("Arial", Font.PLAIN, 13));
-			if(tipo.equalsIgnoreCase("depositar")) txtNumeroCuentaOrigen.setEnabled(false);
-			else txtNumeroCuentaOrigen.setEnabled(true);
-			txtNumeroCuentaOrigen.setColumns(10);
-			txtNumeroCuentaOrigen.setBounds(260, 116, 200, 25);
-			getContentPane().add(txtNumeroCuentaOrigen);
+		if(!tipo.equalsIgnoreCase("depositar")){
+			{
+				lblNumeroCuentaOrigen = new JLabel("Número de cuenta de origen:");
+				lblNumeroCuentaOrigen.setForeground(new Color(90, 90, 90));
+				lblNumeroCuentaOrigen.setFont(new Font("Arial", Font.BOLD, 13));
+				lblNumeroCuentaOrigen.setBounds(50, 120, 186, 16);
+				getContentPane().add(lblNumeroCuentaOrigen);
+			}
+			{
+				txtNumeroCuentaOrigen = new JTextField();
+				txtNumeroCuentaOrigen.setBackground(new Color(255, 255, 255));
+				txtNumeroCuentaOrigen.setForeground(new Color(90, 90, 90));
+				txtNumeroCuentaOrigen.setFont(new Font("Arial", Font.PLAIN, 13));
+				txtNumeroCuentaOrigen.setColumns(10);
+				txtNumeroCuentaOrigen.setBounds(260, 116, 200, 25);
+				getContentPane().add(txtNumeroCuentaOrigen);
+			}
 		}
 	}
 	public void actionPerformed(ActionEvent e) {
@@ -163,9 +166,12 @@ public class VentanaTransaccion extends JDialog implements ActionListener {
 		Cliente clienteAutenticar = cliente, clienteOrigen = null, clienteDestino = null;
 		Cuenta cuentaOrigen = null, cuentaDestino = null;
 		String descripcion = "";
-		String numeroOrigen = txtNumeroCuentaOrigen.getText().trim();
-		String numeroDestino = txtNumeroCuentaDestino.getText().trim();
-		String motivoPagar = txtMotivoPagar.getText().trim();
+		String numeroOrigen = "";
+		String numeroDestino = "";
+		String motivoPagar = "";
+		if(txtNumeroCuentaOrigen != null) numeroOrigen = txtNumeroCuentaOrigen.getText().trim();
+		if(txtNumeroCuentaDestino != null) numeroDestino = txtNumeroCuentaDestino.getText().trim();
+		if(txtMotivoPagar != null) motivoPagar = txtMotivoPagar.getText().trim();
 		if(txtMonto.getText().trim().isEmpty()) {
 			JOptionPane.showMessageDialog(this, "El campo monto está vacío.", "Información", JOptionPane.INFORMATION_MESSAGE);
 			return;
@@ -223,8 +229,6 @@ public class VentanaTransaccion extends JDialog implements ActionListener {
 				JOptionPane.showMessageDialog(this, "La cuenta de origen está cancelada.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
-			cuentaOrigen.setSaldoContable(cuentaOrigen.getSaldoContable() - montoEnviado);
-			cuentaOrigen.setSaldoDisponible(cuentaOrigen.getSaldoDisponible() - montoEnviado);
 		}
 		if(cuentaDestino!=null) {
 			if(cuentaDestino.getEstado().equals("cancelada")) {
@@ -240,24 +244,35 @@ public class VentanaTransaccion extends JDialog implements ActionListener {
 						";Monto recibido: " + obtenerMontoFormateado(monedaDestino, montoRecibido) + 
 						";Cambio: " + monedaOrigen + " - " + monedaDestino;
 			}
-			cuentaDestino.setSaldoContable(cuentaDestino.getSaldoContable() + montoRecibido);
-			cuentaDestino.setSaldoDisponible(cuentaDestino.getSaldoDisponible() + montoRecibido);
 		}
 		VentanaAutenticar ventanaAutenticar = new VentanaAutenticar(clienteAutenticar);
 		ventanaAutenticar.setVisible(true);
 		if(ventanaAutenticar.getEstadoAutenticacion()) {			
 			Transaccion transaccion = new Transaccion(tipo, descripcion, montoEnviado, cliente);
 			transaccion.setEstado("completada");
+			RepositorioTransaccion.insertarTransaccion(transaccion);
 			if(clienteOrigen != null && clienteDestino != null) {
 				if(clienteOrigen.equals(clienteDestino)) clienteOrigen.agregarTransaccion(transaccion);
 				else {
 					clienteOrigen.agregarTransaccion(transaccion);
 					clienteDestino.agregarTransaccion(transaccion);
 				}
+				cuentaOrigen.setSaldoDisponible(cuentaOrigen.getSaldoDisponible() - montoEnviado);
+				cuentaOrigen.setSaldoContable(cuentaOrigen.getSaldoContable() - montoEnviado);
+				cuentaDestino.setSaldoDisponible(cuentaDestino.getSaldoDisponible() + montoRecibido);
+				cuentaDestino.setSaldoContable(cuentaDestino.getSaldoContable() + montoRecibido);
+				RepositorioCuenta.actualizarCuenta(cuentaOrigen);
+				RepositorioCuenta.actualizarCuenta(cuentaDestino);
 			}else if(cuentaDestino==null) {
 				clienteOrigen.agregarTransaccion(transaccion);
+				cuentaOrigen.setSaldoDisponible(cuentaOrigen.getSaldoDisponible() - montoEnviado);
+				cuentaOrigen.setSaldoContable(cuentaOrigen.getSaldoContable() - montoEnviado);
+				RepositorioCuenta.actualizarCuenta(cuentaOrigen);
 			}else if(cuentaOrigen==null) {
 				clienteDestino.agregarTransaccion(transaccion);
+				cuentaDestino.setSaldoDisponible(cuentaDestino.getSaldoDisponible() + montoRecibido);
+				cuentaDestino.setSaldoContable(cuentaDestino.getSaldoContable() + montoRecibido);
+				RepositorioCuenta.actualizarCuenta(cuentaDestino);
 			}
 			int seleccion = JOptionPane.showConfirmDialog(this,
 	                "La autenticación se realizó con éxito, la transacción se ejecutó. ¿Deseas descargar el comprobante?",

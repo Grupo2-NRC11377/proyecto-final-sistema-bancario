@@ -72,7 +72,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 			contentPane.add(btnIniciarSesion);
 		}
 		{
-			txtCorreoElectronico = new JTextField("juan.perez@empleado.com");
+			txtCorreoElectronico = new JTextField("carlos.martinez@email.com");
 			txtCorreoElectronico.setForeground(new Color(90, 90, 90));
 			txtCorreoElectronico.setFont(new Font("Arial", Font.PLAIN, 13));
 			txtCorreoElectronico.setBounds(200, 178, 200, 25);
@@ -105,7 +105,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 			contentPane.add(btnRegistrarse);
 		}
 		{
-			txtContraseña = new JPasswordField("ClaveEjemplo#0");
+			txtContraseña = new JPasswordField("ClaveEjemplo#1");
 			txtContraseña.setForeground(new Color(90, 90, 90));
 			txtContraseña.setFont(new Font("Arial", Font.PLAIN, 13));
 			txtContraseña.setBounds(200, 217, 200, 25);

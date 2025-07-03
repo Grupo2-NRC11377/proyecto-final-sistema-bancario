@@ -105,7 +105,7 @@ public class VentanaVerTarjetas extends JDialog implements ActionListener {
         	Object[] fila = new Object[4];
         	fila[0] = tarjeta.getNumeroTarjeta();
         	fila[1] = tarjeta.getTipoTarjeta();
-        	fila[2] = tarjeta.getFechaVencimiento();
+        	fila[2] = tarjeta.getFechaVencimientoFormateada();
         	fila[3] = tarjeta.getEstado();
             tableModel.addRow(fila);
         }

@@ -162,7 +162,7 @@ public class RepositorioCliente {
 		ResultSet resultSet = null;
 		Cliente cliente = null;
 		try {
-			String consulta = "SELECT p.* FROM personas p "
+			String consulta = "SELECT * FROM personas p "
 					+ "INNER JOIN clientes c ON p.id_persona = c.id_persona "
 					+ "WHERE p.dni = ?;";
 			connection = ConexiónMySQL.getconexión();
@@ -199,7 +199,7 @@ public class RepositorioCliente {
 		ResultSet resultSet = null;
 		Cliente cliente = null;
 		try {
-			String consulta = "SELECT p.* FROM personas p "
+			String consulta = "SELECT * FROM personas p "
 					+ "INNER JOIN clientes c ON p.id_persona = c.id_persona "
 					+ "WHERE p.correo = ?;";
 			connection = ConexiónMySQL.getconexión();
@@ -236,7 +236,7 @@ public class RepositorioCliente {
 		ResultSet resultSet = null;
 		Cliente cliente = null;
 		try {
-			String consulta = "SELECT p.* FROM personas p "
+			String consulta = "SELECT * FROM personas p "
 					+ "INNER JOIN clientes c ON p.id_persona = c.id_persona "
 					+ "WHERE p.correo = ? AND p.contraseña = ?;";
 			connection = ConexiónMySQL.getconexión();
@@ -274,7 +274,7 @@ public class RepositorioCliente {
 		ResultSet resultSet = null;
 		ArrayList<Cliente> clientes = new ArrayList<Cliente>();
 		try {
-			String consulta = "SELECT p.* FROM clientes c "
+			String consulta = "SELECT * FROM clientes c "
 					+ "INNER JOIN personas p ON p.id_persona = c.id_persona "
 					+ "WHERE p.dni LIKE '%" + dni + "%' AND p.nombres LIKE '%" + nombres + "%' AND p.apellidos LIKE '%" + apellidos + "%';";
 			connection = ConexiónMySQL.getconexión();

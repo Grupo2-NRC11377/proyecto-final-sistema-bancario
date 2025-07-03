@@ -159,7 +159,7 @@ CREATE PROCEDURE sp_actualizarCuenta(
     saldo_contable DECIMAL(13,2),
     saldo_disponible DECIMAL(13,2),
     estado ENUM('activa', 'inactiva', 'cancelada')
-) UPDATE cuentas c SET c.saldo_contable = saldo_contable, c.saldo_disponible = c.saldo_disponible, c.estado = estado WHERE c.numero_cuenta = numero_cuenta;
+) UPDATE cuentas c SET c.saldo_contable = saldo_contable, c.saldo_disponible = saldo_disponible, c.estado = estado WHERE c.numero_cuenta = numero_cuenta;
 CREATE PROCEDURE sp_consultarNumeroCuenta(
 	numero_cuenta CHAR(10)
 ) SELECT * FROM cuentas cu INNER JOIN clientes cl ON cl.id_persona = cu.id_cliente INNER JOIN personas p ON p.id_persona = cl.id_persona WHERE cu.numero_cuenta = numero_cuenta;

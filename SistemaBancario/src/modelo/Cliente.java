@@ -76,4 +76,15 @@ public class Cliente extends Persona {
         		return transaccion;
         return null;
     }
+    public boolean agregarSolicitud(Solicitud solicitud) {
+        if (buscarSolicitud(solicitud.getIdSolicitud()) != null) return false;
+        return solicitudes.add(solicitud);
+    }
+    
+    public Solicitud buscarSolicitud(String idSolicitud) {
+        for (Solicitud solicitud : solicitudes) 
+        	if (solicitud.getIdSolicitud().equals(idSolicitud)) 
+        		return solicitud;
+        return null;
+    }
 }

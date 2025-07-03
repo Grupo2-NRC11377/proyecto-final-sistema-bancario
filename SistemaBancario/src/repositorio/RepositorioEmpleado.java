@@ -161,7 +161,7 @@ public class RepositorioEmpleado {
 		ResultSet resultSet = null;
 		Empleado empleado = null;
 		try {
-			String consulta = "SELECT p.* FROM personas p "
+			String consulta = "SELECT * FROM personas p "
 					+ "INNER JOIN empleados e ON p.id_persona = e.id_persona "
 					+ "WHERE p.dni = ?;";
 			connection = ConexiónMySQL.getconexión();
@@ -198,7 +198,7 @@ public class RepositorioEmpleado {
 		ResultSet resultSet = null;
 		Empleado empleado = null;
 		try {
-			String consulta = "SELECT p.* FROM personas p "
+			String consulta = "SELECT * FROM personas p "
 					+ "INNER JOIN empleados e ON p.id_persona = e.id_persona "
 					+ "WHERE p.correo = ?;";
 			connection = ConexiónMySQL.getconexión();
@@ -235,7 +235,7 @@ public class RepositorioEmpleado {
 		ResultSet resultSet = null;
 		Empleado empleado = null;
 		try {
-			String consulta = "SELECT p.* FROM personas p "
+			String consulta = "SELECT * FROM personas p "
 					+ "INNER JOIN empleados e ON p.id_persona = e.id_persona "
 					+ "WHERE p.correo = ? AND p.contraseña = ?;";
 			connection = ConexiónMySQL.getconexión();
@@ -273,7 +273,7 @@ public class RepositorioEmpleado {
 		ResultSet resultSet = null;
 		Empleado empleado = null;
 		try {
-			String consulta = "SELECT p.* FROM personas p "
+			String consulta = "SELECT * FROM personas p "
 					+ "INNER JOIN empleados e ON p.id_persona = e.id_persona "
 					+ "ORDER BY RAND() LIMIT 1";
 			connection = ConexiónMySQL.getconexión();

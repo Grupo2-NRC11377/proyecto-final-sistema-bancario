@@ -43,6 +43,8 @@ public class VentanaMenu extends JFrame implements ActionListener {
 	private JMenuItem mntmDepositar;
 	private JLabel lblNombresCliente;
 	private JLabel lblApellidosCliente;
+	private JMenu mnSolicitudes;
+	private JMenuItem mntmVerSolicitudes;
 
 	public VentanaMenu(VentanaPrincipal ventanaPrincipal, Cliente cliente) {
 		setBackground(new Color(255, 255, 255));
@@ -142,7 +144,7 @@ public class VentanaMenu extends JFrame implements ActionListener {
 				}
 			}
 			
-			JMenu mnTransacción = new JMenu("Transacción");
+			JMenu mnTransacción = new JMenu("Transacciones");
 			mnTransacción.setForeground(new Color(90, 90, 90));
 			mnTransacción.setBackground(new Color(255, 255, 255));
 			mnTransacción.setFont(new Font("Arial", Font.BOLD, 14));
@@ -186,6 +188,21 @@ public class VentanaMenu extends JFrame implements ActionListener {
 				mntmDepositar.addActionListener(this);
 				mnTransacción.add(mntmDepositar);
 			}
+			{
+				mnSolicitudes = new JMenu("Solicitudes");
+				mnSolicitudes.setForeground(new Color(90, 90, 90));
+				mnSolicitudes.setFont(new Font("Arial", Font.BOLD, 14));
+				mnSolicitudes.setBackground(Color.WHITE);
+				menuBar.add(mnSolicitudes);
+				{
+					mntmVerSolicitudes = new JMenuItem("Ver");
+					mntmVerSolicitudes.addActionListener(this);
+					mntmVerSolicitudes.setForeground(new Color(90, 90, 90));
+					mntmVerSolicitudes.setFont(new Font("Arial", Font.BOLD, 13));
+					mntmVerSolicitudes.setBackground(Color.WHITE);
+					mnSolicitudes.add(mntmVerSolicitudes);
+				}
+			}
 		}
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(238, 52, 37));
@@ -218,6 +235,9 @@ public class VentanaMenu extends JFrame implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == mntmVerSolicitudes) {
+			do_mntmVerSolicitudes_actionPerformed(e);
+		}
 		if (e.getSource() == mntmDepositar) {
 			do_mntmDepositar_actionPerformed(e);
 		}
@@ -308,5 +328,9 @@ public class VentanaMenu extends JFrame implements ActionListener {
 	protected void do_mntmDepositar_actionPerformed(ActionEvent e) {
 		VentanaTransaccion ventanaTransaccion = new VentanaTransaccion(cliente, "Depositar");
 		ventanaTransaccion.setVisible(true);
+	}
+	protected void do_mntmVerSolicitudes_actionPerformed(ActionEvent e) {
+		VentanaVerSolicitudes verSolicitudes = new VentanaVerSolicitudes(cliente);
+		verSolicitudes.setVisible(true);
 	}
 }

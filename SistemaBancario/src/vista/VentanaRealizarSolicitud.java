@@ -11,6 +11,7 @@ import modelo.Cliente;
 import modelo.Empleado;
 import modelo.Solicitud;
 import repositorio.RepositorioEmpleado;
+import repositorio.RepositorioSolicitud;
 
 import javax.swing.JComboBox;
 import javax.swing.JButton;
@@ -32,10 +33,10 @@ public class VentanaRealizarSolicitud extends JDialog implements ActionListener 
 	private JComboBox<String> cbxMonedas;
 
 	public VentanaRealizarSolicitud(String asunto, Cliente cliente) {
-		getContentPane().setBackground(new Color(255, 255, 255));
 		this.asunto = asunto;
 		this.cliente = cliente;
 		
+		getContentPane().setBackground(new Color(255, 255, 255));
 		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 		setModal(true);
 		setTitle("Realizar solicitud");
@@ -86,29 +87,26 @@ public class VentanaRealizarSolicitud extends JDialog implements ActionListener 
 			btnCancelar.setBounds(345, 240, 150, 35);
 			getContentPane().add(btnCancelar);
 		}
-		{
-			lblMoneda = new JLabel("Moneda:");
-			lblMoneda.setForeground(new Color(90, 90, 90));
-			lblMoneda.setFont(new Font("Arial", Font.BOLD, 13));
-			lblMoneda.setBounds(50, 180, 55, 16);
-			getContentPane().add(lblMoneda);
-		}
-		{
-			cbxMonedas = new JComboBox<String>();
-			cbxMonedas.setEnabled(false);
-			cbxMonedas.setForeground(new Color(90, 90, 90));
-			cbxMonedas.setFont(new Font("Arial", Font.PLAIN, 13));
-			if(asunto.contains("cuenta")) {
-				cbxMonedas.setEnabled(true);
+		if(asunto.contains("cuenta")) {
+			{
+				lblMoneda = new JLabel("Moneda:");
+				lblMoneda.setForeground(new Color(90, 90, 90));
+				lblMoneda.setFont(new Font("Arial", Font.BOLD, 13));
+				lblMoneda.setBounds(50, 180, 55, 16);
+				getContentPane().add(lblMoneda);
+			}
+			{
+				cbxMonedas = new JComboBox<String>();
+				cbxMonedas.setForeground(new Color(90, 90, 90));
+				cbxMonedas.setFont(new Font("Arial", Font.PLAIN, 13));
 				String[] monedas = {"soles", "dólares", "euros", "libras"};
 				for (String moneda : monedas) {
 					cbxMonedas.addItem(moneda);
 				}
+				cbxMonedas.setBounds(130, 175, 150, 25);
+				getContentPane().add(cbxMonedas);
 			}
-			cbxMonedas.setBounds(130, 175, 150, 25);
-			getContentPane().add(cbxMonedas);
 		}
-
 	}
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnEnviar) {
@@ -123,7 +121,8 @@ public class VentanaRealizarSolicitud extends JDialog implements ActionListener 
 	}
 	protected void do_btnEnviar_actionPerformed(ActionEvent e) {
 		String tipo = (String) cbxAsunto.getSelectedItem();
-		String moneda = (String) cbxMonedas.getSelectedItem();
+		String moneda = "";
+		if(cbxMonedas != null) moneda = (String) cbxMonedas.getSelectedItem();
 		Empleado empleado = RepositorioEmpleado.consultarEmpleadoAleatorio();
     	if(empleado == null) {
     		JOptionPane.showMessageDialog(this, "No hay empleados disponibles, vuelva a intentarlo más tarde.", "Información", JOptionPane.INFORMATION_MESSAGE);
@@ -132,7 +131,9 @@ public class VentanaRealizarSolicitud extends JDialog implements ActionListener 
     	asunto = tipo.equals("corriente") ? asunto + " " + tipo : asunto + " de " + tipo;
     	Solicitud solicitud = new Solicitud(asunto + " en " + moneda, cliente, empleado);
     	empleado.agregarSolicitud(solicitud);
-    	JOptionPane.showMessageDialog(this, "La solicitud se realizó con éxito.", "Información", JOptionPane.INFORMATION_MESSAGE);
+    	cliente.agregarSolicitud(solicitud);
+    	RepositorioSolicitud.insertarSolicitud(solicitud);
+    	JOptionPane.showMessageDialog(this, "La solicitud se realizó con éxito. El empleado " + empleado.getNombres() + " " + empleado.getApellidos() + " atenderá su solicitud.", "Información", JOptionPane.INFORMATION_MESSAGE);
     	dispose();
 	}
 }
