@@ -16,6 +16,7 @@ import modelo.Tarjeta;
 import repositorio.RepositorioTarjeta;
 
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
@@ -95,15 +96,16 @@ public class VentanaVerTarjetas extends JDialog implements ActionListener {
     }
 
     private void llenarTabla() {
-    	ArrayList<Tarjeta> tarjetas = cliente.getTarjetas();
-		if(tarjetas.size() == 0) {
-			tarjetas = RepositorioTarjeta.consultarTarjeta(cliente.getIdPersona());
-			cliente.setTarjetas(tarjetas);
-		}
+    	ArrayList<Tarjeta> tarjetas = RepositorioTarjeta.consultarTarjeta(cliente.getIdPersona());
+    	cliente.setTarjetas(tarjetas);
         tableModel.setRowCount(0);
         for (Tarjeta tarjeta : tarjetas) {
+        	if(tarjeta.getEstado().equals("activa") && tarjeta.getFechaVencimiento().isEqual(LocalDate.now())) {
+        		tarjeta.setEstado("vencida");
+        		RepositorioTarjeta.actualizarTarjeta(tarjeta);
+        	}
         	Object[] fila = new Object[4];
-        	fila[0] = tarjeta.getNumeroTarjeta();
+        	fila[0] = tarjeta.getNumeroTarjetaFormateado();
         	fila[1] = tarjeta.getTipoTarjeta();
         	fila[2] = tarjeta.getFechaVencimientoFormateada();
         	fila[3] = tarjeta.getEstado();
@@ -125,7 +127,9 @@ public class VentanaVerTarjetas extends JDialog implements ActionListener {
         	JOptionPane.showMessageDialog(this, "Selecciona una tarjeta.", "Información", JOptionPane.INFORMATION_MESSAGE);
         	return;
         }
-        String numeroTarjeta = (String) tableModel.getValueAt(posicionFilaSeleccionada, 0);
+        String numeroTarjeta = "";
+        String numeroTarjetaFormateado = (String) tableModel.getValueAt(posicionFilaSeleccionada, 0);
+        for (String numeros : numeroTarjetaFormateado.split(" ")) numeroTarjeta+=numeros;
         Tarjeta tarjeta = cliente.buscarTarjeta(numeroTarjeta);
         if(tarjeta == null) {
         	JOptionPane.showMessageDialog(this, "La tarjeta seleccionada no existe.", "Información", JOptionPane.INFORMATION_MESSAGE);

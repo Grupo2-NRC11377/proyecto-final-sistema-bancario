@@ -123,7 +123,7 @@ public class VentanaVerCuentasBancarias extends JDialog implements ActionListene
 		defaultTableModel.setRowCount(0);
 		for (Cuenta cuenta : cuentas) {
 			Object[] fila = new Object[6];
-			fila[0] = cuenta.getNumeroCuenta();
+			fila[0] = cuenta.getNumeroCuentaFormateado();
 			fila[1] = cuenta.getTipoCuenta();
 			fila[2] = cuenta.getSaldoDisponibleFormateado();
 			fila[3] = cuenta.getSaldoContableFormateado();
@@ -146,7 +146,7 @@ public class VentanaVerCuentasBancarias extends JDialog implements ActionListene
             return;
         }
         int respuesta = JOptionPane.showConfirmDialog(this,
-                "¿Está seguro que desea cancelar la cuenta " + cuenta.getNumeroCuenta() + "?",
+                "¿Está seguro que desea cancelar la cuenta " + cuenta.getNumeroCuentaFormateado() + "?",
                 "Confirmar cancelación", JOptionPane.YES_NO_OPTION);
         if (respuesta == JOptionPane.YES_OPTION) {
         	cuenta.setEstado("cancelada");
@@ -161,8 +161,8 @@ public class VentanaVerCuentasBancarias extends JDialog implements ActionListene
 			JOptionPane.showMessageDialog(this, "Selecciona una cuenta.", "Información", JOptionPane.INFORMATION_MESSAGE);
 			return null;
 		}
-		String numeroCuenta = (String) tableCuentasBancarias.getValueAt(posicionFilaSeleccionada, 0);
-		Cuenta cuenta = cliente.buscarCuenta(numeroCuenta);
+		String numeroCuentaFormateada = (String) tableCuentasBancarias.getValueAt(posicionFilaSeleccionada, 0);
+		Cuenta cuenta = cliente.buscarCuenta(numeroCuentaFormateada.substring(0, 3) + numeroCuentaFormateada.substring(4));
 		if(cuenta == null) {
 			JOptionPane.showMessageDialog(this, "La cuenta seleccionada no existe.", "Información", JOptionPane.INFORMATION_MESSAGE);
 			return null;

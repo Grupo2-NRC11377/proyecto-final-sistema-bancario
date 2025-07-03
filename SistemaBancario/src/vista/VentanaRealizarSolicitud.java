@@ -129,7 +129,8 @@ public class VentanaRealizarSolicitud extends JDialog implements ActionListener 
     		return;
     	}
     	asunto = tipo.equals("corriente") ? asunto + " " + tipo : asunto + " de " + tipo;
-    	Solicitud solicitud = new Solicitud(asunto + " en " + moneda, cliente, empleado);
+    	asunto = moneda.isEmpty() ? asunto : asunto + " en " + moneda;
+    	Solicitud solicitud = new Solicitud(asunto, cliente, empleado);
     	empleado.agregarSolicitud(solicitud);
     	cliente.agregarSolicitud(solicitud);
     	RepositorioSolicitud.insertarSolicitud(solicitud);

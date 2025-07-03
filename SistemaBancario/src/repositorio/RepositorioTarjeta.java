@@ -55,9 +55,9 @@ public class RepositorioTarjeta {
         	connection = ConexiónMySQL.getconexión();
             callableStatement = connection.prepareCall(procedimientoAlmacenado);
             callableStatement.setString(1, tarjeta.getNumeroTarjeta());
-            callableStatement.setDate(2, Date.valueOf(tarjeta.getFechaVencimiento()));
+            callableStatement.setString(2, tarjeta.getEstado());
             callableStatement.setString(3, tarjeta.getTipoTarjeta());
-            callableStatement.setString(4, tarjeta.getEstado());
+            callableStatement.setDate(4, Date.valueOf(tarjeta.getFechaVencimiento()));
             callableStatement.setString(5, tarjeta.getCliente().getIdPersona());
             callableStatement.executeQuery();
         } catch (Exception e) {

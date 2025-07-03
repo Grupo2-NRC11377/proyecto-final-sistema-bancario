@@ -146,46 +146,57 @@ public class VentanaVerSolicitudes extends JDialog implements ActionListener {
 		ventanaVerPerfil.setVisible(true);
 	}
 	protected void do_btnAceptar_actionPerformed(ActionEvent e) {
-		Solicitud solicitud = obtenerSolicitud();
-		if(solicitud == null) return;
-		else if(solicitud.getEstado().equals("aceptada") || solicitud.getEstado().equals("rechazada")) {
-			JOptionPane.showMessageDialog(this, "La solicitud ya fue resuelta.", "Información", JOptionPane.INFORMATION_MESSAGE);
-			return;
+		try {
+			Solicitud solicitud = obtenerSolicitud();
+			if(solicitud == null) return;
+			else if(solicitud.getEstado().equals("aceptada") || solicitud.getEstado().equals("rechazada")) {
+				JOptionPane.showMessageDialog(this, "La solicitud ya fue resuelta.", "Información", JOptionPane.INFORMATION_MESSAGE);
+				return;
+			}
+			Cliente cliente = solicitud.getCliente();
+			if(solicitud.getAsunto().contains("cuenta")) {
+				String asunto = solicitud.getAsunto();
+				String moneda = asunto.split(" en ")[1];
+				System.out.println(moneda);
+				Cuenta cuenta = null;
+				if(solicitud.getAsunto().contains("corriente")) cuenta = new Cuenta("corriente", moneda, cliente);
+				else if(solicitud.getAsunto().contains("ahorro")) cuenta = new Cuenta("ahorro", moneda, cliente);
+				cliente.agregarCuenta(cuenta);
+				RepositorioCuenta.insertarCuenta(cuenta);
+			}
+			else if (solicitud.getAsunto().contains("tarjeta")) {
+				Tarjeta tarjeta = null;
+				if(solicitud.getAsunto().contains("débito")) tarjeta = new Tarjeta("débito", cliente);
+				else if(solicitud.getAsunto().contains("crédito")) tarjeta = new Tarjeta("crédito", cliente);
+				cliente.agregarTarjeta(tarjeta);
+				RepositorioTarjeta.insertarTarjeta(tarjeta);
+			}
+			solicitud.setEstado("aceptada");
+			solicitud.setFechaResolucion(LocalDate.now());
+			RepositorioSolicitud.actualizarSolicitud(solicitud);
+			llenarTabla();
+		} catch (Exception error) {
+			JOptionPane.showMessageDialog(this, "Ocurrio un error, vuelva a intentarlo más tarde.", "Error", JOptionPane.ERROR_MESSAGE);
+			System.out.println(error);
 		}
-		Cliente cliente = solicitud.getCliente();
-		if(solicitud.getAsunto().contains("cuenta")) {
-			String asunto = solicitud.getAsunto();
-			String moneda = asunto.split(" en ")[1];
-			Cuenta cuenta = null;
-			if(solicitud.getAsunto().contains("corriente")) cuenta = new Cuenta("corriente", moneda, cliente);
-			else if(solicitud.getAsunto().contains("ahorro")) cuenta = new Cuenta("ahorro", moneda, cliente);
-			cliente.agregarCuenta(cuenta);
-			RepositorioCuenta.insertarCuenta(cuenta);
-		}
-		else if (solicitud.getAsunto().contains("tarjeta")) {
-			Tarjeta tarjeta = null;
-			if(solicitud.getAsunto().contains("débito")) tarjeta = new Tarjeta("débito", cliente);
-			else if(solicitud.getAsunto().contains("crédito")) tarjeta = new Tarjeta("crédito", cliente);
-			cliente.agregarTarjeta(tarjeta);
-			RepositorioTarjeta.insertarTarjeta(tarjeta);
-		}
-		solicitud.setEstado("aceptada");
-		solicitud.setFechaResolucion(LocalDate.now());
-		RepositorioSolicitud.actualizarSolicitud(solicitud);
-		llenarTabla();
 	}
 	protected void do_btnRechazar_actionPerformed(ActionEvent e) {
-		Solicitud solicitud = obtenerSolicitud();
-		if(solicitud == null) return;
-		else if(solicitud.getEstado().equals("aceptada") || solicitud.getEstado().equals("rechazada")) {
-			JOptionPane.showMessageDialog(this, "La solicitud ya fue resuelta.", "Información", JOptionPane.INFORMATION_MESSAGE);
-			return;
+		try {
+			Solicitud solicitud = obtenerSolicitud();
+			if(solicitud == null) return;
+			else if(solicitud.getEstado().equals("aceptada") || solicitud.getEstado().equals("rechazada")) {
+				JOptionPane.showMessageDialog(this, "La solicitud ya fue resuelta.", "Información", JOptionPane.INFORMATION_MESSAGE);
+				return;
+			}
+			solicitud.setEstado("rechazada");
+			solicitud.setFechaResolucion(LocalDate.now());
+			System.out.println(solicitud.getEstado());
+			RepositorioSolicitud.actualizarSolicitud(solicitud);
+			llenarTabla();
+		} catch (Exception error) {
+			JOptionPane.showMessageDialog(this, "Ocurrio un error, vuelva a intentarlo más tarde.", "Error", JOptionPane.ERROR_MESSAGE);
+			System.out.println(error);
 		}
-		solicitud.setEstado("rechazada");
-		solicitud.setFechaResolucion(LocalDate.now());
-		System.out.println(solicitud.getEstado());
-		RepositorioSolicitud.actualizarSolicitud(solicitud);
-		llenarTabla();
 	}
 	private Solicitud obtenerSolicitud() {
 		int posicionFilaSeleccionada = tableSolicitudes.getSelectedRow();
@@ -207,20 +218,13 @@ public class VentanaVerSolicitudes extends JDialog implements ActionListener {
 		return solicitud;
 	}
 	private void llenarTabla() {
-		ArrayList<Solicitud> solicitudes;
+		ArrayList<Solicitud> solicitudes = new ArrayList<Solicitud>();
 		if(persona.getCorreo().contains("@empleado")) {
-			solicitudes = ((Empleado) persona).getSolicitudes();
+			solicitudes = RepositorioSolicitud.consultarSolicitudEmpleado(persona.getIdPersona());
+			((Empleado) persona).setSolicitudes(solicitudes);
 		} else {
-			solicitudes = ((Cliente) persona).getSolicitudes();
-		}
-		if(solicitudes.size() == 0) {
-			if(persona.getCorreo().contains("@empleado")) {
-				solicitudes = RepositorioSolicitud.consultarSolicitudEmpleado(persona.getIdPersona());
-				((Empleado) persona).setSolicitudes(solicitudes);
-			} else {
-				solicitudes = RepositorioSolicitud.consultarSolicitudCliente(persona.getIdPersona());
-				((Cliente) persona).setSolicitudes(solicitudes);
-			}
+			solicitudes = RepositorioSolicitud.consultarSolicitudCliente(persona.getIdPersona());
+			((Cliente) persona).setSolicitudes(solicitudes);
 		}
 		defaultTableModel.setRowCount(0);
 		for (Solicitud solicitud : solicitudes) {

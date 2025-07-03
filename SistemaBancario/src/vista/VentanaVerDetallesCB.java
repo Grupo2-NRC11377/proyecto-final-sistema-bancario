@@ -213,7 +213,7 @@ public class VentanaVerDetallesCB extends JDialog implements ActionListener {
 		dispose();
 	}
 	private void mostrarDatos() {
-		txtNumeroCuenta.setText(cuenta.getNumeroCuenta());
+		txtNumeroCuenta.setText(cuenta.getNumeroCuentaFormateado());
 		txtSaldoDisponible.setText(cuenta.getSaldoDisponibleFormateado());
 		txtSaldoContable.setText(cuenta.getSaldoContableFormateado());
 		txtFechaCreacion.setText(cuenta.getFechaCreacionFormateada());
@@ -221,11 +221,8 @@ public class VentanaVerDetallesCB extends JDialog implements ActionListener {
 		txtMoneda.setText(cuenta.getMoneda());
 	}
 	private void llenarTabla() {
-		ArrayList<Transaccion> transacciones = cuenta.getTransacciones();
-		if(transacciones.size() == 0) {
-			transacciones = RepositorioTransaccion.consultarTransaccionNumeroCuenta(cuenta.getNumeroCuenta());
-			cuenta.setTransacciones(transacciones);
-		}
+		ArrayList<Transaccion> transacciones = RepositorioTransaccion.consultarTransaccionNumeroCuenta(cuenta.getNumeroCuenta());
+		cuenta.setTransacciones(transacciones);
 		defaultTableModel.setRowCount(0);
 		for (Transaccion transaccion : transacciones) {
 			Object[] fila = new Object[6];

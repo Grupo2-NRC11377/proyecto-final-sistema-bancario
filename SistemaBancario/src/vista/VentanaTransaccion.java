@@ -169,8 +169,14 @@ public class VentanaTransaccion extends JDialog implements ActionListener {
 		String numeroOrigen = "";
 		String numeroDestino = "";
 		String motivoPagar = "";
-		if(txtNumeroCuentaOrigen != null) numeroOrigen = txtNumeroCuentaOrigen.getText().trim();
-		if(txtNumeroCuentaDestino != null) numeroDestino = txtNumeroCuentaDestino.getText().trim();
+		if(txtNumeroCuentaOrigen != null) {
+			String numeroOrigenFormateado = txtNumeroCuentaOrigen.getText().trim();
+			if(numeroOrigenFormateado.contains("-")) numeroOrigen = numeroOrigenFormateado.substring(0, 3) + numeroOrigenFormateado.substring(4);
+		}
+		if(txtNumeroCuentaDestino != null) {
+			String numeroDestinoFormateado = txtNumeroCuentaDestino.getText().trim();
+			if(numeroDestinoFormateado.contains("-")) numeroDestino = numeroDestinoFormateado.substring(0, 3) + numeroDestinoFormateado.substring(4);
+		}
 		if(txtMotivoPagar != null) motivoPagar = txtMotivoPagar.getText().trim();
 		if(txtMonto.getText().trim().isEmpty()) {
 			JOptionPane.showMessageDialog(this, "El campo monto está vacío.", "Información", JOptionPane.INFORMATION_MESSAGE);
@@ -209,7 +215,7 @@ public class VentanaTransaccion extends JDialog implements ActionListener {
 			if(cuentaDestino == null) {
 				JOptionPane.showMessageDialog(this, "La cuenta de destino no existe.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
-			} else if((tipo.equalsIgnoreCase("transferir") || tipo.equalsIgnoreCase("pagar")) && cuentaOrigen.equals(cuentaDestino)) {
+			} else if((tipo.equalsIgnoreCase("transferir") || tipo.equalsIgnoreCase("pagar")) && cuentaOrigen.getNumeroCuenta().equals(cuentaDestino.getNumeroCuenta())) {
 				JOptionPane.showMessageDialog(this, "No se puede " + tipo + " a la misma cuenta", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}

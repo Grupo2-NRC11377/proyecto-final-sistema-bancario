@@ -58,9 +58,7 @@ public class RepositorioCuenta {
         	connection = ConexiónMySQL.getconexión();
             callableStatement = connection.prepareCall(procedimientoAlmacenado);
             callableStatement.setString(1, cuenta.getNumeroCuenta());
-            System.out.println(cuenta.getSaldoContable());
             callableStatement.setDouble(2, cuenta.getSaldoContable());
-            System.out.println(cuenta.getSaldoDisponible());
             callableStatement.setDouble(3, cuenta.getSaldoDisponible());
             callableStatement.setDate(4, Date.valueOf(cuenta.getFechaCreacion()));
             callableStatement.setString(5, cuenta.getEstado());

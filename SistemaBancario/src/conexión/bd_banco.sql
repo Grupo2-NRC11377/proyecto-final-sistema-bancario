@@ -44,7 +44,7 @@ CREATE TABLE solicitudes(
 );
 CREATE TABLE tarjetas(
     numero_tarjeta CHAR(16) PRIMARY KEY,
-    estado ENUM('activa', 'inactiva', 'bloqueada') NOT NULL,
+    estado ENUM('activa', 'inactiva', 'bloqueada', 'vencida') NOT NULL,
     tipo_tarjeta ENUM('débito', 'crédito') NOT NULL,
     fecha_vencimiento DATE NOT NULL,
     id_cliente CHAR(36) NOT NULL,
@@ -198,7 +198,7 @@ CREATE PROCEDURE sp_listarTarjeta(
 ) SELECT * FROM tarjetas t INNER JOIN clientes c ON c.id_persona = t.id_cliente INNER JOIN personas p ON p.id_persona = c.id_persona;
 CREATE PROCEDURE sp_insertarTarjeta(
 	numero_tarjeta CHAR(16),
-    estado ENUM('activa', 'inactiva', 'bloqueada'),
+    estado ENUM('activa', 'inactiva', 'bloqueada', 'vencida'),
     tipo_tarjeta ENUM('débito', 'crédito'),
     fecha_vencimiento DATE,
     id_cliente CHAR(36)
@@ -208,7 +208,7 @@ CREATE PROCEDURE sp_eliminarTarjeta(
 ) DELETE FROM tarjetas t WHERE t.id_solicitud = id_solicitud;
 CREATE PROCEDURE sp_actualizarTarjeta(
 	numero_tarjeta CHAR(16),
-    estado ENUM('activa', 'inactiva', 'bloqueada')
+    estado ENUM('activa', 'inactiva', 'bloqueada', 'vencida')
 ) UPDATE tarjetas t SET t.estado = estado WHERE t.numero_tarjeta = numero_tarjeta;
 CREATE PROCEDURE sp_consultarNumeroTarjeta(
 	numero_tarjeta CHAR(16)
@@ -238,34 +238,34 @@ CREATE PROCEDURE sp_consultarIdTransaccion(
 ) SELECT * FROM transacciones t INNER JOIN clientes c ON c.id_persona = t.id_cliente INNER JOIN personas p ON p.id_persona = c.id_persona WHERE t.id_transaccion = id_transaccion;
 
 #INSERCIÓN DE DATOS
-CALL sp_insertarEmpleado('1', '00000001', 'Juan', 'Pérez García', '987654321', 'Calle Falsa 123, Distrito Imaginario, Ciudad Ejemplo', 'juan.perez@empleado.com', 'ClaveEjemplo#1');
-CALL sp_insertarEmpleado('2', '00000002', 'María', 'López Rodríguez', '912345678', 'Avenida Siempre Viva 742, Sector Demo, Ciudad Ejemplo', 'maria.lopez@empleado.com', 'ClaveEjemplo#2');
-CALL sp_insertarCliente('3', '00000003', 'Carlos', 'Martínez Sánchez', '955501003', 'Jirón Desconocido 456, Urb. Modelo, Ciudad Ejemplo', 'carlos.martinez@email.com', 'ClaveEjemplo#1');
-CALL sp_insertarCliente('4', '00000004', 'Ana', 'Gonzales Castillo', '933112233', 'Pasaje Inventado 789, Zona Test, Ciudad Ejemplo', 'ana.gonzales@email.com', 'ClaveEjemplo#2');
+CALL sp_insertarEmpleado('000b93b3-c539-4b17-adc9-fccd71e29b6a', '00000001', 'Juan', 'Pérez García', '987654321', 'Calle Falsa 123, Distrito Imaginario, Ciudad Ejemplo', 'juan.perez@empleado.com', 'ClaveEjemplo#1');
+CALL sp_insertarEmpleado('111b93b3-c539-4b17-adc9-fccd71e29b6a', '00000002', 'María', 'López Rodríguez', '912345678', 'Avenida Siempre Viva 742, Sector Demo, Ciudad Ejemplo', 'maria.lopez@empleado.com', 'ClaveEjemplo#2');
+CALL sp_insertarCliente('222b93b3-c539-4b17-adc9-fccd71e29b6a', '00000003', 'Carlos', 'Martínez Sánchez', '955501003', 'Jirón Desconocido 456, Urb. Modelo, Ciudad Ejemplo', 'carlos.martinez@email.com', 'ClaveEjemplo#1');
+CALL sp_insertarCliente('333b93b3-c539-4b17-adc9-fccd71e29b6a', '00000004', 'Ana', 'Gonzales Castillo', '933112233', 'Pasaje Inventado 789, Zona Test, Ciudad Ejemplo', 'ana.gonzales@email.com', 'ClaveEjemplo#2');
 
-CALL sp_insertarSolicitud('1', 'Apertura de cuenta de ahorro en soles', 'aceptada', current_date(), current_date(), '3', '1');
-CALL sp_insertarSolicitud('2', 'Apertura de cuenta corriente en dólares', 'aceptada', current_date(), current_date(), '3', '1');
-CALL sp_insertarSolicitud('3', 'Apertura de cuenta de ahorro en soles', 'aceptada', current_date(), current_date(), '4', '2');
-CALL sp_insertarSolicitud('4', 'Apertura de cuenta corriente en dólares', 'aceptada', current_date(), current_date(), '4', '2');
-CALL sp_insertarSolicitud('5', 'Emisión de tarjeta de crédito', 'aceptada', current_date(), current_date(), '3', '1');
-CALL sp_insertarSolicitud('6', 'Emisión de tarjeta de débito', 'aceptada', current_date(), current_date(), '3', '1');
-CALL sp_insertarSolicitud('7', 'Emisión de tarjeta de crédito', 'aceptada', current_date(), current_date(), '4', '2');
-CALL sp_insertarSolicitud('8', 'Emisión de tarjeta de débito', 'aceptada', current_date(), current_date(), '4', '2');
+CALL sp_insertarSolicitud('0baf9d61-a61f-42a1-ae1a-1753ae39292d', 'Apertura de cuenta de ahorro en soles', 'aceptada', current_date(), current_date(), '222b93b3-c539-4b17-adc9-fccd71e29b6a', '000b93b3-c539-4b17-adc9-fccd71e29b6a');
+CALL sp_insertarSolicitud('1d2a3144-05db-4e97-a7bf-1d1b54ad5151', 'Apertura de cuenta corriente en dólares', 'aceptada', current_date(), current_date(), '222b93b3-c539-4b17-adc9-fccd71e29b6a', '000b93b3-c539-4b17-adc9-fccd71e29b6a');
+CALL sp_insertarSolicitud('749b6118-52cf-475f-93c2-fdd4b763910b', 'Apertura de cuenta de ahorro en soles', 'aceptada', current_date(), current_date(), '333b93b3-c539-4b17-adc9-fccd71e29b6a', '111b93b3-c539-4b17-adc9-fccd71e29b6a');
+CALL sp_insertarSolicitud('762b3a5b-d06b-42a6-9e03-a3023857fa02', 'Apertura de cuenta corriente en dólares', 'aceptada', current_date(), current_date(), '333b93b3-c539-4b17-adc9-fccd71e29b6a', '111b93b3-c539-4b17-adc9-fccd71e29b6a');
+CALL sp_insertarSolicitud('d00e6ee6-77df-45b1-9618-29369f86c6f3', 'Emisión de tarjeta de crédito', 'aceptada', current_date(), current_date(), '222b93b3-c539-4b17-adc9-fccd71e29b6a', '000b93b3-c539-4b17-adc9-fccd71e29b6a');
+CALL sp_insertarSolicitud('f11e6ee6-77df-45b1-9618-29369f86c6f3', 'Emisión de tarjeta de débito', 'aceptada', current_date(), current_date(), '222b93b3-c539-4b17-adc9-fccd71e29b6a', '000b93b3-c539-4b17-adc9-fccd71e29b6a');
+CALL sp_insertarSolicitud('000b6118-52cf-475f-93c2-fdd4b763910b', 'Emisión de tarjeta de crédito', 'aceptada', current_date(), current_date(), '333b93b3-c539-4b17-adc9-fccd71e29b6a', '111b93b3-c539-4b17-adc9-fccd71e29b6a');
+CALL sp_insertarSolicitud('9a9b3144-05db-4e97-a7bf-1d1b54ad5151', 'Emisión de tarjeta de débito', 'aceptada', current_date(), current_date(), '333b93b3-c539-4b17-adc9-fccd71e29b6a', '111b93b3-c539-4b17-adc9-fccd71e29b6a');
 
-CALL sp_insertarCuenta('1', '1500', '1500', current_date(), 'activa', 'ahorro', 'soles', '3');
-CALL sp_insertarCuenta('2', '800', '800', current_date(), 'activa', 'corriente', 'dólares', '3');
-CALL sp_insertarCuenta('3', '1200', '1200', current_date(), 'activa', 'ahorro', 'soles', '4');
-CALL sp_insertarCuenta('4', '900', '900', current_date(), 'activa', 'corriente', 'dólares', '4');
+CALL sp_insertarCuenta('0023768492', '1500', '1500', current_date(), 'activa', 'ahorro', 'soles', '222b93b3-c539-4b17-adc9-fccd71e29b6a');
+CALL sp_insertarCuenta('1123768492', '800', '800', current_date(), 'activa', 'corriente', 'dólares', '222b93b3-c539-4b17-adc9-fccd71e29b6a');
+CALL sp_insertarCuenta('9923768492', '1200', '1200', current_date(), 'activa', 'ahorro', 'soles', '333b93b3-c539-4b17-adc9-fccd71e29b6a');
+CALL sp_insertarCuenta('6623768492', '900', '900', current_date(), 'activa', 'corriente', 'dólares', '333b93b3-c539-4b17-adc9-fccd71e29b6a');
 
-CALL sp_insertarTarjeta('1', 'activa', 'crédito', (DATE_ADD(CURDATE(), INTERVAL 3 YEAR)), '3');
-CALL sp_insertarTarjeta('2', 'activa', 'débito', (DATE_ADD(CURDATE(), INTERVAL 3 YEAR)), '3');
-CALL sp_insertarTarjeta('3', 'activa', 'crédito', (DATE_ADD(CURDATE(), INTERVAL 3 YEAR)), '4');
-CALL sp_insertarTarjeta('4', 'activa', 'débito', (DATE_ADD(CURDATE(), INTERVAL 3 YEAR)), '4');
+CALL sp_insertarTarjeta('0004952923404121', 'activa', 'crédito', current_date(), '222b93b3-c539-4b17-adc9-fccd71e29b6a');
+CALL sp_insertarTarjeta('1114952923404121', 'activa', 'débito', (DATE_ADD(current_date(), INTERVAL 3 YEAR)), '222b93b3-c539-4b17-adc9-fccd71e29b6a');
+CALL sp_insertarTarjeta('2224952923404121', 'activa', 'crédito', (DATE_ADD(current_date(), INTERVAL 3 YEAR)), '333b93b3-c539-4b17-adc9-fccd71e29b6a');
+CALL sp_insertarTarjeta('3334952923404121', 'activa', 'débito', (DATE_ADD(current_date(), INTERVAL 3 YEAR)), '333b93b3-c539-4b17-adc9-fccd71e29b6a');
 
-CALL sp_insertarTransaccion('1', 'depositar', 'Número de cuenta de destino: 1;', now(), 'completada', 1500, '3');
-CALL sp_insertarTransaccion('2', 'depositar', 'Número de cuenta de destino: 2;', now(), 'completada', 800, '3');
-CALL sp_insertarTransaccion('3', 'depositar', 'Número de cuenta de destino: 3;', now(), 'completada', 1200, '4');
-CALL sp_insertarTransaccion('4', 'depositar', 'Número de cuenta de destino: 4;', now(), 'completada', 900, '4');
+CALL sp_insertarTransaccion('1efb7df2-3dc5-4bbc-913f-0a330618911a', 'depositar', 'Número de cuenta de destino: 0023768492;', now(), 'completada', 1500, '222b93b3-c539-4b17-adc9-fccd71e29b6a');
+CALL sp_insertarTransaccion('509b93b3-c539-4b17-adc9-fccd71e29b6a', 'depositar', 'Número de cuenta de destino: 1123768492;', now(), 'completada', 800, '222b93b3-c539-4b17-adc9-fccd71e29b6a');
+CALL sp_insertarTransaccion('7bb28d38-3e5e-4923-b6e7-9232d32dc831', 'depositar', 'Número de cuenta de destino: 9923768492;', now(), 'completada', 1200, '333b93b3-c539-4b17-adc9-fccd71e29b6a');
+CALL sp_insertarTransaccion('9993aa27-49fc-41da-84ec-bf69f94d508c', 'depositar', 'Número de cuenta de destino: 6623768492;', now(), 'completada', 900, '333b93b3-c539-4b17-adc9-fccd71e29b6a');
 
 /*
 SELECT * FROM personas;

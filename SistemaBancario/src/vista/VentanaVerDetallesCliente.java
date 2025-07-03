@@ -270,11 +270,8 @@ public class VentanaVerDetallesCliente extends JDialog implements ActionListener
 		txtCorreo.setText(cliente.getCorreo());		
 	}
 	private void llenarTablaCuentas() {
-		ArrayList<Cuenta> cuentas = cliente.getCuentas();
-		if(cuentas.size() == 0) {
-			cuentas = RepositorioCuenta.consultarCuenta(cliente.getIdPersona());
-			cliente.setCuentas(cuentas);
-		}
+		ArrayList<Cuenta> cuentas = RepositorioCuenta.consultarCuenta(cliente.getIdPersona());
+		cliente.setCuentas(cuentas);
 		defaultTableModelCuentas.setRowCount(0);
 		for (Cuenta cuenta : cuentas) {
 			Object[] fila = new Object[3];
@@ -285,11 +282,8 @@ public class VentanaVerDetallesCliente extends JDialog implements ActionListener
 		}
 	}
 	private void llenarTablaTarjetas() {
-		ArrayList<Tarjeta> tarjetas = cliente.getTarjetas();
-		if(tarjetas.size() == 0) {
-			tarjetas = RepositorioTarjeta.consultarTarjeta(cliente.getIdPersona());
-			cliente.setTarjetas(tarjetas);
-		}
+		ArrayList<Tarjeta> tarjetas = RepositorioTarjeta.consultarTarjeta(cliente.getIdPersona());
+		cliente.setTarjetas(tarjetas);
         defaultTableModelTarjetas.setRowCount(0);
         for (Tarjeta tarjeta : tarjetas) {
         	Object[] fila = new Object[3];
