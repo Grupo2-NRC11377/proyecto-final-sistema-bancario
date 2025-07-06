@@ -45,6 +45,8 @@ public class VentanaMenu extends JFrame implements ActionListener {
 	private JLabel lblApellidosCliente;
 	private JMenu mnSolicitudes;
 	private JMenuItem mntmVerSolicitudes;
+	private JMenu mnProgramadores;
+	private JMenuItem mntmVerProgramadores;
 
 	public VentanaMenu(VentanaPrincipal ventanaPrincipal, Cliente cliente) {
 		setBackground(new Color(255, 255, 255));
@@ -203,6 +205,21 @@ public class VentanaMenu extends JFrame implements ActionListener {
 					mnSolicitudes.add(mntmVerSolicitudes);
 				}
 			}
+			{
+				mnProgramadores = new JMenu("Programadores");
+				mnProgramadores.setForeground(new Color(90, 90, 90));
+				mnProgramadores.setFont(new Font("Arial", Font.BOLD, 14));
+				mnProgramadores.setBackground(Color.WHITE);
+				menuBar.add(mnProgramadores);
+				{
+					mntmVerProgramadores = new JMenuItem("Ver");
+					mntmVerProgramadores.addActionListener(this);
+					mntmVerProgramadores.setForeground(new Color(90, 90, 90));
+					mntmVerProgramadores.setFont(new Font("Arial", Font.BOLD, 13));
+					mntmVerProgramadores.setBackground(Color.WHITE);
+					mnProgramadores.add(mntmVerProgramadores);
+				}
+			}
 		}
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(238, 52, 37));
@@ -235,6 +252,9 @@ public class VentanaMenu extends JFrame implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == mntmVerProgramadores) {
+			do_mntmVerProgramadores_actionPerformed(e);
+		}
 		if (e.getSource() == mntmVerSolicitudes) {
 			do_mntmVerSolicitudes_actionPerformed(e);
 		}
@@ -332,5 +352,9 @@ public class VentanaMenu extends JFrame implements ActionListener {
 	protected void do_mntmVerSolicitudes_actionPerformed(ActionEvent e) {
 		VentanaVerSolicitudes verSolicitudes = new VentanaVerSolicitudes(cliente);
 		verSolicitudes.setVisible(true);
+	}
+	protected void do_mntmVerProgramadores_actionPerformed(ActionEvent e) {
+		VentanaProgramadores ventanaProgramadores = new VentanaProgramadores();
+		ventanaProgramadores.setVisible(true);
 	}
 }
