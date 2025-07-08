@@ -17,6 +17,8 @@ import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.NumberFormat;
@@ -24,7 +26,7 @@ import java.util.Locale;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
 
-public class VentanaTransaccion extends JDialog implements ActionListener {
+public class VentanaTransaccion extends JDialog implements ActionListener, KeyListener {
 	
 	private Cliente cliente;
 	private String tipo;
@@ -87,6 +89,8 @@ public class VentanaTransaccion extends JDialog implements ActionListener {
 				txtNumeroCuentaDestino.setBounds(259, 152, 200, 25);
 				getContentPane().add(txtNumeroCuentaDestino);
 				txtNumeroCuentaDestino.setColumns(10);
+				txtNumeroCuentaDestino.addKeyListener(this);
+	            getContentPane().add(txtNumeroCuentaDestino);
 			}
 		}
 		{
@@ -103,6 +107,7 @@ public class VentanaTransaccion extends JDialog implements ActionListener {
 			txtMonto.setFont(new Font("Arial", Font.PLAIN, 13));
 			txtMonto.setColumns(10);
 			txtMonto.setBounds(259, 188, 200, 25);
+			txtMonto.addKeyListener(this);
 			getContentPane().add(txtMonto);
 		}
 		if(tipo.equalsIgnoreCase("pagar")){
@@ -147,6 +152,7 @@ public class VentanaTransaccion extends JDialog implements ActionListener {
 				txtNumeroCuentaOrigen.setFont(new Font("Arial", Font.PLAIN, 13));
 				txtNumeroCuentaOrigen.setColumns(10);
 				txtNumeroCuentaOrigen.setBounds(260, 116, 200, 25);
+				txtNumeroCuentaOrigen.addKeyListener(this);
 				getContentPane().add(txtNumeroCuentaOrigen);
 			}
 		}
@@ -369,4 +375,29 @@ public class VentanaTransaccion extends JDialog implements ActionListener {
 	    NumberFormat numberFormat = NumberFormat.getCurrencyInstance(locale);
 		return numberFormat.format(monto);
 	}
+	
+	@Override
+    public void keyTyped(KeyEvent e) {
+        char c = e.getKeyChar();
+
+        if (e.getSource() == txtMonto) {
+            if (!Character.isDigit(c) && c != '.' && c != KeyEvent.VK_BACK_SPACE) {
+                e.consume();
+                JOptionPane.showMessageDialog(this, "Solo se permiten números y punto decimal", "Advertencia", JOptionPane.WARNING_MESSAGE);
+            }
+        } else {
+            if (Character.isAlphabetic(c)) {
+                e.consume();
+                JOptionPane.showMessageDialog(this, "No debe ingresar letras", "Advertencia", JOptionPane.WARNING_MESSAGE);
+            }
+        }
+    }
+    @Override
+    public void keyPressed(KeyEvent e) {
+        // No se usa
+    }
+    @Override
+    public void keyReleased(KeyEvent e) {
+        // No se usa
+    }
 }
