@@ -60,7 +60,9 @@ public class VentanaProgramadores extends JDialog implements ActionListener {
 			getContentPane().add(btnCerrar);
 		}
 		{
-			lblFoto2 = new JLabel("Foto 2");
+			lblFoto2 = new JLabel("");
+			lblFoto2.setIcon(new ImageIcon(VentanaProgramadores.class.getResource("/imagen/FotoCarnet_CahuanaMoquillaza.jpeg")));
+			lblFoto2.setHorizontalAlignment(SwingConstants.CENTER);
 			lblFoto2.setForeground(new Color(0, 0, 0));
 			lblFoto2.setBackground(new Color(255, 255, 255));
 			lblFoto2.setBounds(210, 120, 137, 171);
