@@ -194,7 +194,7 @@ public class VentanaRegistrar extends JDialog implements ActionListener, KeyList
 			lblNewLabel_6 = new JLabel("DNI:");
 			lblNewLabel_6.setForeground(new Color(90, 90, 90));
 			lblNewLabel_6.setFont(new Font("Arial", Font.BOLD, 13));
-			lblNewLabel_6.setBounds(50, 120, 26, 16);
+			lblNewLabel_6.setBounds(50, 120, 42, 16);
 			contentPanel.add(lblNewLabel_6);
 		}
 		{
@@ -310,20 +310,15 @@ public class VentanaRegistrar extends JDialog implements ActionListener, KeyList
 			do_txtDNI_keyTyped(e);
 		}
 	}
-	private int digitosDni = 0;
-	private int digitosTelefono = 0;
 	protected void do_txtDNI_keyTyped(KeyEvent e) {
 		char caracter = e.getKeyChar();
 		if(Character.isAlphabetic(caracter)) {
 			e.consume();
 			JOptionPane.showMessageDialog(this, "El DNI debe tener números.", "Información", JOptionPane.INFORMATION_MESSAGE);
-		} else {
-			digitosDni++;
-			if(digitosDni > 8) {
-				e.consume();
-				JOptionPane.showMessageDialog(this, "El DNI debe tener 8 dígitos.", "Información", JOptionPane.INFORMATION_MESSAGE);
-			}
-		}
+		} else if (txtDNI.getText().length() >= 8) {
+	        e.consume();
+	        JOptionPane.showMessageDialog(this, "El DNI debe tener 8 dígitos.", "Información", JOptionPane.INFORMATION_MESSAGE);
+	    }
 	}
 	protected void do_txtNombres_keyTyped(KeyEvent e) {
 		char caracteres = e.getKeyChar();
@@ -344,12 +339,9 @@ public class VentanaRegistrar extends JDialog implements ActionListener, KeyList
 		if(Character.isAlphabetic(caracteres)) {
 			e.consume();
 			JOptionPane.showMessageDialog(this, "El teléfono debe tener números.", "Información", JOptionPane.INFORMATION_MESSAGE);
-		} else {
-			digitosTelefono++;
-			if(digitosTelefono > 9) {
-				e.consume();
-				JOptionPane.showMessageDialog(this, "El teléfono debe tener 9 dígitos.", "Información", JOptionPane.INFORMATION_MESSAGE);
-			}
-		}
+		} else if (txtTelefono.getText().length() >= 9) {
+	        e.consume();
+	        JOptionPane.showMessageDialog(this, "El teléfono debe tener 9 dígitos.", "Información", JOptionPane.INFORMATION_MESSAGE);
+	    }
 	}
 }

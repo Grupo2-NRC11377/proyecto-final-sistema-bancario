@@ -81,7 +81,9 @@ public class VentanaProgramadores extends JDialog implements ActionListener {
 			getContentPane().add(lblFoto4);
 		}
 		{
-			lblFoto5 = new JLabel("Foto 5");
+			lblFoto5 = new JLabel("");
+			lblFoto5.setHorizontalAlignment(SwingConstants.CENTER);
+			lblFoto5.setIcon(new ImageIcon(VentanaProgramadores.class.getResource("/imagen/FotoCarnet_DeLaCruzVillugas.jpeg")));
 			lblFoto5.setForeground(new Color(0, 0, 0));
 			lblFoto5.setBackground(new Color(255, 255, 255));
 			lblFoto5.setBounds(690, 120, 137, 171);
@@ -192,7 +194,7 @@ public class VentanaProgramadores extends JDialog implements ActionListener {
 			getContentPane().add(lblDeLaCruzVilluga);
 		}
 		{
-			lblKevinAndre = new JLabel("Kevin Andre");
+			lblKevinAndre = new JLabel("Kevin André");
 			lblKevinAndre.setHorizontalAlignment(SwingConstants.CENTER);
 			lblKevinAndre.setForeground(new Color(90, 90, 90));
 			lblKevinAndre.setFont(new Font("Arial", Font.BOLD, 15));
@@ -210,6 +212,7 @@ public class VentanaProgramadores extends JDialog implements ActionListener {
 		{
 			lblFoto1 = new JLabel("");
 			lblFoto1.setIcon(new ImageIcon(VentanaProgramadores.class.getResource("/imagen/fotoCarnet_BasilioAlvarez.jpeg")));
+			lblFoto1.setHorizontalAlignment(SwingConstants.CENTER);
 			lblFoto1.setForeground(Color.BLACK);
 			lblFoto1.setBackground(Color.WHITE);
 			lblFoto1.setBounds(50, 120, 137, 171);

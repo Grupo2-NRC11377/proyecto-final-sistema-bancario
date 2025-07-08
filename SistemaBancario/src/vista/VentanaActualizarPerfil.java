@@ -163,7 +163,7 @@ public class VentanaActualizarPerfil extends JDialog implements ActionListener, 
 			lblDni = new JLabel("DNI:");
 			lblDni.setForeground(new Color(90, 90, 90));
 			lblDni.setFont(new Font("Arial", Font.BOLD, 13));
-			lblDni.setBounds(50, 119, 26, 16);
+			lblDni.setBounds(50, 119, 39, 16);
 			getContentPane().add(lblDni);
 		}
 		{
@@ -276,20 +276,15 @@ public class VentanaActualizarPerfil extends JDialog implements ActionListener, 
 			do_txtDni_keyTyped(e);
 		}
 	}
-	private int digitosDni = 0;
-	private int digitosTelefono = 0;
 	protected void do_txtDni_keyTyped(KeyEvent e) {
 		char caracteres = e.getKeyChar();
 		if(Character.isAlphabetic(caracteres)) {
 			e.consume();
 			JOptionPane.showMessageDialog(this, "El DNI debe tener números.", "Información", JOptionPane.INFORMATION_MESSAGE);
-		} else {
-			digitosDni++;
-			if(digitosDni > 8) {
-				e.consume();
-				JOptionPane.showMessageDialog(this, "El DNI debe tener 8 dígitos.", "Información", JOptionPane.INFORMATION_MESSAGE);
-			}
-		}
+		} else if (txtDni.getText().length() >= 8) {
+	        e.consume();
+	        JOptionPane.showMessageDialog(this, "El DNI debe tener 8 dígitos.", "Información", JOptionPane.INFORMATION_MESSAGE);
+	    }
 	}
 	protected void do_txtNombres_keyTyped(KeyEvent e) {
 		char caracteres = e.getKeyChar();
@@ -310,12 +305,9 @@ public class VentanaActualizarPerfil extends JDialog implements ActionListener, 
 		if(Character.isAlphabetic(caracteres)) {
 			e.consume();
 			JOptionPane.showMessageDialog(this, "El teléfono debe tener números.", "Información", JOptionPane.INFORMATION_MESSAGE);
-		} else {
-			digitosTelefono++;
-			if(digitosTelefono > 9) {
-				e.consume();
-				JOptionPane.showMessageDialog(this, "El teléfono debe tener 9 dígitos.", "Información", JOptionPane.INFORMATION_MESSAGE);
-			}
-		}
+		} else if (txtTelefono.getText().length() >= 9) {
+	        e.consume();
+	        JOptionPane.showMessageDialog(this, "El teléfono debe tener 9 dígitos.", "Información", JOptionPane.INFORMATION_MESSAGE);
+	    }
 	}
 }
