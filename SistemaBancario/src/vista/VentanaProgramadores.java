@@ -8,6 +8,7 @@ import javax.swing.SwingConstants;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.ImageIcon;
 
 public class VentanaProgramadores extends JDialog implements ActionListener {
 
@@ -87,7 +88,8 @@ public class VentanaProgramadores extends JDialog implements ActionListener {
 			getContentPane().add(lblFoto_1);
 		}
 		{
-			lblFoto_3 = new JLabel("Foto 3");
+			lblFoto_3 = new JLabel("");
+			lblFoto_3.setIcon(new ImageIcon(VentanaProgramadores.class.getResource("/imagen/FotoCarnet_KevinDelaCruzVillugas.jpeg")));
 			lblFoto_3.setForeground(new Color(0, 0, 0));
 			lblFoto_3.setBackground(new Color(255, 255, 255));
 			lblFoto_3.setBounds(690, 120, 137, 171);
@@ -198,7 +200,7 @@ public class VentanaProgramadores extends JDialog implements ActionListener {
 			getContentPane().add(lblBasilioAlvarez_8);
 		}
 		{
-			lblGianellaAnnie_4 = new JLabel("Kevin Andre");
+			lblGianellaAnnie_4 = new JLabel("Kevin André");
 			lblGianellaAnnie_4.setHorizontalAlignment(SwingConstants.CENTER);
 			lblGianellaAnnie_4.setForeground(new Color(90, 90, 90));
 			lblGianellaAnnie_4.setFont(new Font("Arial", Font.BOLD, 15));
