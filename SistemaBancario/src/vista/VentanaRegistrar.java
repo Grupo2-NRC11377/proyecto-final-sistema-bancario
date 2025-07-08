@@ -194,7 +194,7 @@ public class VentanaRegistrar extends JDialog implements ActionListener, KeyList
 			lblNewLabel_6 = new JLabel("DNI:");
 			lblNewLabel_6.setForeground(new Color(90, 90, 90));
 			lblNewLabel_6.setFont(new Font("Arial", Font.BOLD, 13));
-			lblNewLabel_6.setBounds(50, 120, 26, 16);
+			lblNewLabel_6.setBounds(50, 120, 42, 16);
 			contentPanel.add(lblNewLabel_6);
 		}
 		{
@@ -311,7 +311,10 @@ public class VentanaRegistrar extends JDialog implements ActionListener, KeyList
 		if(Character.isAlphabetic(caracteres)) {
 			e.consume();
 			JOptionPane.showMessageDialog(this, "No debe ingresar letras.", "Información", JOptionPane.INFORMATION_MESSAGE);
-		}
+		} else if (txtDNI.getText().length() >= 8) {
+	        e.consume();
+	        JOptionPane.showMessageDialog(this, "El DNI solo debe tener 8 dígitos.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+	    }
 	}
 	protected void do_txtNombres_keyTyped(KeyEvent e) {
 		char caracteres = e.getKeyChar();
@@ -332,6 +335,9 @@ public class VentanaRegistrar extends JDialog implements ActionListener, KeyList
 		if(Character.isAlphabetic(caracteres)) {
 			e.consume();
 			JOptionPane.showMessageDialog(this, "No debe ingresar letras.", "Información", JOptionPane.INFORMATION_MESSAGE);
-		}
+		} else if (txtTelefono.getText().length() >= 9) {
+	        e.consume();
+	        JOptionPane.showMessageDialog(this, "El teléfono solo debe tener 9 dígitos.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+	    }
 	}
 }
