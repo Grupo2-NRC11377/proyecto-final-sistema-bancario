@@ -18,6 +18,8 @@ import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import java.awt.event.ActionListener;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
 import javax.swing.JCheckBox;
@@ -152,33 +154,72 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 			do_btnIniciarSesion_actionPerformed(e);
 		}
 	}
+	private int intentos = 0;
 	protected void do_btnIniciarSesion_actionPerformed(ActionEvent e) {
-		String correoElectronico = txtCorreoElectronico.getText().trim();
-		char[] contraseña = txtContraseña.getPassword();
-		if(correoElectronico.isEmpty() || 
-				contraseña.length == 0) {
-			JOptionPane.showMessageDialog(this, "No debe dejar campos vacíos.", "Información", JOptionPane.INFORMATION_MESSAGE);
-			return;
-		}else if(!correoElectronico.contains("@")) {
-			JOptionPane.showMessageDialog(this, "Correo electrónico inválido.", "Información", JOptionPane.INFORMATION_MESSAGE);
-			return;
+		LocalDateTime fechaHoraBloqueo;
+		try {
+			String correoElectronico = txtCorreoElectronico.getText().trim();
+			char[] contraseña = txtContraseña.getPassword();
+			if(correoElectronico.isEmpty() || 
+					contraseña.length == 0) {
+				JOptionPane.showMessageDialog(this, "No debe dejar campos vacíos.", "Información", JOptionPane.INFORMATION_MESSAGE);
+				return;
+			}else if(!correoElectronico.contains("@")) {
+				JOptionPane.showMessageDialog(this, "El correo electrónico inválido.", "Información", JOptionPane.INFORMATION_MESSAGE);
+				return;
+			}
+			Persona persona = null;
+			if(correoElectronico.contains("@empleado.com")) persona = RepositorioEmpleado.consultarEmpleado(correoElectronico);
+			else persona = RepositorioCliente.consultarCliente(correoElectronico);
+			if(persona == null) {
+				JOptionPane.showMessageDialog(this,  "El correo electrónico no existe.", "Información", JOptionPane.INFORMATION_MESSAGE);
+				return;
+			}
+			fechaHoraBloqueo = persona.getFechaHoraBloqueo();
+			if(fechaHoraBloqueo != null) {
+				Duration duration = Duration.between(persona.getFechaHoraBloqueo(), LocalDateTime.now());
+				if(duration.toMinutes() < 30) {
+					JOptionPane.showMessageDialog(this,  "Vuelva a intentarlo después de " + (30 - duration.toMinutes()) + " minutos.", "Información", JOptionPane.INFORMATION_MESSAGE);
+					return;
+				}
+			}
+			if(correoElectronico.contains("@empleado.com")) persona = RepositorioEmpleado.consultarEmpleado(correoElectronico, new String(contraseña));
+			else persona = RepositorioCliente.consultarCliente(correoElectronico, new String(contraseña));
+			if(persona == null) {
+				intentos++;
+				System.out.println(intentos);
+				String mensaje = "Correo electrónico o contraseña incorrectos. ";
+				if(intentos < 5) {
+					JOptionPane.showMessageDialog(this, mensaje + "Intente nuevamente.", "Información", JOptionPane.INFORMATION_MESSAGE);
+				} else {
+					fechaHoraBloqueo = LocalDateTime.now();
+					if(correoElectronico.contains("@empleado.com")) {
+						persona = RepositorioEmpleado.consultarEmpleado(correoElectronico);
+						persona.setFechaHoraBloqueo(fechaHoraBloqueo);
+						RepositorioEmpleado.actualizarEmpleado((Empleado) persona);
+					}
+					else {
+						persona = RepositorioCliente.consultarCliente(correoElectronico);
+						persona.setFechaHoraBloqueo(fechaHoraBloqueo);
+						RepositorioCliente.actualizarCliente(((Cliente) persona));
+					}
+					JOptionPane.showMessageDialog(this,  mensaje + "Vuelva a intentarlo después de 30 minutos.", "Información", JOptionPane.INFORMATION_MESSAGE);
+				}
+				return;
+			}
+			if(correoElectronico.contains("@empleado.com")) {
+				VentanaMenuEmpleado ventanaMenuEmpleado = new VentanaMenuEmpleado(this, (Empleado) persona);
+				ventanaMenuEmpleado.setVisible(true);
+			}else {
+				VentanaMenu menu = new VentanaMenu(this, (Cliente) persona);
+				menu.setVisible(true);
+			}
+			dispose();
+		} catch (Exception error) {
+			JOptionPane.showMessageDialog(this, "Error: "+error.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+		} finally {
+			limpiarCampos();
 		}
-		Persona persona = null;
-		if(correoElectronico.contains("@empleado.com")) persona = RepositorioEmpleado.consultarEmpleado(correoElectronico, new String(contraseña));
-		else persona = RepositorioCliente.consultarCliente(correoElectronico, new String(contraseña));
-		if(persona == null) {
-			JOptionPane.showMessageDialog(this, "Correo electrónico o contraseña incorrectos. Intente nuevamente.", "Información", JOptionPane.INFORMATION_MESSAGE);
-			return;
-		}
-		if(correoElectronico.contains("@empleado.com")) {
-			VentanaMenuEmpleado ventanaMenuEmpleado = new VentanaMenuEmpleado(this, (Empleado) persona);
-			ventanaMenuEmpleado.setVisible(true);
-		}else {
-			VentanaMenu menu = new VentanaMenu(this, (Cliente) persona);
-			menu.setVisible(true);
-		}
-		limpiarCampos();
-		dispose();
 	}
 	protected void do_btnRegistrarse_actionPerformed(ActionEvent e) {
 		VentanaRegistrar ventanaRegistrar = new VentanaRegistrar(this);

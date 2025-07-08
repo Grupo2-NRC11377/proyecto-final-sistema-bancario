@@ -143,10 +143,16 @@ public class VentanaVerTarjetas extends JDialog implements ActionListener {
                 "¿Está seguro que desea bloquear la tarjeta " + tarjeta.getNumeroTarjeta() + "?",
                 "Confirmar bloqueo", JOptionPane.YES_NO_OPTION);
         if (respuesta == JOptionPane.YES_OPTION) {
-        	tarjeta.setEstado("bloqueada");
-        	RepositorioTarjeta.actualizarTarjeta(tarjeta);
-        	llenarTabla();
-            JOptionPane.showMessageDialog(this, "La tarjeta ha sido bloqueada exitosamente.", "Información", JOptionPane.INFORMATION_MESSAGE);
+        	VentanaAutenticar ventanaAutenticar = new VentanaAutenticar(cliente);
+    		ventanaAutenticar.setVisible(true);
+    		if(ventanaAutenticar.getEstadoAutenticacion()) {
+    			tarjeta.setEstado("bloqueada");
+    			RepositorioTarjeta.actualizarTarjeta(tarjeta);
+    			llenarTabla();
+    			JOptionPane.showMessageDialog(this, "La tarjeta ha sido bloqueada exitosamente.", "Información", JOptionPane.INFORMATION_MESSAGE);
+    		} else {
+    			JOptionPane.showMessageDialog(this, "La autenticación falló.", "Información", JOptionPane.INFORMATION_MESSAGE);
+    		}
         }
     } 
 }

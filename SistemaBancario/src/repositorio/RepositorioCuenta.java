@@ -171,8 +171,8 @@ public class RepositorioCuenta {
     	ArrayList<Cuenta> cuentas = new ArrayList<Cuenta>();
         try {
         	String consulta = "SELECT * FROM cuentas cu "
-        			+ "INNER JOIN clientes cl ON cl.id_persona = cu.id_cliente "
-        			+ "INNER JOIN personas p ON p.id_persona = cl.id_persona "
+        			+ "INNER JOIN clientes cl ON cl.id_cliente = cu.id_cliente "
+        			+ "INNER JOIN personas p ON p.id_persona = cl.id_cliente "
         			+ "WHERE cu.id_cliente = ?;";
         	connection = ConexiónMySQL.getconexión();
         	preparedStatement = connection.prepareCall(consulta);

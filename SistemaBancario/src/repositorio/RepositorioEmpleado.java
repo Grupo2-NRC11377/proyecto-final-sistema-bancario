@@ -4,6 +4,7 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import conexión.ConexiónMySQL;
@@ -31,6 +32,8 @@ public class RepositorioEmpleado {
 				empleado.setDireccion(resultSet.getString("direccion"));
 				empleado.setCorreo(resultSet.getString("correo"));
 				empleado.setContraseña(resultSet.getString("contraseña"));
+				Timestamp fechaHoraBloqueo = resultSet.getTimestamp("fecha_hora_bloqueo");
+				empleado.setFechaHoraBloqueo(fechaHoraBloqueo == null? null:fechaHoraBloqueo.toLocalDateTime());
 				empleados.add(empleado);
 			}
 		} catch (Exception e) {
@@ -50,7 +53,7 @@ public class RepositorioEmpleado {
 		Connection connection = null;
 		CallableStatement callableStatement = null;
 		try {
-			String procedimientoAlmacenado = "{CALL sp_insertarEmpleado(?,?,?,?,?,?,?,?)}";
+			String procedimientoAlmacenado = "{CALL sp_insertarEmpleado(?,?,?,?,?,?,?,?,?)}";
 			connection = ConexiónMySQL.getconexión();
 			callableStatement = connection.prepareCall(procedimientoAlmacenado);
 			callableStatement.setString(1, empleado.getIdPersona());
@@ -61,6 +64,7 @@ public class RepositorioEmpleado {
 			callableStatement.setString(6, empleado.getDireccion());
 			callableStatement.setString(7, empleado.getCorreo());
 			callableStatement.setString(8, empleado.getContraseña());
+			callableStatement.setTimestamp(9, Timestamp.valueOf(empleado.getFechaHoraBloqueo()));
 			callableStatement.executeUpdate();
 		} catch (Exception e) {
 			System.out.println("Error al insertar empleado: " + e);
@@ -77,7 +81,7 @@ public class RepositorioEmpleado {
 		Connection connection = null;
 		CallableStatement callableStatement = null;
 		try {
-			String procedimientoAlmacenado = "{CALL sp_actualizarEmpleado(?,?,?,?,?,?,?,?)}";
+			String procedimientoAlmacenado = "{CALL sp_actualizarEmpleado(?,?,?,?,?,?,?,?,?)}";
 			connection = ConexiónMySQL.getconexión();
 			callableStatement = connection.prepareCall(procedimientoAlmacenado);
 			callableStatement.setString(1, empleado.getIdPersona());
@@ -88,6 +92,7 @@ public class RepositorioEmpleado {
 			callableStatement.setString(6, empleado.getDireccion());
 			callableStatement.setString(7, empleado.getCorreo());
 			callableStatement.setString(8, empleado.getContraseña());
+			callableStatement.setTimestamp(9, Timestamp.valueOf(empleado.getFechaHoraBloqueo()));
 			callableStatement.executeUpdate();
 		} catch (Exception e) {
 			System.out.println("Error al actualizar empleado: " + e);
@@ -141,6 +146,8 @@ public class RepositorioEmpleado {
                 empleado.setDireccion(resultSet.getString("direccion"));
                 empleado.setCorreo(resultSet.getString("correo"));
                 empleado.setContraseña(resultSet.getString("contraseña"));
+				Timestamp fechaHoraBloqueo = resultSet.getTimestamp("fecha_hora_bloqueo");
+				empleado.setFechaHoraBloqueo(fechaHoraBloqueo == null? null:fechaHoraBloqueo.toLocalDateTime());
 			}
 		} catch (Exception e) {
 			System.out.println("Error al consultar id de empleado: " + e);
@@ -162,7 +169,7 @@ public class RepositorioEmpleado {
 		Empleado empleado = null;
 		try {
 			String consulta = "SELECT * FROM personas p "
-					+ "INNER JOIN empleados e ON p.id_persona = e.id_persona "
+					+ "INNER JOIN empleados e ON p.id_persona = e.id_empleado "
 					+ "WHERE p.dni = ?;";
 			connection = ConexiónMySQL.getconexión();
 			preparedStatement = connection.prepareStatement(consulta);
@@ -178,6 +185,8 @@ public class RepositorioEmpleado {
 				empleado.setDireccion(resultSet.getString("direccion"));
 				empleado.setCorreo(resultSet.getString("correo"));
 				empleado.setContraseña(resultSet.getString("contraseña"));
+				Timestamp fechaHoraBloqueo = resultSet.getTimestamp("fecha_hora_bloqueo");
+				empleado.setFechaHoraBloqueo(fechaHoraBloqueo == null? null:fechaHoraBloqueo.toLocalDateTime());
 			}
 		} catch (Exception e) {
 			System.out.println("Error al consultar empleado por dni: " + e);
@@ -199,7 +208,7 @@ public class RepositorioEmpleado {
 		Empleado empleado = null;
 		try {
 			String consulta = "SELECT * FROM personas p "
-					+ "INNER JOIN empleados e ON p.id_persona = e.id_persona "
+					+ "INNER JOIN empleados e ON p.id_persona = e.id_empleado "
 					+ "WHERE p.correo = ?;";
 			connection = ConexiónMySQL.getconexión();
 			preparedStatement = connection.prepareStatement(consulta);
@@ -215,6 +224,8 @@ public class RepositorioEmpleado {
 				empleado.setDireccion(resultSet.getString("direccion"));
 				empleado.setCorreo(resultSet.getString("correo"));
 				empleado.setContraseña(resultSet.getString("contraseña"));
+				Timestamp fechaHoraBloqueo = resultSet.getTimestamp("fecha_hora_bloqueo");
+				empleado.setFechaHoraBloqueo(fechaHoraBloqueo == null? null:fechaHoraBloqueo.toLocalDateTime());
 			}
 		} catch (Exception e) {
 			System.out.println("Error al consultar empleado por correo: " + e);
@@ -236,7 +247,7 @@ public class RepositorioEmpleado {
 		Empleado empleado = null;
 		try {
 			String consulta = "SELECT * FROM personas p "
-					+ "INNER JOIN empleados e ON p.id_persona = e.id_persona "
+					+ "INNER JOIN empleados e ON p.id_persona = e.id_empleado "
 					+ "WHERE p.correo = ? AND p.contraseña = ?;";
 			connection = ConexiónMySQL.getconexión();
 			preparedStatement = connection.prepareStatement(consulta);
@@ -253,6 +264,8 @@ public class RepositorioEmpleado {
 				empleado.setDireccion(resultSet.getString("direccion"));
 				empleado.setCorreo(resultSet.getString("correo"));
 				empleado.setContraseña(resultSet.getString("contraseña"));
+				Timestamp fechaHoraBloqueo = resultSet.getTimestamp("fecha_hora_bloqueo");
+				empleado.setFechaHoraBloqueo(fechaHoraBloqueo == null? null:fechaHoraBloqueo.toLocalDateTime());
 			}
 		} catch (Exception e) {
 			System.out.println("Error al consultar empleado por correo y contraseña: " + e);
@@ -274,7 +287,7 @@ public class RepositorioEmpleado {
 		Empleado empleado = null;
 		try {
 			String consulta = "SELECT * FROM personas p "
-					+ "INNER JOIN empleados e ON p.id_persona = e.id_persona "
+					+ "INNER JOIN empleados e ON p.id_persona = e.id_empleado "
 					+ "ORDER BY RAND() LIMIT 1";
 			connection = ConexiónMySQL.getconexión();
 			preparedStatement = connection.prepareStatement(consulta);
@@ -289,6 +302,8 @@ public class RepositorioEmpleado {
 				empleado.setDireccion(resultSet.getString("direccion"));
 				empleado.setCorreo(resultSet.getString("correo"));
 				empleado.setContraseña(resultSet.getString("contraseña"));
+				Timestamp fechaHoraBloqueo = resultSet.getTimestamp("fecha_hora_bloqueo");
+				empleado.setFechaHoraBloqueo(fechaHoraBloqueo == null? null:fechaHoraBloqueo.toLocalDateTime());
 			}
 		} catch (Exception e) {
 			System.out.println("Error al consultar empleado aleatorio: " + e);

@@ -166,8 +166,8 @@ public class RepositorioTransaccion {
     	ArrayList<Transaccion> transacciones = new ArrayList<Transaccion>();
         try {
         	String consulta = "SELECT * FROM transacciones t "
-        			+ "INNER JOIN clientes c ON c.id_persona = t.id_cliente "
-        			+ "INNER JOIN personas p ON p.id_persona = c.id_persona "
+        			+ "INNER JOIN clientes c ON c.id_cliente = t.id_cliente "
+        			+ "INNER JOIN personas p ON p.id_persona = c.id_cliente "
         			+ "WHERE t.descripcion LIKE '%" + numeroCuenta + "%';";
         	connection = ConexiónMySQL.getconexión();
         	statement = connection.createStatement();
@@ -213,8 +213,8 @@ public class RepositorioTransaccion {
     	ArrayList<Transaccion> transacciones = new ArrayList<Transaccion>();
         try {
         	String consulta = "SELECT * FROM transacciones t "
-        			+ "INNER JOIN clientes c ON c.id_persona = t.id_cliente "
-        			+ "INNER JOIN personas p ON p.id_persona = c.id_persona "
+        			+ "INNER JOIN clientes c ON c.id_cliente = t.id_cliente "
+        			+ "INNER JOIN personas p ON p.id_persona = c.id_cliente "
         			+ "WHERE t.id_cliente = ?;";
         	connection = ConexiónMySQL.getconexión();
         	preparedStatement = connection.prepareStatement(consulta);
@@ -261,8 +261,8 @@ public class RepositorioTransaccion {
     	ArrayList<Transaccion> transacciones = new ArrayList<Transaccion>();
         try {
         	String consulta = "SELECT * FROM transacciones t "
-        			+ "INNER JOIN clientes c ON c.id_persona = t.id_cliente "
-        			+ "INNER JOIN personas p ON p.id_persona = c.id_persona "
+        			+ "INNER JOIN clientes c ON c.id_cliente = t.id_cliente "
+        			+ "INNER JOIN personas p ON p.id_persona = c.id_cliente "
         			+ "WHERE t.id_cliente = " + idCliente + " AND t.tipo_transaccion LIKE '%" + tipoTransaccion + "%' AND t.descripcion LIKE '%" + descripcion + "%';";
         	connection = ConexiónMySQL.getconexión();
         	statement = connection.createStatement();

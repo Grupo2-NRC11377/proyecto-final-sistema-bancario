@@ -1,5 +1,6 @@
 package modelo;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class Persona {
@@ -11,6 +12,7 @@ public class Persona {
 	protected String direccion;
 	protected String correo;
 	protected String contraseña;
+	protected LocalDateTime fechaHoraBloqueo;
 	public Persona() {}
 	public Persona(String dni, String nombres, String apellidos, String telefono, String direccion, String correo,
 			String contraseña) {
@@ -22,6 +24,7 @@ public class Persona {
 		this.direccion = direccion;
 		this.correo = correo;
 		this.contraseña = contraseña;
+		this.fechaHoraBloqueo = null;
 	}
 	public String getIdPersona() {
 		return idPersona;
@@ -71,5 +74,10 @@ public class Persona {
 	public void setContraseña(String contraseña) {
 		this.contraseña = contraseña;
 	}
-	
+	public LocalDateTime getFechaHoraBloqueo() {
+		return fechaHoraBloqueo;
+	}
+	public void setFechaHoraBloqueo(LocalDateTime fechaHoraBloqueo) {
+		this.fechaHoraBloqueo = fechaHoraBloqueo;
+	}
 }

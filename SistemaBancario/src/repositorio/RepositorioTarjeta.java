@@ -160,8 +160,8 @@ public class RepositorioTarjeta {
     	ArrayList<Tarjeta> tarjetas = new ArrayList<Tarjeta>();
         try {
         	String consulta = "SELECT * FROM tarjetas t "
-        			+ "INNER JOIN clientes c ON c.id_persona = t.id_cliente "
-        			+ "INNER JOIN personas p ON p.id_persona = c.id_persona "
+        			+ "INNER JOIN clientes c ON c.id_cliente = t.id_cliente "
+        			+ "INNER JOIN personas p ON p.id_persona = c.id_cliente "
         			+ "WHERE t.id_cliente = ?;";
         	connection = ConexiónMySQL.getconexión();
         	preparedStatement = connection.prepareCall(consulta);

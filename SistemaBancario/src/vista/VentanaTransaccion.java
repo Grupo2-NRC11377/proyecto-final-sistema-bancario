@@ -308,7 +308,7 @@ public class VentanaTransaccion extends JDialog implements ActionListener {
 	    	        }
 	    	    }
 	        }
-		}else {
+		} else {
 			JOptionPane.showMessageDialog(this, "La autenticación falló.", "Información", JOptionPane.INFORMATION_MESSAGE);
 		}
 		dispose();

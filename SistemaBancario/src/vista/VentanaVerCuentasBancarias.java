@@ -149,10 +149,16 @@ public class VentanaVerCuentasBancarias extends JDialog implements ActionListene
                 "¿Está seguro que desea cancelar la cuenta " + cuenta.getNumeroCuentaFormateado() + "?",
                 "Confirmar cancelación", JOptionPane.YES_NO_OPTION);
         if (respuesta == JOptionPane.YES_OPTION) {
-        	cuenta.setEstado("cancelada");
-        	RepositorioCuenta.actualizarCuenta(cuenta);
-        	llenarTabla();
-            JOptionPane.showMessageDialog(this, "La cuenta ha sido cancelada exitosamente.", "Información", JOptionPane.INFORMATION_MESSAGE);
+        	VentanaAutenticar ventanaAutenticar = new VentanaAutenticar(cliente);
+    		ventanaAutenticar.setVisible(true);
+    		if(ventanaAutenticar.getEstadoAutenticacion()) {
+    			cuenta.setEstado("cancelada");
+    			RepositorioCuenta.actualizarCuenta(cuenta);
+    			llenarTabla();
+    			JOptionPane.showMessageDialog(this, "La cuenta ha sido cancelada exitosamente.", "Información", JOptionPane.INFORMATION_MESSAGE);
+    		} else {
+    			JOptionPane.showMessageDialog(this, "La autenticación falló.", "Información", JOptionPane.INFORMATION_MESSAGE);
+    		}
         }
 	}
 	private Cuenta obtenerCuentaBancaria() {

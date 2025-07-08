@@ -194,10 +194,10 @@ public class RepositorioSolicitud {
         ArrayList<Solicitud> solicitudes = new ArrayList<Solicitud>();
         try {
         	String consulta = "SELECT * FROM solicitudes s "
-        			+ "INNER JOIN clientes c ON c.id_persona = s.id_cliente "
-					+ "INNER JOIN personas pc ON pc.id_persona = c.id_persona "
-					+ "INNER JOIN empleados e ON e.id_persona = s.id_empleado "
-					+ "INNER JOIN personas pe ON pe.id_persona = e.id_persona "
+        			+ "INNER JOIN clientes c ON c.id_cliente = s.id_cliente "
+					+ "INNER JOIN personas pc ON pc.id_persona = c.id_cliente "
+					+ "INNER JOIN empleados e ON e.id_empleado = s.id_empleado "
+					+ "INNER JOIN personas pe ON pe.id_persona = e.id_empleado "
 					+ "WHERE s.id_cliente = ?;";
         	connection = ConexiónMySQL.getconexión();
         	preparedStatement = connection.prepareStatement(consulta);
@@ -254,10 +254,10 @@ public class RepositorioSolicitud {
         ArrayList<Solicitud> solicitudes = new ArrayList<Solicitud>();
         try {
         	String consulta = "SELECT * FROM solicitudes s "
-					+ "INNER JOIN clientes c ON c.id_persona = s.id_cliente "
-					+ "INNER JOIN personas pc ON pc.id_persona = c.id_persona "
-					+ "INNER JOIN empleados e ON e.id_persona = s.id_empleado "
-					+ "INNER JOIN personas pe ON pe.id_persona = e.id_persona "
+					+ "INNER JOIN clientes c ON c.id_cliente = s.id_cliente "
+					+ "INNER JOIN personas pc ON pc.id_persona = c.id_cliente "
+					+ "INNER JOIN empleados e ON e.id_empleado = s.id_empleado "
+					+ "INNER JOIN personas pe ON pe.id_persona = e.id_empleado "
 					+ "WHERE s.id_empleado = ?;";
         	connection = ConexiónMySQL.getconexión();
         	preparedStatement = connection.prepareStatement(consulta);

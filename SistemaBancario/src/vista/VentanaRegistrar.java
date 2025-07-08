@@ -237,13 +237,16 @@ public class VentanaRegistrar extends JDialog implements ActionListener, KeyList
 				JOptionPane.showMessageDialog(this, "No debe dejar campos vacíos.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}else if(!correoElectronico.contains("@")) {
-				JOptionPane.showMessageDialog(this, "Correo electrónico inválido.", "Información", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(this, "El correo electrónico es inválido.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
-			}else if(telefono.length() != 9) {
-				JOptionPane.showMessageDialog(this, "Número de teléfono inválido.", "Información", JOptionPane.INFORMATION_MESSAGE);
+			}else if(telefono.length() < 9) {
+				JOptionPane.showMessageDialog(this, "El teléfono debe tener 9 dígitos.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
-			}else if(dni.length() != 8) {
-				JOptionPane.showMessageDialog(this, "DNI inválido.", "Información", JOptionPane.INFORMATION_MESSAGE);
+			}else if(dni.length() < 8) {
+				JOptionPane.showMessageDialog(this, "El DNI debe tener 8 dígitos.", "Información", JOptionPane.INFORMATION_MESSAGE);
+				return;
+			}else if(contraseña.length < 8) {
+				JOptionPane.showMessageDialog(this, "La contraseña debe tener como mínimo 8 caracteres.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}else if(RepositorioEmpleado.consultarEmpleado(correoElectronico) != null ||
 					RepositorioCliente.consultarCliente(correoElectronico) != null) {
@@ -266,10 +269,11 @@ public class VentanaRegistrar extends JDialog implements ActionListener, KeyList
 				menu.setVisible(true);
 			}
 			ventanaPrincipal.dispose();
-			limpiarCampos();
 			dispose();
 		} catch (Exception error) {
 			JOptionPane.showMessageDialog(this, "Error: "+error.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+		} finally {
+			limpiarCampos();
 		}
 	}
 	private void limpiarCampos() {
@@ -306,32 +310,46 @@ public class VentanaRegistrar extends JDialog implements ActionListener, KeyList
 			do_txtDNI_keyTyped(e);
 		}
 	}
+	private int digitosDni = 0;
+	private int digitosTelefono = 0;
 	protected void do_txtDNI_keyTyped(KeyEvent e) {
-		char caracteres = e.getKeyChar();
-		if(Character.isAlphabetic(caracteres)) {
+		char caracter = e.getKeyChar();
+		if(Character.isAlphabetic(caracter)) {
 			e.consume();
-			JOptionPane.showMessageDialog(this, "No debe ingresar letras.", "Información", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(this, "El DNI debe tener números.", "Información", JOptionPane.INFORMATION_MESSAGE);
+		} else {
+			digitosDni++;
+			if(digitosDni > 8) {
+				e.consume();
+				JOptionPane.showMessageDialog(this, "El DNI debe tener 8 dígitos.", "Información", JOptionPane.INFORMATION_MESSAGE);
+			}
 		}
 	}
 	protected void do_txtNombres_keyTyped(KeyEvent e) {
 		char caracteres = e.getKeyChar();
 		if(Character.isDigit(caracteres)) {
 			e.consume();
-			JOptionPane.showMessageDialog(this, "No debe ingresar números.", "Información", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(this, "Los nombres deben tener letras.", "Información", JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
 	protected void do_txtApellidos_keyTyped(KeyEvent e) {
 		char caracteres = e.getKeyChar();
 		if(Character.isDigit(caracteres)) {
 			e.consume();
-			JOptionPane.showMessageDialog(this, "No debe ingresar números.", "Información", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(this, "Los apellidos deben tener letras.", "Información", JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
 	protected void do_txtTelefono_keyTyped(KeyEvent e) {
 		char caracteres = e.getKeyChar();
 		if(Character.isAlphabetic(caracteres)) {
 			e.consume();
-			JOptionPane.showMessageDialog(this, "No debe ingresar letras.", "Información", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(this, "El teléfono debe tener números.", "Información", JOptionPane.INFORMATION_MESSAGE);
+		} else {
+			digitosTelefono++;
+			if(digitosTelefono > 9) {
+				e.consume();
+				JOptionPane.showMessageDialog(this, "El teléfono debe tener 9 dígitos.", "Información", JOptionPane.INFORMATION_MESSAGE);
+			}
 		}
 	}
 }

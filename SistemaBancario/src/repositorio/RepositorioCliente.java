@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import conexión.ConexiónMySQL;
@@ -32,6 +33,8 @@ public class RepositorioCliente {
                 cliente.setDireccion(resultSet.getString("direccion"));
                 cliente.setCorreo(resultSet.getString("correo"));
                 cliente.setContraseña(resultSet.getString("contraseña"));
+                Timestamp fechaHoraBloqueo = resultSet.getTimestamp("fecha_hora_bloqueo");
+                cliente.setFechaHoraBloqueo(fechaHoraBloqueo == null? null:fechaHoraBloqueo.toLocalDateTime());
 				clientes.add(cliente);
 			}
 		} catch (Exception e) {
@@ -51,7 +54,7 @@ public class RepositorioCliente {
 		Connection connection = null;
 		CallableStatement callableStatement = null;
 		try {
-			String procedimientoAlmacenado = "{CALL sp_insertarCliente(?,?,?,?,?,?,?,?)}";
+			String procedimientoAlmacenado = "{CALL sp_insertarCliente(?,?,?,?,?,?,?,?,?)}";
 			connection = ConexiónMySQL.getconexión();
 			callableStatement = connection.prepareCall(procedimientoAlmacenado);
 			callableStatement.setString(1, cliente.getIdPersona());
@@ -62,6 +65,7 @@ public class RepositorioCliente {
 			callableStatement.setString(6, cliente.getDireccion());
 			callableStatement.setString(7, cliente.getCorreo());
 			callableStatement.setString(8, cliente.getContraseña());
+			callableStatement.setTimestamp(9, Timestamp.valueOf(cliente.getFechaHoraBloqueo()));
 			callableStatement.executeUpdate();
 		} catch (Exception e) {
 			System.out.println("Error al insertar cliente: " + e);
@@ -78,7 +82,7 @@ public class RepositorioCliente {
 		Connection connection = null;
 		CallableStatement callableStatement = null;
 		try {
-			String procedimientoAlmacenado = "{CALL sp_actualizarCliente(?,?,?,?,?,?,?,?)}";
+			String procedimientoAlmacenado = "{CALL sp_actualizarCliente(?,?,?,?,?,?,?,?,?)}";
 			connection = ConexiónMySQL.getconexión();
 			callableStatement = connection.prepareCall(procedimientoAlmacenado);
 			callableStatement.setString(1, cliente.getIdPersona());
@@ -89,6 +93,7 @@ public class RepositorioCliente {
 			callableStatement.setString(6, cliente.getDireccion());
 			callableStatement.setString(7, cliente.getCorreo());
 			callableStatement.setString(8, cliente.getContraseña());
+			callableStatement.setTimestamp(9, Timestamp.valueOf(cliente.getFechaHoraBloqueo()));
 			callableStatement.executeUpdate();
 		} catch (Exception e) {
 			System.out.println("Error al actualizar cliente: " + e);
@@ -142,6 +147,8 @@ public class RepositorioCliente {
                 cliente.setDireccion(resultSet.getString("direccion"));
                 cliente.setCorreo(resultSet.getString("correo"));
                 cliente.setContraseña(resultSet.getString("contraseña"));
+                Timestamp fechaHoraBloqueo = resultSet.getTimestamp("fecha_hora_bloqueo");
+                cliente.setFechaHoraBloqueo(fechaHoraBloqueo == null? null:fechaHoraBloqueo.toLocalDateTime());
 			}
 		} catch (Exception e) {
 			System.out.println("Error al consultar id de cliente: " + e);
@@ -163,7 +170,7 @@ public class RepositorioCliente {
 		Cliente cliente = null;
 		try {
 			String consulta = "SELECT * FROM personas p "
-					+ "INNER JOIN clientes c ON p.id_persona = c.id_persona "
+					+ "INNER JOIN clientes c ON p.id_persona = c.id_cliente "
 					+ "WHERE p.dni = ?;";
 			connection = ConexiónMySQL.getconexión();
 			preparedStatement = connection.prepareStatement(consulta);
@@ -179,6 +186,8 @@ public class RepositorioCliente {
                 cliente.setDireccion(resultSet.getString("direccion"));
                 cliente.setCorreo(resultSet.getString("correo"));
                 cliente.setContraseña(resultSet.getString("contraseña"));
+                Timestamp fechaHoraBloqueo = resultSet.getTimestamp("fecha_hora_bloqueo");
+                cliente.setFechaHoraBloqueo(fechaHoraBloqueo == null? null:fechaHoraBloqueo.toLocalDateTime());
 			}
 		} catch (Exception e) {
 			System.out.println("Error al consultar cliente por dni: " + e);
@@ -200,7 +209,7 @@ public class RepositorioCliente {
 		Cliente cliente = null;
 		try {
 			String consulta = "SELECT * FROM personas p "
-					+ "INNER JOIN clientes c ON p.id_persona = c.id_persona "
+					+ "INNER JOIN clientes c ON p.id_persona = c.id_cliente "
 					+ "WHERE p.correo = ?;";
 			connection = ConexiónMySQL.getconexión();
 			preparedStatement = connection.prepareStatement(consulta);
@@ -216,6 +225,8 @@ public class RepositorioCliente {
                 cliente.setDireccion(resultSet.getString("direccion"));
                 cliente.setCorreo(resultSet.getString("correo"));
                 cliente.setContraseña(resultSet.getString("contraseña"));
+                Timestamp fechaHoraBloqueo = resultSet.getTimestamp("fecha_hora_bloqueo");
+                cliente.setFechaHoraBloqueo(fechaHoraBloqueo == null? null:fechaHoraBloqueo.toLocalDateTime());
 			}
 		} catch (Exception e) {
 			System.out.println("Error al consultar cliente por correo: " + e);
@@ -237,7 +248,7 @@ public class RepositorioCliente {
 		Cliente cliente = null;
 		try {
 			String consulta = "SELECT * FROM personas p "
-					+ "INNER JOIN clientes c ON p.id_persona = c.id_persona "
+					+ "INNER JOIN clientes c ON p.id_persona = c.id_cliente "
 					+ "WHERE p.correo = ? AND p.contraseña = ?;";
 			connection = ConexiónMySQL.getconexión();
 			preparedStatement = connection.prepareStatement(consulta);
@@ -254,6 +265,8 @@ public class RepositorioCliente {
                 cliente.setDireccion(resultSet.getString("direccion"));
                 cliente.setCorreo(resultSet.getString("correo"));
                 cliente.setContraseña(resultSet.getString("contraseña"));
+                Timestamp fechaHoraBloqueo = resultSet.getTimestamp("fecha_hora_bloqueo");
+                cliente.setFechaHoraBloqueo(fechaHoraBloqueo == null? null:fechaHoraBloqueo.toLocalDateTime());
 			}
 		} catch (Exception e) {
 			System.out.println("Error al consultar cliente por correo y contraseña: " + e);
@@ -275,7 +288,7 @@ public class RepositorioCliente {
 		ArrayList<Cliente> clientes = new ArrayList<Cliente>();
 		try {
 			String consulta = "SELECT * FROM clientes c "
-					+ "INNER JOIN personas p ON p.id_persona = c.id_persona "
+					+ "INNER JOIN personas p ON p.id_persona = c.id_cliente "
 					+ "WHERE p.dni LIKE '%" + dni + "%' AND p.nombres LIKE '%" + nombres + "%' AND p.apellidos LIKE '%" + apellidos + "%';";
 			connection = ConexiónMySQL.getconexión();
 			statement = connection.createStatement();
@@ -291,6 +304,8 @@ public class RepositorioCliente {
                 cliente.setDireccion(resultSet.getString("direccion"));
                 cliente.setCorreo(resultSet.getString("correo"));
                 cliente.setContraseña(resultSet.getString("contraseña"));
+                Timestamp fechaHoraBloqueo = resultSet.getTimestamp("fecha_hora_bloqueo");
+                cliente.setFechaHoraBloqueo(fechaHoraBloqueo == null? null:fechaHoraBloqueo.toLocalDateTime());
 				clientes.add(cliente);
 			}
 		} catch (Exception e) {

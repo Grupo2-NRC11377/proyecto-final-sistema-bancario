@@ -10,15 +10,16 @@ CREATE TABLE personas(
 	telefono CHAR(9) NOT NULL UNIQUE,
 	direccion varchar(300) NOT NULL,
 	correo varchar(200) NOT NULL UNIQUE,
-	contraseña varchar(300) NOT NULL
+	contraseña varchar(300) NOT NULL,
+    fecha_hora_bloqueo DATETIME
 );
 CREATE TABLE clientes(
-	id_persona CHAR(36) PRIMARY KEY,
-	FOREIGN KEY (id_persona) REFERENCES personas(id_persona) ON DELETE CASCADE
+	id_cliente CHAR(36) PRIMARY KEY,
+	FOREIGN KEY (id_cliente) REFERENCES personas(id_persona) ON DELETE CASCADE
 );
 CREATE TABLE empleados(
-    id_persona CHAR(36) PRIMARY KEY,
-	FOREIGN KEY (id_persona) REFERENCES personas(id_persona) ON DELETE CASCADE
+    id_empleado CHAR(36) PRIMARY KEY,
+	FOREIGN KEY (id_empleado) REFERENCES personas(id_persona) ON DELETE CASCADE
 );
 CREATE TABLE cuentas(
     numero_cuenta CHAR(10) PRIMARY KEY,
@@ -29,7 +30,7 @@ CREATE TABLE cuentas(
     tipo_cuenta ENUM('ahorro', 'corriente') NOT NULL,
     moneda ENUM('soles', 'dólares', 'euros', 'libras') NOT NULL,
     id_cliente CHAR(36) NOT NULL,
-    FOREIGN KEY (id_cliente) REFERENCES clientes(id_persona) ON DELETE CASCADE
+    FOREIGN KEY (id_cliente) REFERENCES clientes(id_cliente) ON DELETE CASCADE
 );
 CREATE TABLE solicitudes(
     id_solicitud CHAR(36) PRIMARY KEY,
@@ -39,8 +40,8 @@ CREATE TABLE solicitudes(
     fecha_resolucion DATE,
     id_cliente CHAR(36) NOT NULL,
     id_empleado CHAR(36),
-    FOREIGN KEY (id_cliente) REFERENCES clientes(id_persona) ON DELETE CASCADE,
-    FOREIGN KEY (id_empleado) REFERENCES empleados(id_persona) ON DELETE SET NULL
+    FOREIGN KEY (id_cliente) REFERENCES clientes(id_cliente) ON DELETE CASCADE,
+    FOREIGN KEY (id_empleado) REFERENCES empleados(id_empleado) ON DELETE SET NULL
 );
 CREATE TABLE tarjetas(
     numero_tarjeta CHAR(16) PRIMARY KEY,
@@ -48,7 +49,7 @@ CREATE TABLE tarjetas(
     tipo_tarjeta ENUM('débito', 'crédito') NOT NULL,
     fecha_vencimiento DATE NOT NULL,
     id_cliente CHAR(36) NOT NULL,
-    FOREIGN KEY (id_cliente) REFERENCES clientes(id_persona) ON DELETE CASCADE
+    FOREIGN KEY (id_cliente) REFERENCES clientes(id_cliente) ON DELETE CASCADE
 );
 CREATE TABLE transacciones(
     id_transaccion CHAR(36) PRIMARY KEY,
@@ -58,13 +59,13 @@ CREATE TABLE transacciones(
     estado ENUM('completada', 'pendiente', 'cancelada') NOT NULL,
     monto DECIMAL(13,2) NOT NULL,
     id_cliente CHAR(36) NOT NULL,
-    FOREIGN KEY (id_cliente) REFERENCES clientes(id_persona) ON DELETE CASCADE
+    FOREIGN KEY (id_cliente) REFERENCES clientes(id_cliente) ON DELETE CASCADE
 );
 
 # CREACIÓN DE LOS PROCEDIMIENTOS ALMACENADOS
--- Para Clientes (el único terminado por ahora):
+-- Para Clientes:
 CREATE PROCEDURE sp_listarCliente(
-) SELECT * FROM clientes c INNER JOIN personas p ON p.id_persona = c.id_persona;
+) SELECT * FROM clientes c INNER JOIN personas p ON p.id_persona = c.id_cliente;
 DELIMITER //
 CREATE PROCEDURE sp_insertarCliente(
 	id_persona CHAR(36),
@@ -74,16 +75,17 @@ CREATE PROCEDURE sp_insertarCliente(
 	telefono CHAR(9),
 	direccion varchar(300),
 	correo varchar(200),
-	contraseña varchar(300)
+	contraseña varchar(300),
+    fecha_hora_bloqueo DATETIME
 )
 BEGIN
-	INSERT INTO personas VALUES (id_persona, dni, nombres, apellidos, telefono, direccion, correo, contraseña);
+	INSERT INTO personas VALUES (id_persona, dni, nombres, apellidos, telefono, direccion, correo, contraseña, fecha_hora_bloqueo);
     INSERT INTO clientes VALUES (id_persona);
 END //
 DELIMITER ;
 CREATE PROCEDURE sp_eliminarCliente(
-	id_persona CHAR(36)
-) DELETE FROM personas p WHERE p.id_persona = id_persona;
+	id_cliente CHAR(36)
+) DELETE FROM personas WHERE id_persona = id_cliente;
 CREATE PROCEDURE sp_actualizarCliente(
 	id_persona CHAR(36),
 	dni CHAR(8),
@@ -92,17 +94,18 @@ CREATE PROCEDURE sp_actualizarCliente(
 	telefono CHAR(9),
 	direccion varchar(300),
 	correo varchar(200),
-	contraseña varchar(300)
-) UPDATE personas p INNER JOIN clientes c ON c.id_persona = p.id_persona
-SET p.dni = dni, p.nombres = nombres, p.apellidos = apellidos, p.telefono = telefono, p.direccion = direccion, p.correo = correo, p.contraseña = contraseña 
-WHERE c.id_persona = id_persona;
+	contraseña varchar(300),
+    fecha_hora_bloqueo DATETIME
+) UPDATE personas p INNER JOIN clientes c ON c.id_cliente = p.id_persona
+SET p.dni = dni, p.nombres = nombres, p.apellidos = apellidos, p.telefono = telefono, p.direccion = direccion, p.correo = correo, p.contraseña = contraseña, p.fecha_hora_bloqueo = fecha_hora_bloqueo
+WHERE c.id_cliente = id_persona;
 CREATE PROCEDURE sp_consultarIdCliente(
-	id_persona CHAR(36)
-) SELECT * FROM personas p INNER JOIN clientes c ON c.id_persona = p.id_persona WHERE c.id_persona = id_persona;
+	id_cliente CHAR(36)
+) SELECT * FROM personas p INNER JOIN clientes c ON c.id_cliente = p.id_persona WHERE c.id_cliente = id_persona;
 
 -- Para Empleados:
 CREATE PROCEDURE sp_listarEmpleado(
-) SELECT * FROM empleados e INNER JOIN personas p ON p.id_persona = e.id_persona;
+) SELECT * FROM empleados e INNER JOIN personas p ON p.id_persona = e.id_empleado;
 DELIMITER //
 CREATE PROCEDURE sp_insertarEmpleado(
 	id_persona CHAR(36),
@@ -112,10 +115,11 @@ CREATE PROCEDURE sp_insertarEmpleado(
 	telefono CHAR(9),
 	direccion varchar(300),
 	correo varchar(200),
-	contraseña varchar(300)
+	contraseña varchar(300),
+    fecha_hora_bloqueo DATETIME
 )
 BEGIN
-	INSERT INTO personas VALUES (id_persona, dni, nombres, apellidos, telefono, direccion, correo, contraseña);
+	INSERT INTO personas VALUES (id_persona, dni, nombres, apellidos, telefono, direccion, correo, contraseña, fecha_hora_bloqueo);
     INSERT INTO empleados VALUES (id_persona);
 END //
 DELIMITER ;
@@ -130,13 +134,14 @@ CREATE PROCEDURE sp_actualizarEmpleado(
 	telefono CHAR(9),
 	direccion varchar(300),
 	correo varchar(200),
-	contraseña varchar(300)
-) UPDATE personas p INNER JOIN empleados e ON e.id_persona = p.id_persona
-SET p.dni = dni, p.nombres = nombres, p.apellidos = apellidos, p.telefono = telefono, p.direccion = direccion, p.correo = correo, p.contraseña = contraseña 
-WHERE e.id_persona = id_persona;
+	contraseña varchar(300),
+    fecha_hora_bloqueo DATETIME
+) UPDATE personas p INNER JOIN empleados e ON e.id_empleado = p.id_persona
+SET p.dni = dni, p.nombres = nombres, p.apellidos = apellidos, p.telefono = telefono, p.direccion = direccion, p.correo = correo, p.contraseña = contraseña, p.fecha_hora_bloqueo = fecha_hora_bloqueo
+WHERE e.id_empleado = id_persona;
 CREATE PROCEDURE sp_consultarIdEmpleado(
 	id_persona CHAR(36)
-) SELECT * FROM personas p INNER JOIN empleados e ON e.id_persona = p.id_persona WHERE e.id_persona = id_persona;
+) SELECT * FROM personas p INNER JOIN empleados e ON e.id_empleado = p.id_persona WHERE e.id_empleado = id_persona;
 
 -- Para Cuentas:
 CREATE PROCEDURE sp_listarCuenta(
@@ -167,8 +172,8 @@ CREATE PROCEDURE sp_consultarNumeroCuenta(
 -- Para Solicitud:
 CREATE PROCEDURE sp_listarSolicitud(
 ) SELECT * FROM solicitudes s
-INNER JOIN clientes c ON c.id_persona = s.id_cliente INNER JOIN personas pc ON pc.id_persona = c.id_persona
-INNER JOIN empleados e ON e.id_persona = s.id_empleado INNER JOIN personas pe ON pe.id_persona = e.id_persona;
+INNER JOIN clientes c ON c.id_cliente = s.id_cliente INNER JOIN personas pc ON pc.id_persona = c.id_cliente
+INNER JOIN empleados e ON e.id_empleado = s.id_empleado INNER JOIN personas pe ON pe.id_persona = e.id_empleado;
 CREATE PROCEDURE sp_insertarSolicitud(
 	id_solicitud CHAR(36),
     asunto VARCHAR(150),
@@ -189,13 +194,13 @@ CREATE PROCEDURE sp_actualizarSolicitud(
 CREATE PROCEDURE sp_consultarIdSolicitud(
 	id_solicitud CHAR(36)
 ) SELECT * FROM solicitudes s 
-INNER JOIN clientes c ON c.id_persona = s.id_cliente INNER JOIN personas pc ON pc.id_persona = c.id_persona
-INNER JOIN empleados e ON e.id_persona = s.id_empleado INNER JOIN personas pe ON pe.id_persona = e.id_persona
+INNER JOIN clientes c ON c.id_cliente = s.id_cliente INNER JOIN personas pc ON pc.id_persona = c.id_cliente
+INNER JOIN empleados e ON e.id_empleado = s.id_empleado INNER JOIN personas pe ON pe.id_persona = e.id_empleado
 WHERE s.id_solicitud = id_solicitud;
 
 -- Para Tarjetas:
 CREATE PROCEDURE sp_listarTarjeta(
-) SELECT * FROM tarjetas t INNER JOIN clientes c ON c.id_persona = t.id_cliente INNER JOIN personas p ON p.id_persona = c.id_persona;
+) SELECT * FROM tarjetas t INNER JOIN clientes c ON c.id_cliente = t.id_cliente INNER JOIN personas p ON p.id_persona = c.id_cliente;
 CREATE PROCEDURE sp_insertarTarjeta(
 	numero_tarjeta CHAR(16),
     estado ENUM('activa', 'inactiva', 'bloqueada', 'vencida'),
@@ -212,11 +217,11 @@ CREATE PROCEDURE sp_actualizarTarjeta(
 ) UPDATE tarjetas t SET t.estado = estado WHERE t.numero_tarjeta = numero_tarjeta;
 CREATE PROCEDURE sp_consultarNumeroTarjeta(
 	numero_tarjeta CHAR(16)
-) SELECT * FROM tarjetas t INNER JOIN clientes c ON c.id_persona = t.id_cliente INNER JOIN personas p ON p.id_persona = c.id_persona WHERE t.numero_tarjeta = numero_tarjeta;
+) SELECT * FROM tarjetas t INNER JOIN clientes c ON c.id_cliente = t.id_cliente INNER JOIN personas p ON p.id_persona = c.id_cliente WHERE t.numero_tarjeta = numero_tarjeta;
 
 -- Para Transacciones:
 CREATE PROCEDURE sp_listarTransaccion(
-) SELECT * FROM transacciones t INNER JOIN clientes c ON c.id_persona = t.id_cliente INNER JOIN personas p ON p.id_persona = c.id_persona;
+) SELECT * FROM transacciones t INNER JOIN clientes c ON c.id_cliente = t.id_cliente INNER JOIN personas p ON p.id_persona = c.id_cliente;
 CREATE PROCEDURE sp_insertarTransaccion(
 	id_transaccion CHAR(36),
     tipo_transaccion ENUM('transferir', 'pagar', 'retirar', 'depositar'),
@@ -235,13 +240,13 @@ CREATE PROCEDURE sp_actualizarTransaccion(
 ) UPDATE transacciones t SET t.estado = estado WHERE t.id_transaccion = id_transaccion;
 CREATE PROCEDURE sp_consultarIdTransaccion(
 	id_transaccion CHAR(36)
-) SELECT * FROM transacciones t INNER JOIN clientes c ON c.id_persona = t.id_cliente INNER JOIN personas p ON p.id_persona = c.id_persona WHERE t.id_transaccion = id_transaccion;
+) SELECT * FROM transacciones t INNER JOIN clientes c ON c.id_cliente = t.id_cliente INNER JOIN personas p ON p.id_persona = c.id_cliente WHERE t.id_transaccion = id_transaccion;
 
 #INSERCIÓN DE DATOS
-CALL sp_insertarEmpleado('000b93b3-c539-4b17-adc9-fccd71e29b6a', '00000001', 'Juan', 'Pérez García', '987654321', 'Calle Falsa 123, Distrito Imaginario, Ciudad Ejemplo', 'juan.perez@empleado.com', 'ClaveEjemplo#1');
-CALL sp_insertarEmpleado('111b93b3-c539-4b17-adc9-fccd71e29b6a', '00000002', 'María', 'López Rodríguez', '912345678', 'Avenida Siempre Viva 742, Sector Demo, Ciudad Ejemplo', 'maria.lopez@empleado.com', 'ClaveEjemplo#2');
-CALL sp_insertarCliente('222b93b3-c539-4b17-adc9-fccd71e29b6a', '00000003', 'Carlos', 'Martínez Sánchez', '955501003', 'Jirón Desconocido 456, Urb. Modelo, Ciudad Ejemplo', 'carlos.martinez@email.com', 'ClaveEjemplo#1');
-CALL sp_insertarCliente('333b93b3-c539-4b17-adc9-fccd71e29b6a', '00000004', 'Ana', 'Gonzales Castillo', '933112233', 'Pasaje Inventado 789, Zona Test, Ciudad Ejemplo', 'ana.gonzales@email.com', 'ClaveEjemplo#2');
+CALL sp_insertarEmpleado('000b93b3-c539-4b17-adc9-fccd71e29b6a', '00000001', 'Juan', 'Pérez García', '987654321', 'Calle Falsa 123, Distrito Imaginario, Ciudad Ejemplo', 'juan.perez@empleado.com', 'ClaveEjemplo#1', null);
+CALL sp_insertarEmpleado('111b93b3-c539-4b17-adc9-fccd71e29b6a', '00000002', 'María', 'López Rodríguez', '912345678', 'Avenida Siempre Viva 742, Sector Demo, Ciudad Ejemplo', 'maria.lopez@empleado.com', 'ClaveEjemplo#2', null);
+CALL sp_insertarCliente('222b93b3-c539-4b17-adc9-fccd71e29b6a', '00000003', 'Carlos', 'Martínez Sánchez', '955501003', 'Jirón Desconocido 456, Urb. Modelo, Ciudad Ejemplo', 'carlos.martinez@email.com', 'ClaveEjemplo#1', null);
+CALL sp_insertarCliente('333b93b3-c539-4b17-adc9-fccd71e29b6a', '00000004', 'Ana', 'Gonzales Castillo', '933112233', 'Pasaje Inventado 789, Zona Test, Ciudad Ejemplo', 'ana.gonzales@email.com', 'ClaveEjemplo#2', null);
 
 CALL sp_insertarSolicitud('0baf9d61-a61f-42a1-ae1a-1753ae39292d', 'Apertura de cuenta de ahorro en soles', 'aceptada', current_date(), current_date(), '222b93b3-c539-4b17-adc9-fccd71e29b6a', '000b93b3-c539-4b17-adc9-fccd71e29b6a');
 CALL sp_insertarSolicitud('1d2a3144-05db-4e97-a7bf-1d1b54ad5151', 'Apertura de cuenta corriente en dólares', 'aceptada', current_date(), current_date(), '222b93b3-c539-4b17-adc9-fccd71e29b6a', '000b93b3-c539-4b17-adc9-fccd71e29b6a');
@@ -269,10 +274,8 @@ CALL sp_insertarTransaccion('9993aa27-49fc-41da-84ec-bf69f94d508c', 'depositar',
 
 /*
 SELECT * FROM personas;
-CALL sp_listarEmpleado();
-CALL sp_listarCliente();
-CALL sp_listarCuenta();
-CALL sp_listarTarjeta();
-CALL sp_listarSolicitud();
-CALL sp_listarTransaccion();
+SELECT * FROM cuentas;
+SELECT * FROM tarjetas;
+SELECT * FROM solicitudes;
+SELECT * FROM transacciones;
 */
