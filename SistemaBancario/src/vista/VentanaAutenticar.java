@@ -7,10 +7,16 @@ import javax.swing.JOptionPane;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 
+import modelo.Cliente;
+import modelo.Empleado;
 import modelo.Persona;
+import repositorio.RepositorioCliente;
+import repositorio.RepositorioEmpleado;
 
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
 import javax.swing.JPasswordField;
@@ -104,13 +110,41 @@ public class VentanaAutenticar extends JDialog implements ActionListener {
 			do_btnConfirmar_actionPerformed(e);
 		}
 	}
+	private int intentos = 0;
 	protected void do_btnConfirmar_actionPerformed(ActionEvent e) {
+		LocalDateTime fechaHoraBloqueo;
+		String correo = persona.getCorreo();
+		if(correo.contains("@empleado.com")) persona = RepositorioEmpleado.consultarEmpleado(correo);
+		else persona = RepositorioCliente.consultarCliente(correo);
+		fechaHoraBloqueo = persona.getFechaHoraBloqueo();
+		if(fechaHoraBloqueo != null) {
+			Duration duration = Duration.between(persona.getFechaHoraBloqueo(), LocalDateTime.now());
+			if(duration.toMinutes() < 30) {
+				JOptionPane.showMessageDialog(this,  "Vuelva a intentarlo después de " + (30 - duration.toMinutes()) + " minutos.", "Información", JOptionPane.INFORMATION_MESSAGE);
+				return;
+			}
+		}
 		char[] contraseña = txtContraseña.getPassword();
 		if (contraseña.length == 0){
 			JOptionPane.showMessageDialog(this, "El campo contraseña no debe estar vacío.", "Información", JOptionPane.INFORMATION_MESSAGE);
 			return;
 		} else if (!new String(contraseña).equals(persona.getContraseña())) {
-			JOptionPane.showMessageDialog(this, "La contraseña es incorrecta, vuelva a intentarlo.", "Información", JOptionPane.INFORMATION_MESSAGE);
+			intentos++;
+			String mensaje = "La contraseña es incorrecta, ";
+			if(intentos < 5) {
+				JOptionPane.showMessageDialog(this, mensaje + "vuelva a intentarlo.", "Información", JOptionPane.INFORMATION_MESSAGE);
+			} else {
+				fechaHoraBloqueo = LocalDateTime.now();
+				if(correo.contains("@empleado.com")) {
+					persona.setFechaHoraBloqueo(fechaHoraBloqueo);
+					RepositorioEmpleado.actualizarEmpleado((Empleado) persona);
+				}
+				else {
+					persona.setFechaHoraBloqueo(fechaHoraBloqueo);
+					RepositorioCliente.actualizarCliente(((Cliente) persona));
+				}
+				JOptionPane.showMessageDialog(this,  mensaje + "vuelva a intentarlo después de 30 minutos.", "Información", JOptionPane.INFORMATION_MESSAGE);
+			}
 			return;
 		}
 		estadoAutenticacion = true;

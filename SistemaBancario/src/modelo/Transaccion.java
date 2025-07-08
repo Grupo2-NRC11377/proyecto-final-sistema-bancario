@@ -9,7 +9,6 @@ public class Transaccion {
 	private String tipoTransaccion;
 	private String descripcion;
 	private LocalDateTime fechaHora;
-	private String estado;
 	private double monto;
 	private Cliente Cliente;
 	public Transaccion() {}
@@ -18,7 +17,6 @@ public class Transaccion {
 		this.tipoTransaccion = tipoTransaccion;
 		this.descripcion = descripcion;
 		fechaHora = LocalDateTime.now();
-		estado = "pendiente";
 		this.monto = monto;
 		this.Cliente = Cliente;
 	}
@@ -45,12 +43,6 @@ public class Transaccion {
 	}
 	public void setFechaHora(LocalDateTime fechaHora) {
 		this.fechaHora = fechaHora;
-	}
-	public String getEstado() {
-		return estado;
-	}
-	public void setEstado(String estado) {
-		this.estado = estado;
 	}
 	public double getMonto() {
 		return monto;

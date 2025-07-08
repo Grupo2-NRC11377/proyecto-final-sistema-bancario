@@ -26,7 +26,7 @@ CREATE TABLE cuentas(
     saldo_contable DECIMAL(13,2) NOT NULL,
     saldo_disponible DECIMAL(13,2) NOT NULL,
     fecha_creacion DATE NOT NULL,
-    estado ENUM('activa', 'inactiva', 'cancelada') NOT NULL,
+    estado ENUM('activa', 'cancelada') NOT NULL,
     tipo_cuenta ENUM('ahorro', 'corriente') NOT NULL,
     moneda ENUM('soles', 'dólares', 'euros', 'libras') NOT NULL,
     id_cliente CHAR(36) NOT NULL,
@@ -45,7 +45,7 @@ CREATE TABLE solicitudes(
 );
 CREATE TABLE tarjetas(
     numero_tarjeta CHAR(16) PRIMARY KEY,
-    estado ENUM('activa', 'inactiva', 'bloqueada', 'vencida') NOT NULL,
+    estado ENUM('activa', 'bloqueada', 'vencida') NOT NULL,
     tipo_tarjeta ENUM('débito', 'crédito') NOT NULL,
     fecha_vencimiento DATE NOT NULL,
     id_cliente CHAR(36) NOT NULL,
@@ -56,7 +56,6 @@ CREATE TABLE transacciones(
     tipo_transaccion ENUM('transferir', 'pagar', 'retirar', 'depositar') NOT NULL,
     descripcion varchar(500),
     fecha_hora DATETIME NOT NULL,
-    estado ENUM('completada', 'pendiente', 'cancelada') NOT NULL,
     monto DECIMAL(13,2) NOT NULL,
     id_cliente CHAR(36) NOT NULL,
     FOREIGN KEY (id_cliente) REFERENCES clientes(id_cliente) ON DELETE CASCADE
@@ -145,13 +144,13 @@ CREATE PROCEDURE sp_consultarIdEmpleado(
 
 -- Para Cuentas:
 CREATE PROCEDURE sp_listarCuenta(
-) SELECT * FROM cuentas cu INNER JOIN clientes cl ON cl.id_persona = cu.id_cliente INNER JOIN personas p ON p.id_persona = cl.id_persona;
+) SELECT * FROM cuentas cu INNER JOIN clientes cl ON cl.id_cliente = cu.id_cliente INNER JOIN personas p ON p.id_persona = cl.id_cliente;
 CREATE PROCEDURE sp_insertarCuenta(
 	numero_cuenta CHAR(10),
     saldo_contable DECIMAL(13,2),
     saldo_disponible DECIMAL(13,2),
     fecha_creacion DATE,
-    estado ENUM('activa', 'inactiva', 'cancelada'),
+    estado ENUM('activa', 'cancelada'),
     tipo_cuenta ENUM('ahorro', 'corriente'),
     moneda ENUM('soles', 'dólares', 'euros', 'libras'),
     id_cliente CHAR(36)
@@ -163,11 +162,11 @@ CREATE PROCEDURE sp_actualizarCuenta(
 	numero_cuenta CHAR(10),
     saldo_contable DECIMAL(13,2),
     saldo_disponible DECIMAL(13,2),
-    estado ENUM('activa', 'inactiva', 'cancelada')
+    estado ENUM('activa', 'cancelada')
 ) UPDATE cuentas c SET c.saldo_contable = saldo_contable, c.saldo_disponible = saldo_disponible, c.estado = estado WHERE c.numero_cuenta = numero_cuenta;
 CREATE PROCEDURE sp_consultarNumeroCuenta(
 	numero_cuenta CHAR(10)
-) SELECT * FROM cuentas cu INNER JOIN clientes cl ON cl.id_persona = cu.id_cliente INNER JOIN personas p ON p.id_persona = cl.id_persona WHERE cu.numero_cuenta = numero_cuenta;
+) SELECT * FROM cuentas cu INNER JOIN clientes cl ON cl.id_cliente = cu.id_cliente INNER JOIN personas p ON p.id_persona = cl.id_cliente WHERE cu.numero_cuenta = numero_cuenta;
 
 -- Para Solicitud:
 CREATE PROCEDURE sp_listarSolicitud(
@@ -203,7 +202,7 @@ CREATE PROCEDURE sp_listarTarjeta(
 ) SELECT * FROM tarjetas t INNER JOIN clientes c ON c.id_cliente = t.id_cliente INNER JOIN personas p ON p.id_persona = c.id_cliente;
 CREATE PROCEDURE sp_insertarTarjeta(
 	numero_tarjeta CHAR(16),
-    estado ENUM('activa', 'inactiva', 'bloqueada', 'vencida'),
+    estado ENUM('activa', 'bloqueada', 'vencida'),
     tipo_tarjeta ENUM('débito', 'crédito'),
     fecha_vencimiento DATE,
     id_cliente CHAR(36)
@@ -227,17 +226,12 @@ CREATE PROCEDURE sp_insertarTransaccion(
     tipo_transaccion ENUM('transferir', 'pagar', 'retirar', 'depositar'),
     descripcion varchar(500),
     fecha_hora DATETIME,
-    estado ENUM('completada', 'pendiente', 'cancelada'),
     monto DECIMAL(13,2),
     id_cliente CHAR(36)
-) INSERT INTO transacciones VALUES (id_transaccion, tipo_transaccion, descripcion, fecha_hora, estado, monto, id_cliente);
+) INSERT INTO transacciones VALUES (id_transaccion, tipo_transaccion, descripcion, fecha_hora, monto, id_cliente);
 CREATE PROCEDURE sp_eliminarTransaccion(
 	id_transaccion CHAR(36)
 ) DELETE FROM transacciones t WHERE t.id_transaccion = id_transaccion;
-CREATE PROCEDURE sp_actualizarTransaccion(
-	id_transaccion CHAR(36),
-    estado ENUM('completada', 'pendiente', 'cancelada')
-) UPDATE transacciones t SET t.estado = estado WHERE t.id_transaccion = id_transaccion;
 CREATE PROCEDURE sp_consultarIdTransaccion(
 	id_transaccion CHAR(36)
 ) SELECT * FROM transacciones t INNER JOIN clientes c ON c.id_cliente = t.id_cliente INNER JOIN personas p ON p.id_persona = c.id_cliente WHERE t.id_transaccion = id_transaccion;
@@ -267,10 +261,10 @@ CALL sp_insertarTarjeta('1114952923404121', 'activa', 'débito', (DATE_ADD(curre
 CALL sp_insertarTarjeta('2224952923404121', 'activa', 'crédito', (DATE_ADD(current_date(), INTERVAL 3 YEAR)), '333b93b3-c539-4b17-adc9-fccd71e29b6a');
 CALL sp_insertarTarjeta('3334952923404121', 'activa', 'débito', (DATE_ADD(current_date(), INTERVAL 3 YEAR)), '333b93b3-c539-4b17-adc9-fccd71e29b6a');
 
-CALL sp_insertarTransaccion('1efb7df2-3dc5-4bbc-913f-0a330618911a', 'depositar', 'Número de cuenta de destino: 0023768492;', now(), 'completada', 1500, '222b93b3-c539-4b17-adc9-fccd71e29b6a');
-CALL sp_insertarTransaccion('509b93b3-c539-4b17-adc9-fccd71e29b6a', 'depositar', 'Número de cuenta de destino: 1123768492;', now(), 'completada', 800, '222b93b3-c539-4b17-adc9-fccd71e29b6a');
-CALL sp_insertarTransaccion('7bb28d38-3e5e-4923-b6e7-9232d32dc831', 'depositar', 'Número de cuenta de destino: 9923768492;', now(), 'completada', 1200, '333b93b3-c539-4b17-adc9-fccd71e29b6a');
-CALL sp_insertarTransaccion('9993aa27-49fc-41da-84ec-bf69f94d508c', 'depositar', 'Número de cuenta de destino: 6623768492;', now(), 'completada', 900, '333b93b3-c539-4b17-adc9-fccd71e29b6a');
+CALL sp_insertarTransaccion('1efb7df2-3dc5-4bbc-913f-0a330618911a', 'depositar', 'Número de cuenta de destino: 0023768492;', now(), 1500, '222b93b3-c539-4b17-adc9-fccd71e29b6a');
+CALL sp_insertarTransaccion('509b93b3-c539-4b17-adc9-fccd71e29b6a', 'depositar', 'Número de cuenta de destino: 1123768492;', now(), 800, '222b93b3-c539-4b17-adc9-fccd71e29b6a');
+CALL sp_insertarTransaccion('7bb28d38-3e5e-4923-b6e7-9232d32dc831', 'depositar', 'Número de cuenta de destino: 9923768492;', now(), 1200, '333b93b3-c539-4b17-adc9-fccd71e29b6a');
+CALL sp_insertarTransaccion('9993aa27-49fc-41da-84ec-bf69f94d508c', 'depositar', 'Número de cuenta de destino: 6623768492;', now(), 900, '333b93b3-c539-4b17-adc9-fccd71e29b6a');
 
 /*
 SELECT * FROM personas;

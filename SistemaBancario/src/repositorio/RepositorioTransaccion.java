@@ -32,7 +32,6 @@ public class RepositorioTransaccion {
                 transaccion.setTipoTransaccion(resultSet.getString("tipo_transaccion"));
                 transaccion.setDescripcion(resultSet.getString("descripcion"));
                 transaccion.setFechaHora(resultSet.getTimestamp("fecha_hora").toLocalDateTime());
-                transaccion.setEstado(resultSet.getString("estado"));
                 transaccion.setMonto(resultSet.getDouble("monto"));
                 transaccion.setCliente(cliente);
                 transacciones.add(transaccion);
@@ -53,16 +52,15 @@ public class RepositorioTransaccion {
     	Connection connection = null;
     	CallableStatement callableStatement = null;
         try {
-        	String procedimientoAlmacenado = "{CALL sp_insertarTransaccion(?, ?, ?, ?, ?, ?, ?)}";
+        	String procedimientoAlmacenado = "{CALL sp_insertarTransaccion(?, ?, ?, ?, ?, ?)}";
         	connection = ConexiónMySQL.getconexión();
             callableStatement = connection.prepareCall(procedimientoAlmacenado);
             callableStatement.setString(1, transaccion.getIdTransaccion());
             callableStatement.setString(2, transaccion.getTipoTransaccion());
             callableStatement.setString(3, transaccion.getDescripcion());
             callableStatement.setTimestamp(4, Timestamp.valueOf((transaccion.getFechaHora())));
-            callableStatement.setString(5, transaccion.getEstado());
-            callableStatement.setDouble(6, transaccion.getMonto());
-            callableStatement.setString(7, transaccion.getCliente().getIdPersona());
+            callableStatement.setDouble(5, transaccion.getMonto());
+            callableStatement.setString(6, transaccion.getCliente().getIdPersona());
             callableStatement.executeQuery();
         } catch (Exception e) {
             System.out.println("Error al insertar transacción: " + e);
@@ -86,27 +84,6 @@ public class RepositorioTransaccion {
         	callableStatement.executeQuery();
         } catch (Exception e) {
             System.out.println("Error al eliminar transacción: " + e);
-        } finally {
-			try {
-				if(connection != null) connection.close();
-				if(callableStatement != null) callableStatement.close();
-			} catch (Exception e) {
-				System.out.println("Error: " + e);
-			}
-		}
-    }
-	public static void actualizarTransaccion(Transaccion transaccion) {
-    	Connection connection = null;
-    	CallableStatement callableStatement = null;
-        try {
-        	String procedimientoAlmacenado = "{CALL sp_actualizarTransaccion(?, ?)}";
-        	connection = ConexiónMySQL.getconexión();
-        	callableStatement = connection.prepareCall(procedimientoAlmacenado);
-        	callableStatement.setString(1, transaccion.getIdTransaccion());
-        	callableStatement.setString(2, transaccion.getEstado());
-        	callableStatement.executeQuery();
-        } catch (Exception e) {
-            System.out.println("Error al actualizar transacción: " + e);
         } finally {
 			try {
 				if(connection != null) connection.close();
@@ -142,7 +119,6 @@ public class RepositorioTransaccion {
                 transaccion.setTipoTransaccion(resultSet.getString("tipo_transaccion"));
                 transaccion.setDescripcion(resultSet.getString("descripcion"));
                 transaccion.setFechaHora(resultSet.getTimestamp("fecha_hora").toLocalDateTime());
-                transaccion.setEstado(resultSet.getString("estado"));
                 transaccion.setMonto(resultSet.getDouble("monto"));
                 transaccion.setCliente(cliente);
             }
@@ -188,7 +164,6 @@ public class RepositorioTransaccion {
                 transaccion.setTipoTransaccion(resultSet.getString("tipo_transaccion"));
                 transaccion.setDescripcion(resultSet.getString("descripcion"));
                 transaccion.setFechaHora(resultSet.getTimestamp("fecha_hora").toLocalDateTime());
-                transaccion.setEstado(resultSet.getString("estado"));
                 transaccion.setMonto(resultSet.getDouble("monto"));
                 transaccion.setCliente(cliente);
                 transacciones.add(transaccion);
@@ -236,7 +211,6 @@ public class RepositorioTransaccion {
                 transaccion.setTipoTransaccion(resultSet.getString("tipo_transaccion"));
                 transaccion.setDescripcion(resultSet.getString("descripcion"));
                 transaccion.setFechaHora(resultSet.getTimestamp("fecha_hora").toLocalDateTime());
-                transaccion.setEstado(resultSet.getString("estado"));
                 transaccion.setMonto(resultSet.getDouble("monto"));
                 transaccion.setCliente(cliente);
                 transacciones.add(transaccion);
@@ -263,7 +237,7 @@ public class RepositorioTransaccion {
         	String consulta = "SELECT * FROM transacciones t "
         			+ "INNER JOIN clientes c ON c.id_cliente = t.id_cliente "
         			+ "INNER JOIN personas p ON p.id_persona = c.id_cliente "
-        			+ "WHERE t.id_cliente = " + idCliente + " AND t.tipo_transaccion LIKE '%" + tipoTransaccion + "%' AND t.descripcion LIKE '%" + descripcion + "%';";
+        			+ "WHERE t.id_cliente = '" + idCliente + "' AND t.tipo_transaccion LIKE '%" + tipoTransaccion + "%' AND t.descripcion LIKE '%" + descripcion + "%'";
         	connection = ConexiónMySQL.getconexión();
         	statement = connection.createStatement();
             resultSet = statement.executeQuery(consulta);
@@ -283,7 +257,6 @@ public class RepositorioTransaccion {
                 transaccion.setTipoTransaccion(resultSet.getString("tipo_transaccion"));
                 transaccion.setDescripcion(resultSet.getString("descripcion"));
                 transaccion.setFechaHora(resultSet.getTimestamp("fecha_hora").toLocalDateTime());
-                transaccion.setEstado(resultSet.getString("estado"));
                 transaccion.setMonto(resultSet.getDouble("monto"));
                 transaccion.setCliente(cliente);
                 transacciones.add(transaccion);

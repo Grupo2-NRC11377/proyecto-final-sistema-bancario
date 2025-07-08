@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import conexión.ConexiónMySQL;
@@ -64,7 +65,8 @@ public class RepositorioEmpleado {
 			callableStatement.setString(6, empleado.getDireccion());
 			callableStatement.setString(7, empleado.getCorreo());
 			callableStatement.setString(8, empleado.getContraseña());
-			callableStatement.setTimestamp(9, Timestamp.valueOf(empleado.getFechaHoraBloqueo()));
+			LocalDateTime fechaHoraBloqueo = empleado.getFechaHoraBloqueo();
+			callableStatement.setTimestamp(9, fechaHoraBloqueo == null ? null : Timestamp.valueOf(fechaHoraBloqueo));
 			callableStatement.executeUpdate();
 		} catch (Exception e) {
 			System.out.println("Error al insertar empleado: " + e);
@@ -92,7 +94,8 @@ public class RepositorioEmpleado {
 			callableStatement.setString(6, empleado.getDireccion());
 			callableStatement.setString(7, empleado.getCorreo());
 			callableStatement.setString(8, empleado.getContraseña());
-			callableStatement.setTimestamp(9, Timestamp.valueOf(empleado.getFechaHoraBloqueo()));
+			LocalDateTime fechaHoraBloqueo = empleado.getFechaHoraBloqueo();
+			callableStatement.setTimestamp(9, fechaHoraBloqueo == null ? null : Timestamp.valueOf(fechaHoraBloqueo));
 			callableStatement.executeUpdate();
 		} catch (Exception e) {
 			System.out.println("Error al actualizar empleado: " + e);

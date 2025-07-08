@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import conexión.ConexiónMySQL;
@@ -65,7 +66,8 @@ public class RepositorioCliente {
 			callableStatement.setString(6, cliente.getDireccion());
 			callableStatement.setString(7, cliente.getCorreo());
 			callableStatement.setString(8, cliente.getContraseña());
-			callableStatement.setTimestamp(9, Timestamp.valueOf(cliente.getFechaHoraBloqueo()));
+			LocalDateTime fechaHoraBloqueo = cliente.getFechaHoraBloqueo();
+			callableStatement.setTimestamp(9, fechaHoraBloqueo == null ? null : Timestamp.valueOf(fechaHoraBloqueo));
 			callableStatement.executeUpdate();
 		} catch (Exception e) {
 			System.out.println("Error al insertar cliente: " + e);
@@ -93,7 +95,8 @@ public class RepositorioCliente {
 			callableStatement.setString(6, cliente.getDireccion());
 			callableStatement.setString(7, cliente.getCorreo());
 			callableStatement.setString(8, cliente.getContraseña());
-			callableStatement.setTimestamp(9, Timestamp.valueOf(cliente.getFechaHoraBloqueo()));
+			LocalDateTime fechaHoraBloqueo = cliente.getFechaHoraBloqueo();
+			callableStatement.setTimestamp(9, fechaHoraBloqueo == null ? null : Timestamp.valueOf(fechaHoraBloqueo));
 			callableStatement.executeUpdate();
 		} catch (Exception e) {
 			System.out.println("Error al actualizar cliente: " + e);

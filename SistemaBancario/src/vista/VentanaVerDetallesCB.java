@@ -165,7 +165,7 @@ public class VentanaVerDetallesCB extends JDialog implements ActionListener {
 				tableHistorial.setForeground(new Color(90, 90, 90));
 				tableHistorial.setFont(new Font("Arial", Font.PLAIN, 13));
 				tableHistorial.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-				String[] columnas = new String[] {"Id", "Tipo", "Descripción", "Fecha y hora", "Estado", "Monto"};
+				String[] columnas = new String[] {"Id", "Tipo", "Descripción", "Fecha y hora", "Monto"};
 				defaultTableModel = new DefaultTableModel(columnas, 0) {
 					private static final long serialVersionUID = 1L;
 					public boolean isCellEditable(int row, int column) {
@@ -225,13 +225,12 @@ public class VentanaVerDetallesCB extends JDialog implements ActionListener {
 		cuenta.setTransacciones(transacciones);
 		defaultTableModel.setRowCount(0);
 		for (Transaccion transaccion : transacciones) {
-			Object[] fila = new Object[6];
+			Object[] fila = new Object[5];
 			fila[0] = transaccion.getIdTransaccion();
 			fila[1] = transaccion.getTipoTransaccion();
 			fila[2] = transaccion.getDescripcion();
 			fila[3] = transaccion.getFechaHoraFormateada();
-			fila[4] = transaccion.getEstado();
-			fila[5] = transaccion.getMonto();
+			fila[4] = transaccion.getMonto();
 			defaultTableModel.addRow(fila);
 		}
 	}

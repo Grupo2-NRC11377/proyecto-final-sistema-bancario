@@ -22,8 +22,12 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.KeyEvent;
 
-public class VentanaVerTransacciones extends JDialog implements ActionListener {
+public class VentanaVerTransacciones extends JDialog implements ActionListener, ItemListener, KeyListener {
 	
 	private Cliente cliente;
 
@@ -33,7 +37,6 @@ public class VentanaVerTransacciones extends JDialog implements ActionListener {
 	private JLabel lblTipoOperación;
 	private JLabel lblDescripcin;
 	private JTextField txtDescripcion;
-	private JButton btnFiltrar;
 	private JScrollPane scrollPane;
 	private JButton btnCerrar;
 	private JTable tableTransacciones;
@@ -59,6 +62,7 @@ public class VentanaVerTransacciones extends JDialog implements ActionListener {
 		}
 		{
 			cbxTipoTransaccion = new JComboBox<String>();
+			cbxTipoTransaccion.addItemListener(this);
 			cbxTipoTransaccion.setForeground(new Color(90, 90, 90));
 			cbxTipoTransaccion.setFont(new Font("Arial", Font.PLAIN, 13));
 			String[] tiposTransacciones = {"todos", "transferir", "pagar", "retirar", "depositar"};
@@ -84,6 +88,7 @@ public class VentanaVerTransacciones extends JDialog implements ActionListener {
 		}
 		{
 			txtDescripcion = new JTextField();
+			txtDescripcion.addKeyListener(this);
 			txtDescripcion.setForeground(new Color(90, 90, 90));
 			txtDescripcion.setFont(new Font("Arial", Font.PLAIN, 13));
 			txtDescripcion.setColumns(10);
@@ -91,17 +96,8 @@ public class VentanaVerTransacciones extends JDialog implements ActionListener {
 			getContentPane().add(txtDescripcion);
 		}
 		{
-			btnFiltrar = new JButton("Filtrar");
-			btnFiltrar.setBackground(new Color(238, 52, 37));
-			btnFiltrar.setForeground(new Color(255, 255, 255));
-			btnFiltrar.addActionListener(this);
-			btnFiltrar.setFont(new Font("Arial", Font.BOLD, 13));
-			btnFiltrar.setBounds(327, 160, 150, 35);
-			getContentPane().add(btnFiltrar);
-		}
-		{
 			scrollPane = new JScrollPane();
-			scrollPane.setBounds(50, 220, 700, 200);
+			scrollPane.setBounds(50, 170, 700, 250);
 			getContentPane().add(scrollPane);
 			{
 				tableTransacciones = new JTable();
@@ -110,7 +106,7 @@ public class VentanaVerTransacciones extends JDialog implements ActionListener {
 				tableTransacciones.setFont(new Font("Arial", Font.PLAIN, 13));
 				tableTransacciones.setBackground(new Color(255, 255, 255));
 				tableTransacciones.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-				String[] columnas = new String[] {"ID", "Tipo", "Descripción", "Fecha y hora", "Estado", "Monto"};
+				String[] columnas = new String[] {"ID", "Tipo", "Descripción", "Fecha y hora", "Monto"};
 				defaultTableModel = new DefaultTableModel(columnas, 0) {
 					private static final long serialVersionUID = 1L;
 					public boolean isCellEditable(int row, int column) {
@@ -133,9 +129,9 @@ public class VentanaVerTransacciones extends JDialog implements ActionListener {
 		{
 			btnVerDetalles = new JButton("Ver detalles");
 			btnVerDetalles.addActionListener(this);
-			btnVerDetalles.setForeground(new Color(90, 90, 90));
+			btnVerDetalles.setForeground(new Color(255, 255, 255));
 			btnVerDetalles.setFont(new Font("Arial", Font.BOLD, 13));
-			btnVerDetalles.setBackground(new Color(230, 230, 230));
+			btnVerDetalles.setBackground(new Color(238, 52, 37));
 			btnVerDetalles.setBounds(50, 446, 150, 35);
 			getContentPane().add(btnVerDetalles);
 		}
@@ -145,9 +141,6 @@ public class VentanaVerTransacciones extends JDialog implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnVerDetalles) {
 			do_btnVerDetalles_actionPerformed(e);
-		}
-		if (e.getSource() == btnFiltrar) {
-			do_btnFiltrar_actionPerformed(e);
 		}
 		if (e.getSource() == btnCerrar) {
 			do_btnCerrar_actionPerformed(e);
@@ -165,20 +158,14 @@ public class VentanaVerTransacciones extends JDialog implements ActionListener {
 		else transacciones = RepositorioTransaccion.consultarTransaccion(cliente.getIdPersona(), tipoTransaccion, descripcion);
 		defaultTableModel.setRowCount(0);
 		for (Transaccion transaccion : transacciones) {
-			Object[] fila = new Object[6];
+			Object[] fila = new Object[5];
 			fila[0] = transaccion.getIdTransaccion();
 			fila[1] = transaccion.getTipoTransaccion();
 			fila[2] = transaccion.getDescripcion();
 			fila[3] = transaccion.getFechaHoraFormateada();
-			fila[4] = transaccion.getEstado();
-			fila[5] = transaccion.getMonto();
+			fila[4] = transaccion.getMonto();
 			defaultTableModel.addRow(fila);
 		}
-	}
-	protected void do_btnFiltrar_actionPerformed(ActionEvent e) {
-		String tipoTransaccion = (String) cbxTipoTransaccion.getSelectedItem();
-		String descripcion = txtDescripcion.getText().trim();
-		llenarTabla((tipoTransaccion.equals("todos") ? "" : tipoTransaccion), descripcion);
 	}
 	protected void do_btnVerDetalles_actionPerformed(ActionEvent e) {
 		int posicionFilaSeleccionada = tableTransacciones.getSelectedRow();
@@ -194,5 +181,31 @@ public class VentanaVerTransacciones extends JDialog implements ActionListener {
 		}
 		VentanaVerTransaccion ventanaVerTransaccion = new VentanaVerTransaccion(transaccion);
 		ventanaVerTransaccion.setVisible(true);
+	}
+	public void itemStateChanged(ItemEvent e) {
+		if (e.getSource() == cbxTipoTransaccion) {
+			do_cbxTipoTransaccion_itemStateChanged(e);
+		}
+	}
+	protected void do_cbxTipoTransaccion_itemStateChanged(ItemEvent e) {
+		String tipoTransaccion = (String) cbxTipoTransaccion.getSelectedItem();
+		String descripcion = "";
+		if(txtDescripcion != null) descripcion = txtDescripcion.getText().trim();
+		if(tableTransacciones != null) llenarTabla((tipoTransaccion.equals("todos") ? "" : tipoTransaccion), descripcion);
+	}
+	public void keyPressed(KeyEvent e) {
+	}
+	public void keyReleased(KeyEvent e) {
+		if (e.getSource() == txtDescripcion) {
+			do_txtDescripcion_keyReleased(e);
+		}
+	}
+	public void keyTyped(KeyEvent e) {
+	}
+	protected void do_txtDescripcion_keyReleased(KeyEvent e) {
+		String tipoTransaccion = (String) cbxTipoTransaccion.getSelectedItem();
+		String descripcion = "";
+		if(txtDescripcion != null) descripcion = txtDescripcion.getText().trim();
+		if(tableTransacciones != null) llenarTabla((tipoTransaccion.equals("todos") ? "" : tipoTransaccion), descripcion);
 	}
 }

@@ -252,6 +252,7 @@ public class VentanaActualizarPerfil extends JDialog implements ActionListener, 
 			if(persona.getCorreo().contains("@empleado")) RepositorioEmpleado.actualizarEmpleado((Empleado) persona);
 			else RepositorioCliente.actualizarCliente((Cliente) persona);
 			JOptionPane.showMessageDialog(this,"Datos actualizados correctamente.");
+			dispose();
 		} catch (Exception error) {
 			JOptionPane.showMessageDialog(this, "Error: "+error.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		} finally {

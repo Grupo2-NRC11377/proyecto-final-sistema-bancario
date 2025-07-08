@@ -17,14 +17,14 @@ import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.Locale;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
+import java.awt.event.KeyListener;
+import java.awt.event.KeyEvent;
 
 public class VentanaTransaccion extends JDialog implements ActionListener, KeyListener {
 	
@@ -38,11 +38,11 @@ public class VentanaTransaccion extends JDialog implements ActionListener, KeyLi
 	private JLabel lblNumeroCuentaDestino;
 	private JTextField txtNumeroCuentaDestino;
 	private JLabel lblMonto;
-	private JTextField txtMonto;
 	private JLabel lblMotivo;
 	private JTextField txtMotivoPagar;
 	private JButton btnContinuar;
 	private JTextField txtNumeroCuentaOrigen;
+	private JTextField txtMonto;
 
 	public VentanaTransaccion(Cliente cliente, String tipo) {
 		this.cliente = cliente;
@@ -83,13 +83,13 @@ public class VentanaTransaccion extends JDialog implements ActionListener, KeyLi
 			}
 			{
 				txtNumeroCuentaDestino = new JTextField();
+				txtNumeroCuentaDestino.addKeyListener(this);
 				txtNumeroCuentaDestino.setBackground(new Color(255, 255, 255));
 				txtNumeroCuentaDestino.setForeground(new Color(90, 90, 90));
 				txtNumeroCuentaDestino.setFont(new Font("Arial", Font.PLAIN, 13));
 				txtNumeroCuentaDestino.setBounds(259, 152, 200, 25);
 				getContentPane().add(txtNumeroCuentaDestino);
 				txtNumeroCuentaDestino.setColumns(10);
-				txtNumeroCuentaDestino.addKeyListener(this);
 	            getContentPane().add(txtNumeroCuentaDestino);
 			}
 		}
@@ -99,16 +99,6 @@ public class VentanaTransaccion extends JDialog implements ActionListener, KeyLi
 			lblMonto.setFont(new Font("Arial", Font.BOLD, 13));
 			lblMonto.setBounds(50, 192, 129, 16);
 			getContentPane().add(lblMonto);
-		}
-		{
-			txtMonto = new JTextField();
-			txtMonto.setBackground(new Color(255, 255, 255));
-			txtMonto.setForeground(new Color(90, 90, 90));
-			txtMonto.setFont(new Font("Arial", Font.PLAIN, 13));
-			txtMonto.setColumns(10);
-			txtMonto.setBounds(259, 188, 200, 25);
-			txtMonto.addKeyListener(this);
-			getContentPane().add(txtMonto);
 		}
 		if(tipo.equalsIgnoreCase("pagar")){
 			{
@@ -137,6 +127,16 @@ public class VentanaTransaccion extends JDialog implements ActionListener, KeyLi
 			btnContinuar.setBounds(50, 290, 150, 35);
 			getContentPane().add(btnContinuar);
 		}
+		{
+			txtMonto = new JTextField();
+			txtMonto.addKeyListener(this);
+			txtMonto.setForeground(new Color(90, 90, 90));
+			txtMonto.setFont(new Font("Arial", Font.PLAIN, 13));
+			txtMonto.setColumns(10);
+			txtMonto.setBackground(new Color(255, 255, 255));
+			txtMonto.setBounds(259, 190, 200, 25);
+			getContentPane().add(txtMonto);
+		}
 		if(!tipo.equalsIgnoreCase("depositar")){
 			{
 				lblNumeroCuentaOrigen = new JLabel("Número de cuenta de origen:");
@@ -147,12 +147,12 @@ public class VentanaTransaccion extends JDialog implements ActionListener, KeyLi
 			}
 			{
 				txtNumeroCuentaOrigen = new JTextField();
+				txtNumeroCuentaOrigen.addKeyListener(this);
 				txtNumeroCuentaOrigen.setBackground(new Color(255, 255, 255));
 				txtNumeroCuentaOrigen.setForeground(new Color(90, 90, 90));
 				txtNumeroCuentaOrigen.setFont(new Font("Arial", Font.PLAIN, 13));
 				txtNumeroCuentaOrigen.setColumns(10);
 				txtNumeroCuentaOrigen.setBounds(260, 116, 200, 25);
-				txtNumeroCuentaOrigen.addKeyListener(this);
 				getContentPane().add(txtNumeroCuentaOrigen);
 			}
 		}
@@ -169,155 +169,159 @@ public class VentanaTransaccion extends JDialog implements ActionListener, KeyLi
 		dispose();
 	}
 	protected void do_btnContinuar_actionPerformed(ActionEvent e) {
-		Cliente clienteAutenticar = cliente, clienteOrigen = null, clienteDestino = null;
-		Cuenta cuentaOrigen = null, cuentaDestino = null;
-		String descripcion = "";
-		String numeroOrigen = "";
-		String numeroDestino = "";
-		String motivoPagar = "";
-		if(txtNumeroCuentaOrigen != null) {
-			String numeroOrigenFormateado = txtNumeroCuentaOrigen.getText().trim();
-			if(numeroOrigenFormateado.contains("-")) numeroOrigen = numeroOrigenFormateado.substring(0, 3) + numeroOrigenFormateado.substring(4);
-		}
-		if(txtNumeroCuentaDestino != null) {
-			String numeroDestinoFormateado = txtNumeroCuentaDestino.getText().trim();
-			if(numeroDestinoFormateado.contains("-")) numeroDestino = numeroDestinoFormateado.substring(0, 3) + numeroDestinoFormateado.substring(4);
-		}
-		if(txtMotivoPagar != null) motivoPagar = txtMotivoPagar.getText().trim();
-		if(txtMonto.getText().trim().isEmpty()) {
-			JOptionPane.showMessageDialog(this, "El campo monto está vacío.", "Información", JOptionPane.INFORMATION_MESSAGE);
-			return;
-		}
-		double montoEnviado = Double.parseDouble(txtMonto.getText().trim()), montoRecibido = 0;
-		if(montoEnviado < 0) {
-			JOptionPane.showMessageDialog(this, "Monto inválido.", "Información", JOptionPane.INFORMATION_MESSAGE);
-			return;
-		}else if(montoEnviado == 0) {
-			JOptionPane.showMessageDialog(this, "Monto no puede ser cero.", "Información", JOptionPane.INFORMATION_MESSAGE);
-			return;
-		}
-		if(tipo.equals("retirar") || tipo.equals("transferir") || tipo.equals("pagar")) {
-			if(numeroOrigen.isEmpty()) {
-				JOptionPane.showMessageDialog(this, "El campo número de cuenta de origen está vacío.", "Información", JOptionPane.INFORMATION_MESSAGE);
+		try {
+			Cliente clienteAutenticar = cliente, clienteOrigen = null, clienteDestino = null;
+			Cuenta cuentaOrigen = null, cuentaDestino = null;
+			String descripcion = "";
+			String numeroOrigen = "";
+			String numeroDestino = "";
+			String motivoPagar = "";
+			if(txtNumeroCuentaOrigen != null) {
+				String numeroOrigenFormateado = txtNumeroCuentaOrigen.getText().trim();
+				if(numeroOrigenFormateado.contains("-")) numeroOrigen = numeroOrigenFormateado.substring(0, 3) + numeroOrigenFormateado.substring(4);
+			}
+			if(txtNumeroCuentaDestino != null) {
+				String numeroDestinoFormateado = txtNumeroCuentaDestino.getText().trim();
+				if(numeroDestinoFormateado.contains("-")) numeroDestino = numeroDestinoFormateado.substring(0, 3) + numeroDestinoFormateado.substring(4);
+			}
+			if(txtMotivoPagar != null) motivoPagar = txtMotivoPagar.getText().trim();
+			if(txtMonto.getText().trim().isEmpty()) {
+				JOptionPane.showMessageDialog(this, "El campo monto está vacío.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
-			cuentaOrigen = RepositorioCuenta.consultarNumeroCuenta(numeroOrigen);
-			if(cuentaOrigen == null) {
-				JOptionPane.showMessageDialog(this, "La cuenta de origen no existe.", "Información", JOptionPane.INFORMATION_MESSAGE);
+			double montoEnviado = Double.parseDouble(txtMonto.getText().trim()), montoRecibido = 0;
+			if(montoEnviado < 0 || montoEnviado >= 10000000000000.0) {
+				JOptionPane.showMessageDialog(this, "El monto inválido.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
-			}else if(montoEnviado > cuentaOrigen.getSaldoDisponible()) {
-				JOptionPane.showMessageDialog(this, "El saldo de la cuenta de origen es insuficiente.", "Información", JOptionPane.INFORMATION_MESSAGE);
-				return;
-			}
-			clienteAutenticar = clienteOrigen = cuentaOrigen.getCliente();
-			descripcion += "Número de cuenta de origen: " + numeroOrigen + ";";
-		}
-		if(tipo.equals("depositar") || tipo.equals("transferir") || tipo.equals("pagar")){
-			if(numeroDestino.isEmpty()) {
-				JOptionPane.showMessageDialog(this, "El campo número de cuenta de destino está vacío.", "Información", JOptionPane.INFORMATION_MESSAGE);
+			} else if(montoEnviado == 0) {
+				JOptionPane.showMessageDialog(this, "El monto no puede ser cero.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
-			cuentaDestino = RepositorioCuenta.consultarNumeroCuenta(numeroDestino);
-			if(cuentaDestino == null) {
-				JOptionPane.showMessageDialog(this, "La cuenta de destino no existe.", "Información", JOptionPane.INFORMATION_MESSAGE);
-				return;
-			} else if((tipo.equalsIgnoreCase("transferir") || tipo.equalsIgnoreCase("pagar")) && cuentaOrigen.getNumeroCuenta().equals(cuentaDestino.getNumeroCuenta())) {
-				JOptionPane.showMessageDialog(this, "No se puede " + tipo + " a la misma cuenta", "Información", JOptionPane.INFORMATION_MESSAGE);
-				return;
-			}
-			clienteDestino = cuentaDestino.getCliente();
-			descripcion += "Número de cuenta de destino: " + numeroDestino + ";";
-			if(tipo.equals("depositar")) clienteAutenticar = clienteDestino;
-		}
-		if(tipo.equals("pagar")) {
-			if(motivoPagar.isEmpty()) {
-				JOptionPane.showMessageDialog(this, "El campo motivo a pagar está vacío.", "Información", JOptionPane.INFORMATION_MESSAGE);
-				return;
-			}
-			descripcion += "Motivo: " + motivoPagar + ";";
-		}
-		if(cuentaOrigen!=null) {
-			if(cuentaOrigen.getEstado().equals("cancelada")){
-				JOptionPane.showMessageDialog(this, "La cuenta de origen está cancelada.", "Información", JOptionPane.INFORMATION_MESSAGE);
-				return;
-			}
-		}
-		if(cuentaDestino!=null) {
-			if(cuentaDestino.getEstado().equals("cancelada")) {
-				JOptionPane.showMessageDialog(this, "La cuenta de destino está cancelada.", "Información", JOptionPane.INFORMATION_MESSAGE);
-				return;
-			}
-			montoRecibido = montoEnviado;
-			if(tipo.equals("transferir") || tipo.equals("pagar")) {
-				String monedaOrigen = cuentaOrigen.getMoneda();
-				String monedaDestino = cuentaDestino.getMoneda();
-				montoRecibido = calcularConversión(monedaOrigen, monedaDestino, montoEnviado);
-				descripcion += "Monto enviado: " + obtenerMontoFormateado(monedaOrigen, montoEnviado) + 
-						";Monto recibido: " + obtenerMontoFormateado(monedaDestino, montoRecibido) + 
-						";Cambio: " + monedaOrigen + " - " + monedaDestino;
-			}
-		}
-		VentanaAutenticar ventanaAutenticar = new VentanaAutenticar(clienteAutenticar);
-		ventanaAutenticar.setVisible(true);
-		if(ventanaAutenticar.getEstadoAutenticacion()) {			
-			Transaccion transaccion = new Transaccion(tipo, descripcion, montoEnviado, cliente);
-			transaccion.setEstado("completada");
-			RepositorioTransaccion.insertarTransaccion(transaccion);
-			if(clienteOrigen != null && clienteDestino != null) {
-				if(clienteOrigen.equals(clienteDestino)) clienteOrigen.agregarTransaccion(transaccion);
-				else {
-					clienteOrigen.agregarTransaccion(transaccion);
-					clienteDestino.agregarTransaccion(transaccion);
+			if(tipo.equals("retirar") || tipo.equals("transferir") || tipo.equals("pagar")) {
+				if(numeroOrigen.isEmpty()) {
+					JOptionPane.showMessageDialog(this, "El campo número de cuenta de origen está vacío.", "Información", JOptionPane.INFORMATION_MESSAGE);
+					return;
 				}
-				cuentaOrigen.setSaldoDisponible(cuentaOrigen.getSaldoDisponible() - montoEnviado);
-				cuentaOrigen.setSaldoContable(cuentaOrigen.getSaldoContable() - montoEnviado);
-				cuentaDestino.setSaldoDisponible(cuentaDestino.getSaldoDisponible() + montoRecibido);
-				cuentaDestino.setSaldoContable(cuentaDestino.getSaldoContable() + montoRecibido);
-				RepositorioCuenta.actualizarCuenta(cuentaOrigen);
-				RepositorioCuenta.actualizarCuenta(cuentaDestino);
-			}else if(cuentaDestino==null) {
-				clienteOrigen.agregarTransaccion(transaccion);
-				cuentaOrigen.setSaldoDisponible(cuentaOrigen.getSaldoDisponible() - montoEnviado);
-				cuentaOrigen.setSaldoContable(cuentaOrigen.getSaldoContable() - montoEnviado);
-				RepositorioCuenta.actualizarCuenta(cuentaOrigen);
-			}else if(cuentaOrigen==null) {
-				clienteDestino.agregarTransaccion(transaccion);
-				cuentaDestino.setSaldoDisponible(cuentaDestino.getSaldoDisponible() + montoRecibido);
-				cuentaDestino.setSaldoContable(cuentaDestino.getSaldoContable() + montoRecibido);
-				RepositorioCuenta.actualizarCuenta(cuentaDestino);
+				cuentaOrigen = RepositorioCuenta.consultarNumeroCuenta(numeroOrigen);
+				if(cuentaOrigen == null) {
+					JOptionPane.showMessageDialog(this, "La cuenta de origen no existe.", "Información", JOptionPane.INFORMATION_MESSAGE);
+					return;
+				}else if(montoEnviado > cuentaOrigen.getSaldoDisponible()) {
+					JOptionPane.showMessageDialog(this, "El saldo de la cuenta de origen es insuficiente.", "Información", JOptionPane.INFORMATION_MESSAGE);
+					return;
+				}
+				clienteAutenticar = clienteOrigen = cuentaOrigen.getCliente();
+				descripcion += "Número de cuenta de origen: " + numeroOrigen + ";";
 			}
-			int seleccion = JOptionPane.showConfirmDialog(this,
-	                "La autenticación se realizó con éxito, la transacción se ejecutó. ¿Deseas descargar el comprobante?",
-	                "Confirmar descarga del comprobante", JOptionPane.YES_NO_OPTION);
-	        if (seleccion == JOptionPane.YES_OPTION) {
-	        	JFileChooser fileChooser = new JFileChooser();
-	    	    fileChooser.setDialogTitle("Descargar comprobante");
-	    	    fileChooser.setSelectedFile(new java.io.File("comprobante-" + transaccion.getIdTransaccion() + ".txt"));
-	    	    seleccion = fileChooser.showSaveDialog(this);
-	    	    if (seleccion == JFileChooser.APPROVE_OPTION) {
-	    	        java.io.File archivo = fileChooser.getSelectedFile();
-	    	        try {
-	    	        	FileWriter writer = new FileWriter(archivo);
-	    	            writer.write("Comprobante de la transacción\n");
-	    	            writer.write("------------------------------\n");
-	    	            writer.write("ID: " + transaccion.getIdTransaccion() + "\n");
-	    	            writer.write("Tipo: " + transaccion.getTipoTransaccion() + "\n");
-	            		writer.write("Descripción: " + transaccion.getDescripcion() + "\n");
-        				writer.write("Fecha y hora: " + transaccion.getFechaHora() + "\n");
-        				writer.write("Estado: " + transaccion.getEstado() + "\n");
-        				writer.write("Monto: " + transaccion.getMonto() + "\n");
-	    	        	writer.close();
-	    	            JOptionPane.showMessageDialog(this, "Comprobante descargado correctamente.");
-	    	        } catch (IOException ex) {
-	    	            JOptionPane.showMessageDialog(this, "Error al descargar el comprobante.", "Error", JOptionPane.ERROR_MESSAGE);
-	    	            ex.printStackTrace();
-	    	        }
-	    	    }
-	        }
-		} else {
-			JOptionPane.showMessageDialog(this, "La autenticación falló.", "Información", JOptionPane.INFORMATION_MESSAGE);
+			if(tipo.equals("depositar") || tipo.equals("transferir") || tipo.equals("pagar")){
+				if(numeroDestino.isEmpty()) {
+					JOptionPane.showMessageDialog(this, "El campo número de cuenta de destino está vacío.", "Información", JOptionPane.INFORMATION_MESSAGE);
+					return;
+				}
+				cuentaDestino = RepositorioCuenta.consultarNumeroCuenta(numeroDestino);
+				if(cuentaDestino == null) {
+					JOptionPane.showMessageDialog(this, "La cuenta de destino no existe.", "Información", JOptionPane.INFORMATION_MESSAGE);
+					return;
+				} else if((tipo.equalsIgnoreCase("transferir") || tipo.equalsIgnoreCase("pagar")) && cuentaOrigen.getNumeroCuenta().equals(cuentaDestino.getNumeroCuenta())) {
+					JOptionPane.showMessageDialog(this, "No se puede " + tipo + " a la misma cuenta", "Información", JOptionPane.INFORMATION_MESSAGE);
+					return;
+				}
+				clienteDestino = cuentaDestino.getCliente();
+				descripcion += "Número de cuenta de destino: " + numeroDestino + ";";
+				if(tipo.equals("depositar")) clienteAutenticar = clienteDestino;
+			}
+			if(tipo.equals("pagar")) {
+				if(motivoPagar.isEmpty()) {
+					JOptionPane.showMessageDialog(this, "El campo motivo a pagar está vacío.", "Información", JOptionPane.INFORMATION_MESSAGE);
+					return;
+				}
+				descripcion += "Motivo: " + motivoPagar + ";";
+			}
+			if(cuentaOrigen!=null) {
+				if(cuentaOrigen.getEstado().equals("cancelada")){
+					JOptionPane.showMessageDialog(this, "La cuenta de origen está cancelada.", "Información", JOptionPane.INFORMATION_MESSAGE);
+					return;
+				}
+			}
+			if(cuentaDestino!=null) {
+				if(cuentaDestino.getEstado().equals("cancelada")) {
+					JOptionPane.showMessageDialog(this, "La cuenta de destino está cancelada.", "Información", JOptionPane.INFORMATION_MESSAGE);
+					return;
+				}
+				montoRecibido = montoEnviado;
+				if(tipo.equals("transferir") || tipo.equals("pagar")) {
+					String monedaOrigen = cuentaOrigen.getMoneda();
+					String monedaDestino = cuentaDestino.getMoneda();
+					montoRecibido = calcularConversión(monedaOrigen, monedaDestino, montoEnviado);
+					descripcion += "Monto enviado: " + obtenerMontoFormateado(monedaOrigen, montoEnviado) + 
+							";Monto recibido: " + obtenerMontoFormateado(monedaDestino, montoRecibido) + 
+							";Cambio: " + monedaOrigen + " - " + monedaDestino;
+				}
+			}
+			VentanaAutenticar ventanaAutenticar = new VentanaAutenticar(clienteAutenticar);
+			ventanaAutenticar.setVisible(true);
+			if(ventanaAutenticar.getEstadoAutenticacion()) {			
+				Transaccion transaccion = new Transaccion(tipo, descripcion, montoEnviado, cliente);
+				RepositorioTransaccion.insertarTransaccion(transaccion);
+				if(clienteOrigen != null && clienteDestino != null) {
+					if(clienteOrigen.equals(clienteDestino)) clienteOrigen.agregarTransaccion(transaccion);
+					else {
+						clienteOrigen.agregarTransaccion(transaccion);
+						clienteDestino.agregarTransaccion(transaccion);
+					}
+					cuentaOrigen.setSaldoDisponible(cuentaOrigen.getSaldoDisponible() - montoEnviado);
+					cuentaOrigen.setSaldoContable(cuentaOrigen.getSaldoContable() - montoEnviado);
+					cuentaDestino.setSaldoDisponible(cuentaDestino.getSaldoDisponible() + montoRecibido);
+					cuentaDestino.setSaldoContable(cuentaDestino.getSaldoContable() + montoRecibido);
+					RepositorioCuenta.actualizarCuenta(cuentaOrigen);
+					RepositorioCuenta.actualizarCuenta(cuentaDestino);
+				}else if(cuentaDestino==null) {
+					clienteOrigen.agregarTransaccion(transaccion);
+					cuentaOrigen.setSaldoDisponible(cuentaOrigen.getSaldoDisponible() - montoEnviado);
+					cuentaOrigen.setSaldoContable(cuentaOrigen.getSaldoContable() - montoEnviado);
+					RepositorioCuenta.actualizarCuenta(cuentaOrigen);
+				}else if(cuentaOrigen==null) {
+					clienteDestino.agregarTransaccion(transaccion);
+					cuentaDestino.setSaldoDisponible(cuentaDestino.getSaldoDisponible() + montoRecibido);
+					cuentaDestino.setSaldoContable(cuentaDestino.getSaldoContable() + montoRecibido);
+					RepositorioCuenta.actualizarCuenta(cuentaDestino);
+				}
+				int seleccion = JOptionPane.showConfirmDialog(this,
+		                "La autenticación se realizó con éxito, la transacción se ejecutó. ¿Deseas descargar el comprobante?",
+		                "Confirmar descarga del comprobante", JOptionPane.YES_NO_OPTION);
+		        if (seleccion == JOptionPane.YES_OPTION) {
+		        	JFileChooser fileChooser = new JFileChooser();
+		    	    fileChooser.setDialogTitle("Descargar comprobante");
+		    	    fileChooser.setSelectedFile(new java.io.File("comprobante-" + transaccion.getIdTransaccion() + ".txt"));
+		    	    seleccion = fileChooser.showSaveDialog(this);
+		    	    if (seleccion == JFileChooser.APPROVE_OPTION) {
+		    	        java.io.File archivo = fileChooser.getSelectedFile();
+		    	        try {
+		    	        	FileWriter writer = new FileWriter(archivo);
+		    	            writer.write("Comprobante de la transacción\n");
+		    	            writer.write("------------------------------\n");
+		    	            writer.write("ID: " + transaccion.getIdTransaccion() + "\n");
+		    	            writer.write("Tipo: " + transaccion.getTipoTransaccion() + "\n");
+		            		writer.write("Descripción: " + transaccion.getDescripcion() + "\n");
+	        				writer.write("Fecha y hora: " + transaccion.getFechaHora() + "\n");
+	        				writer.write("Monto: " + transaccion.getMonto() + "\n");
+		    	        	writer.close();
+		    	            JOptionPane.showMessageDialog(this, "Comprobante descargado correctamente.");
+		    	        } catch (IOException ex) {
+		    	            JOptionPane.showMessageDialog(this, "Error al descargar el comprobante.", "Error", JOptionPane.ERROR_MESSAGE);
+		    	            ex.printStackTrace();
+		    	        }
+		    	    }
+		        }
+			} else {
+				JOptionPane.showMessageDialog(this, "La autenticación falló.", "Información", JOptionPane.INFORMATION_MESSAGE);
+			}
+			dispose();
+		} catch (NumberFormatException error) {
+			JOptionPane.showMessageDialog(this, "El monto es inválido.", "Error", JOptionPane.ERROR_MESSAGE);
+		} catch (Exception error) {
+			JOptionPane.showMessageDialog(this, "Error: " + error, "Error", JOptionPane.ERROR_MESSAGE);
 		}
-		dispose();
 	}
 	private double calcularConversión(String monedaOrigen, String monedaDestino, double monto) {
 		final double SOL_A_DOLAR = 0.27;
@@ -375,29 +379,46 @@ public class VentanaTransaccion extends JDialog implements ActionListener, KeyLi
 	    NumberFormat numberFormat = NumberFormat.getCurrencyInstance(locale);
 		return numberFormat.format(monto);
 	}
-	
-	@Override
-    public void keyTyped(KeyEvent e) {
-        char c = e.getKeyChar();
-
-        if (e.getSource() == txtMonto) {
-            if (!Character.isDigit(c) && c != '.' && c != KeyEvent.VK_BACK_SPACE) {
-                e.consume();
-                JOptionPane.showMessageDialog(this, "Solo se permiten números y punto decimal", "Advertencia", JOptionPane.WARNING_MESSAGE);
-            }
-        } else {
-            if (Character.isAlphabetic(c)) {
-                e.consume();
-                JOptionPane.showMessageDialog(this, "No debe ingresar letras", "Advertencia", JOptionPane.WARNING_MESSAGE);
-            }
-        }
-    }
-    @Override
-    public void keyPressed(KeyEvent e) {
-        // No se usa
-    }
-    @Override
-    public void keyReleased(KeyEvent e) {
-        // No se usa
-    }
+	public void keyPressed(KeyEvent e) {
+	}
+	public void keyReleased(KeyEvent e) {
+	}
+	public void keyTyped(KeyEvent e) {
+		if (e.getSource() == txtNumeroCuentaDestino) {
+			do_txtNumeroCuentaDestino_keyTyped(e);
+		}
+		if (e.getSource() == txtNumeroCuentaOrigen) {
+			do_txtNumeroCuentaOrigen_keyTyped(e);
+		}
+		if (e.getSource() == txtMonto) {
+			do_txtMonto_keyTyped(e);
+		}
+	}
+	protected void do_txtMonto_keyTyped(KeyEvent e) {
+		char caracteres = e.getKeyChar();
+		if(Character.isAlphabetic(caracteres)) {
+			e.consume();
+			JOptionPane.showMessageDialog(this, "El monto debe tener números.", "Información", JOptionPane.INFORMATION_MESSAGE);
+		}
+	}
+	protected void do_txtNumeroCuentaOrigen_keyTyped(KeyEvent e) {
+		char caracteres = e.getKeyChar();
+		if(Character.isAlphabetic(caracteres)) {
+			e.consume();
+			JOptionPane.showMessageDialog(this, "El número de cuenta debe tener números.", "Información", JOptionPane.INFORMATION_MESSAGE);
+		} else if(txtNumeroCuentaOrigen.getText().length() >= 11) {
+			e.consume();
+			JOptionPane.showMessageDialog(this, "El número de cuenta debe tener 10 dígitos u 11 dígitos si tiene la separación.", "Información", JOptionPane.INFORMATION_MESSAGE);
+		}
+	}
+	protected void do_txtNumeroCuentaDestino_keyTyped(KeyEvent e) {
+		char caracteres = e.getKeyChar();
+		if(Character.isAlphabetic(caracteres)) {
+			e.consume();
+			JOptionPane.showMessageDialog(this, "El número de cuenta debe tener números.", "Información", JOptionPane.INFORMATION_MESSAGE);
+		} else if(txtNumeroCuentaDestino.getText().length() >= 11) {
+			e.consume();
+			JOptionPane.showMessageDialog(this, "El número de cuenta debe tener 10 dígitos u 11 dígitos si tiene la separación.", "Información", JOptionPane.INFORMATION_MESSAGE);
+		}
+	}
 }

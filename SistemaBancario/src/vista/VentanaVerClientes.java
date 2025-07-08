@@ -36,7 +36,6 @@ public class VentanaVerClientes extends JDialog implements ActionListener, KeyLi
 	private JTextField txtNombres;
 	private JLabel lblApellidos;
 	private JTextField txtApellidos;
-	private JButton btnFiltrar;
 	private JButton btnVerDetalles;
 
 	public VentanaVerClientes() {
@@ -56,7 +55,7 @@ public class VentanaVerClientes extends JDialog implements ActionListener, KeyLi
 		}
 		{
 			scrollPane = new JScrollPane();
-			scrollPane.setBounds(50, 261, 700, 200);
+			scrollPane.setBounds(50, 210, 700, 250);
 			getContentPane().add(scrollPane);
 			{
 				tableClientes = new JTable();
@@ -134,18 +133,9 @@ public class VentanaVerClientes extends JDialog implements ActionListener, KeyLi
 			getContentPane().add(txtApellidos);
 		}
 		{
-			btnFiltrar = new JButton("Filtrar");
-			btnFiltrar.setBackground(new Color(238, 52, 37));
-			btnFiltrar.setForeground(new Color(255, 255, 255));
-			btnFiltrar.setFont(new Font("Arial", Font.BOLD, 13));
-			btnFiltrar.addActionListener(this);
-			btnFiltrar.setBounds(327, 205, 150, 35);
-			getContentPane().add(btnFiltrar);
-		}
-		{
 			btnVerDetalles = new JButton("Ver detalles");
-			btnVerDetalles.setBackground(new Color(230, 230, 230));
-			btnVerDetalles.setForeground(new Color(90, 90, 90));
+			btnVerDetalles.setBackground(new Color(238, 52, 37));
+			btnVerDetalles.setForeground(new Color(255, 255, 255));
 			btnVerDetalles.setFont(new Font("Arial", Font.BOLD, 13));
 			btnVerDetalles.addActionListener(this);
 			btnVerDetalles.setBounds(50, 491, 150, 35);
@@ -156,9 +146,6 @@ public class VentanaVerClientes extends JDialog implements ActionListener, KeyLi
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnVerDetalles) {
 			do_btnVerDetalles_actionPerformed(e);
-		}
-		if (e.getSource() == btnFiltrar) {
-			do_btnFiltrar_actionPerformed(e);
 		}
 		if (e.getSource() == btnCerrar) {
 			do_btnCerrar_actionPerformed(e);
@@ -183,12 +170,6 @@ public class VentanaVerClientes extends JDialog implements ActionListener, KeyLi
 			defaultTableModel.addRow(fila);
 		}
 	}
-	protected void do_btnFiltrar_actionPerformed(ActionEvent e) {
-		String dni = txtDni.getText().trim();
-		String nombres = txtNombres.getText().trim();
-		String apellidos = txtApellidos.getText().trim();
-		llenarTabla(dni, nombres, apellidos);
-	}
 	protected void do_btnVerDetalles_actionPerformed(ActionEvent e) {
 		int posicionFilaSeleccionada = tableClientes.getSelectedRow();
 		if(posicionFilaSeleccionada == -1) {
@@ -207,6 +188,15 @@ public class VentanaVerClientes extends JDialog implements ActionListener, KeyLi
 	public void keyPressed(KeyEvent e) {
 	}
 	public void keyReleased(KeyEvent e) {
+		if (e.getSource() == txtApellidos) {
+			do_txtApellidos_keyTyped(e);
+		}
+		if (e.getSource() == txtNombres) {
+			do_txtNombres_keyReleased(e);
+		}
+		if (e.getSource() == txtDni) {
+			do_txtApellidos_keyReleased(e);
+		}
 	}
 	public void keyTyped(KeyEvent e) {
 		if (e.getSource() == txtApellidos) {
@@ -223,21 +213,42 @@ public class VentanaVerClientes extends JDialog implements ActionListener, KeyLi
 		char caracteres = e.getKeyChar();
 		if(Character.isAlphabetic(caracteres)) {
 			e.consume();
-			JOptionPane.showMessageDialog(this, "No debe ingresar letras.", "Información", JOptionPane.INFORMATION_MESSAGE);
-		}
+			JOptionPane.showMessageDialog(this, "El DNI debe tener números.", "Información", JOptionPane.INFORMATION_MESSAGE);
+		} else if (txtDni.getText().length() >= 8) {
+	        e.consume();
+	        JOptionPane.showMessageDialog(this, "El DNI debe tener 8 dígitos.", "Información", JOptionPane.INFORMATION_MESSAGE);
+	    }
 	}
 	protected void do_txtNombres_keyTyped(KeyEvent e) {
 		char caracteres = e.getKeyChar();
 		if(Character.isDigit(caracteres)) {
 			e.consume();
-			JOptionPane.showMessageDialog(this, "No debe ingresar números.", "Información", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(this, "Los nombres deben tener letras.", "Información", JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
 	protected void do_txtApellidos_keyTyped(KeyEvent e) {
 		char caracteres = e.getKeyChar();
 		if(Character.isDigit(caracteres)) {
 			e.consume();
-			JOptionPane.showMessageDialog(this, "No debe ingresar números.", "Información", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(this, "Los apellidos deben tener letras.", "Información", JOptionPane.INFORMATION_MESSAGE);
 		}
+	}
+	protected void do_txtDni_keyReleased(KeyEvent e) {
+		String dni = txtDni.getText().trim();
+		String nombres = txtNombres.getText().trim();
+		String apellidos = txtApellidos.getText().trim();
+		llenarTabla(dni, nombres, apellidos);
+	}
+	protected void do_txtNombres_keyReleased(KeyEvent e) {
+		String dni = txtDni.getText().trim();
+		String nombres = txtNombres.getText().trim();
+		String apellidos = txtApellidos.getText().trim();
+		llenarTabla(dni, nombres, apellidos);
+	}
+	protected void do_txtApellidos_keyReleased(KeyEvent e) {
+		String dni = txtDni.getText().trim();
+		String nombres = txtNombres.getText().trim();
+		String apellidos = txtApellidos.getText().trim();
+		llenarTabla(dni, nombres, apellidos);
 	}
 }

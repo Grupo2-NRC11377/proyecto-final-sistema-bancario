@@ -268,12 +268,11 @@ public class VentanaRegistrar extends JDialog implements ActionListener, KeyList
 				VentanaMenu menu = new VentanaMenu(ventanaPrincipal, cliente);
 				menu.setVisible(true);
 			}
+			limpiarCampos();
 			ventanaPrincipal.dispose();
 			dispose();
 		} catch (Exception error) {
 			JOptionPane.showMessageDialog(this, "Error: "+error.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-		} finally {
-			limpiarCampos();
 		}
 	}
 	private void limpiarCampos() {

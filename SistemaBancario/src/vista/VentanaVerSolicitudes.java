@@ -142,8 +142,8 @@ public class VentanaVerSolicitudes extends JDialog implements ActionListener {
 	protected void do_btnVerCliente_actionPerformed(ActionEvent e) {
 		Solicitud solicitud = obtenerSolicitud();
 		if(solicitud == null) return;
-		VentanaVerPerfil ventanaVerPerfil = new VentanaVerPerfil(solicitud.getCliente());
-		ventanaVerPerfil.setVisible(true);
+		VentanaVerDetallesCliente ventanaVerDetallesCliente = new VentanaVerDetallesCliente(solicitud.getCliente());
+		ventanaVerDetallesCliente.setVisible(true);
 	}
 	protected void do_btnAceptar_actionPerformed(ActionEvent e) {
 		try {
@@ -153,28 +153,33 @@ public class VentanaVerSolicitudes extends JDialog implements ActionListener {
 				JOptionPane.showMessageDialog(this, "La solicitud ya fue resuelta.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
-			Cliente cliente = solicitud.getCliente();
-			if(solicitud.getAsunto().contains("cuenta")) {
-				String asunto = solicitud.getAsunto();
-				String moneda = asunto.split(" en ")[1];
-				System.out.println(moneda);
-				Cuenta cuenta = null;
-				if(solicitud.getAsunto().contains("corriente")) cuenta = new Cuenta("corriente", moneda, cliente);
-				else if(solicitud.getAsunto().contains("ahorro")) cuenta = new Cuenta("ahorro", moneda, cliente);
-				cliente.agregarCuenta(cuenta);
-				RepositorioCuenta.insertarCuenta(cuenta);
-			}
-			else if (solicitud.getAsunto().contains("tarjeta")) {
-				Tarjeta tarjeta = null;
-				if(solicitud.getAsunto().contains("débito")) tarjeta = new Tarjeta("débito", cliente);
-				else if(solicitud.getAsunto().contains("crédito")) tarjeta = new Tarjeta("crédito", cliente);
-				cliente.agregarTarjeta(tarjeta);
-				RepositorioTarjeta.insertarTarjeta(tarjeta);
-			}
-			solicitud.setEstado("aceptada");
-			solicitud.setFechaResolucion(LocalDate.now());
-			RepositorioSolicitud.actualizarSolicitud(solicitud);
-			llenarTabla();
+			VentanaAutenticar ventanaAutenticar = new VentanaAutenticar(persona);
+			ventanaAutenticar.setVisible(true);
+			if(ventanaAutenticar.getEstadoAutenticacion()) {
+				Cliente cliente = solicitud.getCliente();
+				if(solicitud.getAsunto().contains("cuenta")) {
+					String asunto = solicitud.getAsunto();
+					String moneda = asunto.split(" en ")[1];
+					Cuenta cuenta = null;
+					if(solicitud.getAsunto().contains("corriente")) cuenta = new Cuenta("corriente", moneda, cliente);
+					else if(solicitud.getAsunto().contains("ahorro")) cuenta = new Cuenta("ahorro", moneda, cliente);
+					cliente.agregarCuenta(cuenta);
+					RepositorioCuenta.insertarCuenta(cuenta);
+				}
+				else if (solicitud.getAsunto().contains("tarjeta")) {
+					Tarjeta tarjeta = null;
+					if(solicitud.getAsunto().contains("débito")) tarjeta = new Tarjeta("débito", cliente);
+					else if(solicitud.getAsunto().contains("crédito")) tarjeta = new Tarjeta("crédito", cliente);
+					cliente.agregarTarjeta(tarjeta);
+					RepositorioTarjeta.insertarTarjeta(tarjeta);
+				}
+				solicitud.setEstado("aceptada");
+				solicitud.setFechaResolucion(LocalDate.now());
+				RepositorioSolicitud.actualizarSolicitud(solicitud);
+				llenarTabla();
+    		} else {
+    			JOptionPane.showMessageDialog(this, "La autenticación falló.", "Información", JOptionPane.INFORMATION_MESSAGE);
+    		}
 		} catch (Exception error) {
 			JOptionPane.showMessageDialog(this, "Ocurrio un error, vuelva a intentarlo más tarde.", "Error", JOptionPane.ERROR_MESSAGE);
 			System.out.println(error);
@@ -188,11 +193,16 @@ public class VentanaVerSolicitudes extends JDialog implements ActionListener {
 				JOptionPane.showMessageDialog(this, "La solicitud ya fue resuelta.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
-			solicitud.setEstado("rechazada");
-			solicitud.setFechaResolucion(LocalDate.now());
-			System.out.println(solicitud.getEstado());
-			RepositorioSolicitud.actualizarSolicitud(solicitud);
-			llenarTabla();
+			VentanaAutenticar ventanaAutenticar = new VentanaAutenticar(persona);
+			ventanaAutenticar.setVisible(true);
+			if(ventanaAutenticar.getEstadoAutenticacion()) {
+				solicitud.setEstado("rechazada");
+				solicitud.setFechaResolucion(LocalDate.now());
+				RepositorioSolicitud.actualizarSolicitud(solicitud);
+				llenarTabla();
+			} else {
+    			JOptionPane.showMessageDialog(this, "La autenticación falló.", "Información", JOptionPane.INFORMATION_MESSAGE);
+    		}
 		} catch (Exception error) {
 			JOptionPane.showMessageDialog(this, "Ocurrio un error, vuelva a intentarlo más tarde.", "Error", JOptionPane.ERROR_MESSAGE);
 			System.out.println(error);

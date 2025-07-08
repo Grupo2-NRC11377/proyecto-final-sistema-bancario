@@ -29,8 +29,6 @@ public class VentanaVerTransaccion extends JDialog implements ActionListener {
 	private JTextField txtMonto;
 	private JLabel lblFechaYHora;
 	private JTextField txtFechaHora;
-	private JTextField txtEstado;
-	private JLabel lblEstado;
 	private JLabel lblDescripcin;
 	private JScrollPane scrollPane;
 	private JTextArea txtDescripcion;
@@ -42,7 +40,7 @@ public class VentanaVerTransaccion extends JDialog implements ActionListener {
 		this.transaccion = transaccion;
 		setTitle("Ver Transacción");
 		getContentPane().setBackground(new Color(255, 255, 255));
-		setBounds(100, 100, 820, 490);
+		setBounds(100, 100, 820, 430);
 		getContentPane().setLayout(null);
 		{
 			lblTransaccin = new JLabel("Transacción");
@@ -110,7 +108,7 @@ public class VentanaVerTransaccion extends JDialog implements ActionListener {
 			lblFechaYHora = new JLabel("Fecha y hora:");
 			lblFechaYHora.setForeground(new Color(90, 90, 90));
 			lblFechaYHora.setFont(new Font("Arial", Font.BOLD, 13));
-			lblFechaYHora.setBounds(50, 192, 87, 16);
+			lblFechaYHora.setBounds(410, 120, 87, 16);
 			getContentPane().add(lblFechaYHora);
 		}
 		{
@@ -121,37 +119,19 @@ public class VentanaVerTransaccion extends JDialog implements ActionListener {
 			txtFechaHora.setEditable(false);
 			txtFechaHora.setColumns(10);
 			txtFechaHora.setBackground(Color.WHITE);
-			txtFechaHora.setBounds(190, 188, 200, 25);
+			txtFechaHora.setBounds(550, 116, 200, 25);
 			getContentPane().add(txtFechaHora);
-		}
-		{
-			txtEstado = new JTextField();
-			txtEstado.setText((String) null);
-			txtEstado.setForeground(new Color(90, 90, 90));
-			txtEstado.setFont(new Font("Arial", Font.PLAIN, 13));
-			txtEstado.setEditable(false);
-			txtEstado.setColumns(10);
-			txtEstado.setBackground(Color.WHITE);
-			txtEstado.setBounds(550, 116, 200, 25);
-			getContentPane().add(txtEstado);
-		}
-		{
-			lblEstado = new JLabel("Estado:");
-			lblEstado.setForeground(new Color(90, 90, 90));
-			lblEstado.setFont(new Font("Arial", Font.BOLD, 13));
-			lblEstado.setBounds(450, 120, 46, 16);
-			getContentPane().add(lblEstado);
 		}
 		{
 			lblDescripcin = new JLabel("Descripción:");
 			lblDescripcin.setForeground(new Color(90, 90, 90));
 			lblDescripcin.setFont(new Font("Arial", Font.BOLD, 13));
-			lblDescripcin.setBounds(50, 227, 78, 16);
+			lblDescripcin.setBounds(50, 192, 78, 16);
 			getContentPane().add(lblDescripcin);
 		}
 		{
 			scrollPane = new JScrollPane();
-			scrollPane.setBounds(190, 224, 560, 100);
+			scrollPane.setBounds(190, 188, 560, 100);
 			getContentPane().add(scrollPane);
 			{
 				txtDescripcion = new JTextArea();
@@ -168,7 +148,7 @@ public class VentanaVerTransaccion extends JDialog implements ActionListener {
 			btnCerrar.setForeground(new Color(90, 90, 90));
 			btnCerrar.setFont(new Font("Arial", Font.BOLD, 13));
 			btnCerrar.setBackground(Color.WHITE);
-			btnCerrar.setBounds(327, 364, 150, 35);
+			btnCerrar.setBounds(327, 320, 150, 35);
 			getContentPane().add(btnCerrar);
 		}
 		mostrarDatos();
@@ -185,7 +165,6 @@ public class VentanaVerTransaccion extends JDialog implements ActionListener {
 		txtId.setText(transaccion.getIdTransaccion());
 		txtTipo.setText(transaccion.getTipoTransaccion());
 		txtFechaHora.setText(transaccion.getFechaHoraFormateada());
-		txtEstado.setText(transaccion.getEstado());
 		txtMonto.setText(Double.toString(transaccion.getMonto()));
 		String[] textoSeparado = transaccion.getDescripcion().split(";");
 		for (int i = 0; i < textoSeparado.length; i++) {

@@ -156,8 +156,8 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 	}
 	private int intentos = 0;
 	protected void do_btnIniciarSesion_actionPerformed(ActionEvent e) {
-		LocalDateTime fechaHoraBloqueo;
 		try {
+			LocalDateTime fechaHoraBloqueo;
 			String correoElectronico = txtCorreoElectronico.getText().trim();
 			char[] contraseña = txtContraseña.getPassword();
 			if(correoElectronico.isEmpty() || 
@@ -187,7 +187,6 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 			else persona = RepositorioCliente.consultarCliente(correoElectronico, new String(contraseña));
 			if(persona == null) {
 				intentos++;
-				System.out.println(intentos);
 				String mensaje = "Correo electrónico o contraseña incorrectos. ";
 				if(intentos < 5) {
 					JOptionPane.showMessageDialog(this, mensaje + "Intente nuevamente.", "Información", JOptionPane.INFORMATION_MESSAGE);
@@ -214,11 +213,10 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 				VentanaMenu menu = new VentanaMenu(this, (Cliente) persona);
 				menu.setVisible(true);
 			}
+			limpiarCampos();
 			dispose();
 		} catch (Exception error) {
 			JOptionPane.showMessageDialog(this, "Error: "+error.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-		} finally {
-			limpiarCampos();
 		}
 	}
 	protected void do_btnRegistrarse_actionPerformed(ActionEvent e) {
