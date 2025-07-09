@@ -15,11 +15,11 @@ CREATE TABLE personas(
 );
 CREATE TABLE clientes(
 	id_cliente CHAR(36) PRIMARY KEY,
-	FOREIGN KEY (id_cliente) REFERENCES personas(id_persona) ON DELETE CASCADE
+	FOREIGN KEY (id_cliente) REFERENCES personas(id_persona)
 );
 CREATE TABLE empleados(
     id_empleado CHAR(36) PRIMARY KEY,
-	FOREIGN KEY (id_empleado) REFERENCES personas(id_persona) ON DELETE CASCADE
+	FOREIGN KEY (id_empleado) REFERENCES personas(id_persona)
 );
 CREATE TABLE cuentas(
     numero_cuenta CHAR(10) PRIMARY KEY,
@@ -30,7 +30,7 @@ CREATE TABLE cuentas(
     tipo_cuenta ENUM('ahorro', 'corriente') NOT NULL,
     moneda ENUM('soles', 'dólares', 'euros', 'libras') NOT NULL,
     id_cliente CHAR(36) NOT NULL,
-    FOREIGN KEY (id_cliente) REFERENCES clientes(id_cliente) ON DELETE CASCADE
+    FOREIGN KEY (id_cliente) REFERENCES clientes(id_cliente)
 );
 CREATE TABLE solicitudes(
     id_solicitud CHAR(36) PRIMARY KEY,
@@ -39,9 +39,9 @@ CREATE TABLE solicitudes(
     fecha_creacion DATE NOT NULL,
     fecha_resolucion DATE,
     id_cliente CHAR(36) NOT NULL,
-    id_empleado CHAR(36),
-    FOREIGN KEY (id_cliente) REFERENCES clientes(id_cliente) ON DELETE CASCADE,
-    FOREIGN KEY (id_empleado) REFERENCES empleados(id_empleado) ON DELETE SET NULL
+    id_empleado CHAR(36) NOT NULL,
+    FOREIGN KEY (id_cliente) REFERENCES clientes(id_cliente),
+    FOREIGN KEY (id_empleado) REFERENCES empleados(id_empleado)
 );
 CREATE TABLE tarjetas(
     numero_tarjeta CHAR(16) PRIMARY KEY,
@@ -49,7 +49,7 @@ CREATE TABLE tarjetas(
     tipo_tarjeta ENUM('débito', 'crédito') NOT NULL,
     fecha_vencimiento DATE NOT NULL,
     id_cliente CHAR(36) NOT NULL,
-    FOREIGN KEY (id_cliente) REFERENCES clientes(id_cliente) ON DELETE CASCADE
+    FOREIGN KEY (id_cliente) REFERENCES clientes(id_cliente)
 );
 CREATE TABLE transacciones(
     id_transaccion CHAR(36) PRIMARY KEY,
@@ -58,7 +58,7 @@ CREATE TABLE transacciones(
     fecha_hora DATETIME NOT NULL,
     monto DECIMAL(13,2) NOT NULL,
     id_cliente CHAR(36) NOT NULL,
-    FOREIGN KEY (id_cliente) REFERENCES clientes(id_cliente) ON DELETE CASCADE
+    FOREIGN KEY (id_cliente) REFERENCES clientes(id_cliente)
 );
 
 # CREACIÓN DE LOS PROCEDIMIENTOS ALMACENADOS
@@ -85,12 +85,6 @@ BEGIN
     VALUES (id_persona);
 END //
 DELIMITER ;
-/*
-CREATE PROCEDURE sp_eliminarCliente(
-	id_cliente CHAR(36)
-) DELETE FROM personas 
-WHERE id_persona = id_cliente;
-*/
 CREATE PROCEDURE sp_actualizarCliente(
 	id_persona CHAR(36),
 	dni CHAR(8),
@@ -134,12 +128,6 @@ BEGIN
     VALUES (id_persona);
 END //
 DELIMITER ;
-/*
-CREATE PROCEDURE sp_eliminarEmpleado(
-	id_empleado CHAR(36)
-) DELETE FROM personas 
-WHERE id_persona = id_empleado;
-*/
 CREATE PROCEDURE sp_actualizarEmpleado(
 	id_persona CHAR(36),
 	dni CHAR(8),
@@ -174,12 +162,6 @@ CREATE PROCEDURE sp_insertarCuenta(
     id_cliente CHAR(36)
 ) INSERT INTO cuentas 
 VALUES (numero_cuenta, saldo_contable, saldo_disponible, fecha_creacion, estado, tipo_cuenta, moneda, id_cliente);
-/*
-CREATE PROCEDURE sp_eliminarCuenta(
-	numero_cuenta CHAR(10)
-) DELETE FROM cuentas c 
-WHERE c.numero_cuenta = numero_cuenta;
-*/
 CREATE PROCEDURE sp_actualizarCuenta(
 	numero_cuenta CHAR(10),
     saldo_contable DECIMAL(13,2),
@@ -206,12 +188,6 @@ CREATE PROCEDURE sp_insertarSolicitud(
     id_empleado CHAR(36)
 ) INSERT INTO solicitudes 
 VALUES (id_solicitud, asunto, estado, fecha_creacion, fecha_resolucion, id_cliente, id_empleado);
-/*
-CREATE PROCEDURE sp_eliminarSolicitud(
-	id_solicitud CHAR(36)
-) DELETE FROM solicitudes s 
-WHERE s.id_solicitud = id_solicitud;
-*/
 CREATE PROCEDURE sp_actualizarSolicitud(
 	id_solicitud CHAR(36),
     estado ENUM('rechazada', 'aceptada', 'pendiente'),
@@ -235,12 +211,6 @@ CREATE PROCEDURE sp_insertarTarjeta(
     id_cliente CHAR(36)
 ) INSERT INTO tarjetas 
 VALUES (numero_tarjeta, estado, tipo_tarjeta, fecha_vencimiento, id_cliente);
-/*
-CREATE PROCEDURE sp_eliminarTarjeta(
-	id_solicitud CHAR(36)
-) DELETE FROM tarjetas t 
-WHERE t.id_solicitud = id_solicitud;
-*/
 CREATE PROCEDURE sp_actualizarTarjeta(
 	numero_tarjeta CHAR(16),
     estado ENUM('activa', 'bloqueada', 'vencida')
