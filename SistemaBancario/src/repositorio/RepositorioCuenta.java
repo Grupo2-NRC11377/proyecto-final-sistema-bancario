@@ -102,27 +102,6 @@ public class RepositorioCuenta {
 		}
         return cuenta;
     }
-    /*
-    public static void eliminarCuenta(String numeroCuenta) {
-    	Connection connection = null;
-    	CallableStatement callableStatement = null;
-        try {
-        	String procedimientoAlmacenado = "{CALL sp_eliminarCuenta(?)}";
-        	connection = ConexiónMySQL.getconexión();
-        	callableStatement = connection.prepareCall(procedimientoAlmacenado);
-        	callableStatement.setString(1, numeroCuenta);
-        	callableStatement.executeQuery();
-        } catch (Exception e) {
-            System.out.println("Error al eliminar cuenta: " + e);
-        } finally {
-			try {
-				if(connection != null) connection.close();
-				if(callableStatement != null) callableStatement.close();
-			} catch (Exception e) {
-				System.out.println("Error: " + e);
-			}
-		}
-    }*/
     public static void actualizarCuenta(Cuenta cuenta) {
     	Connection connection = null;
     	CallableStatement callableStatement = null;

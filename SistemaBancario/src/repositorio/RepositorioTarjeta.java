@@ -82,27 +82,6 @@ public class RepositorioTarjeta {
 			}
 		}
     }
-	/*
-	public static void eliminarTarjeta(String numeroTarjeta) {
-    	Connection connection = null;
-    	CallableStatement callableStatement = null;
-        try {
-        	String procedimientoAlmacenado = "{CALL sp_eliminarTarjeta(?)}";
-        	connection = ConexiónMySQL.getconexión();
-        	callableStatement = connection.prepareCall(procedimientoAlmacenado);
-        	callableStatement.setString(1, numeroTarjeta);
-        	callableStatement.executeQuery();
-        } catch (Exception e) {
-            System.out.println("Error al eliminar tarjeta: " + e);
-        } finally {
-			try {
-				if(connection != null) connection.close();
-				if(callableStatement != null) callableStatement.close();
-			} catch (Exception e) {
-				System.out.println("Error: " + e);
-			}
-		}
-    }*/
 	public static Tarjeta consultarNumeroTarjeta(String numeroTarjeta) {
     	Connection connection = null;
     	CallableStatement callableStatement = null;

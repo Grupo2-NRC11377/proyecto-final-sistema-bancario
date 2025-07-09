@@ -63,27 +63,6 @@ public class RepositorioTransaccion {
 			}
 		}
 	}
-	/*
-	public static void eliminarTransaccion(String idTransaccion) {
-    	Connection connection = null;
-    	CallableStatement callableStatement = null;
-        try {
-        	String procedimientoAlmacenado = "{CALL sp_eliminarTransaccion(?)}";
-        	connection = ConexiónMySQL.getconexión();
-        	callableStatement = connection.prepareCall(procedimientoAlmacenado);
-        	callableStatement.setString(1, idTransaccion);
-        	callableStatement.executeQuery();
-        } catch (Exception e) {
-            System.out.println("Error al eliminar transacción: " + e);
-        } finally {
-			try {
-				if(connection != null) connection.close();
-				if(callableStatement != null) callableStatement.close();
-			} catch (Exception e) {
-				System.out.println("Error: " + e);
-			}
-		}
-    }*/
 	public static Transaccion consultarIdTransaccion(String idTransaccion) {
     	Connection connection = null;
     	CallableStatement callableStatement = null;

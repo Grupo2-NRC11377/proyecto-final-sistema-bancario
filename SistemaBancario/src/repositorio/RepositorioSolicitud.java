@@ -72,27 +72,6 @@ public class RepositorioSolicitud {
 			}
 		}
 	}
-	/*
-	public static void eliminarSolicitud(String idSolicitud) {
-    	Connection connection = null;
-    	CallableStatement callableStatement = null;
-        try {
-        	String procedimientoAlmacenado = "{CALL sp_eliminarSolicitud(?)}";
-        	connection = ConexiónMySQL.getconexión();
-        	callableStatement = connection.prepareCall(procedimientoAlmacenado);
-        	callableStatement.setString(1, idSolicitud);
-        	callableStatement.executeQuery();
-        } catch (Exception e) {
-            System.out.println("Error al eliminar solicitud: " + e);
-        } finally {
-			try {
-				if(connection != null) connection.close();
-				if(callableStatement != null) callableStatement.close();
-			} catch (Exception e) {
-				System.out.println("Error: " + e);
-			}
-		}
-    }*/
 	public static void actualizarSolicitud(Solicitud solicitud) {
     	Connection connection = null;
     	CallableStatement callableStatement = null;

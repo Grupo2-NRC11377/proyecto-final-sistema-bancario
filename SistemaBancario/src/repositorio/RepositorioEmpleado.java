@@ -108,28 +108,6 @@ public class RepositorioEmpleado {
 			}
 		}
 	}
-	/*
-	public static void eliminarEmpleado(String idPersona) {
-    	Connection connection = null;
-    	CallableStatement callableStatement = null;
-        try {
-        	String procedimientoAlmacenado = "{CALL sp_eliminarEmpleado(?)}";
-        	connection = ConexiónMySQL.getconexión();
-        	callableStatement = connection.prepareCall(procedimientoAlmacenado);
-        	callableStatement.setString(1, idPersona);
-        	callableStatement.executeQuery();
-        } catch (Exception e) {
-            System.out.println("Error al eliminar empleado: " + e);
-        } finally {
-			try {
-				if(connection != null) connection.close();
-				if(callableStatement != null) callableStatement.close();
-			} catch (Exception e) {
-				System.out.println("Error: " + e);
-			}
-		}
-    }
-    */
 	public static Empleado consultarIdEmpleado(String idPersona) {
 		Connection connection = null;
 		CallableStatement callableStatement = null;

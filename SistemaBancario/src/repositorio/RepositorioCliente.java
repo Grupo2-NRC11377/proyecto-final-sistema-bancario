@@ -109,28 +109,6 @@ public class RepositorioCliente {
 			}
 		}
 	}
-	/*
-	public static void eliminarCliente(String idPersona) {
-    	Connection connection = null;
-    	CallableStatement callableStatement = null;
-        try {
-        	String procedimientoAlmacenado = "{CALL sp_eliminarCliente(?)}";
-        	connection = ConexiónMySQL.getconexión();
-        	callableStatement = connection.prepareCall(procedimientoAlmacenado);
-        	callableStatement.setString(1, idPersona);
-        	callableStatement.executeQuery();
-        } catch (Exception e) {
-            System.out.println("Error al eliminar cliente: " + e);
-        } finally {
-			try {
-				if(connection != null) connection.close();
-				if(callableStatement != null) callableStatement.close();
-			} catch (Exception e) {
-				System.out.println("Error: " + e);
-			}
-		}
-    }
-    */
 	public static Cliente consultarIdCliente(String idPersona) {
 		Connection connection = null;
 		CallableStatement callableStatement = null;
@@ -294,7 +272,9 @@ public class RepositorioCliente {
 		try {
 			String consulta = "SELECT p.* FROM clientes c "
 					+ "INNER JOIN personas p ON c.id_cliente = p.id_persona "
-					+ "WHERE p.dni LIKE '%" + dni + "%' AND p.nombres LIKE '%" + nombres + "%' AND p.apellidos LIKE '%" + apellidos + "%';";
+					+ "WHERE p.dni LIKE '%" + dni 
+					+ "%' AND p.nombres LIKE '%" + nombres 
+					+ "%' AND p.apellidos LIKE '%" + apellidos + "%';";
 			connection = ConexiónMySQL.getconexión();
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(consulta);
@@ -314,7 +294,7 @@ public class RepositorioCliente {
 				clientes.add(cliente);
 			}
 		} catch (Exception e) {
-			System.out.println("Error al consultar cliente por dni, nombre y apellidos: " + e);
+			System.out.println("Error al consultar cliente por dni, nombres y apellidos: " + e);
 		} finally {
 			try {
 				if(connection != null) connection.close();

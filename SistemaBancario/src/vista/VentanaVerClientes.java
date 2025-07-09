@@ -189,13 +189,13 @@ public class VentanaVerClientes extends JDialog implements ActionListener, KeyLi
 	}
 	public void keyReleased(KeyEvent e) {
 		if (e.getSource() == txtApellidos) {
-			do_txtApellidos_keyTyped(e);
+			do_txtApellidos_keyReleased(e);
 		}
 		if (e.getSource() == txtNombres) {
 			do_txtNombres_keyReleased(e);
 		}
 		if (e.getSource() == txtDni) {
-			do_txtApellidos_keyReleased(e);
+			do_txtDni_keyReleased(e);
 		}
 	}
 	public void keyTyped(KeyEvent e) {
