@@ -120,7 +120,7 @@ public class VentanaAutenticar extends JDialog implements ActionListener {
 		if(fechaHoraBloqueo != null) {
 			Duration duration = Duration.between(persona.getFechaHoraBloqueo(), LocalDateTime.now());
 			if(duration.toMinutes() < 30) {
-				JOptionPane.showMessageDialog(this,  "Vuelva a intentarlo después de " + (30 - duration.toMinutes()) + " minutos.", "Información", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(this,  "Su cuenta se encuentra bloqueada temporalmente. Vuelva a intentarlo después de " + (30 - duration.toMinutes()) + " minutos.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
 		}

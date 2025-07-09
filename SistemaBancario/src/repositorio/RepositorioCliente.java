@@ -26,15 +26,15 @@ public class RepositorioCliente {
 			Cliente cliente;
 			while (resultSet.next()) {
 				cliente = new Cliente();
-				cliente.setIdPersona(resultSet.getString("id_persona"));
-                cliente.setDni(resultSet.getString("dni"));
-                cliente.setNombres(resultSet.getString("nombres"));
-                cliente.setApellidos(resultSet.getString("apellidos"));
-                cliente.setTelefono(resultSet.getString("telefono"));
-                cliente.setDireccion(resultSet.getString("direccion"));
-                cliente.setCorreo(resultSet.getString("correo"));
-                cliente.setContraseña(resultSet.getString("contraseña"));
-                Timestamp fechaHoraBloqueo = resultSet.getTimestamp("fecha_hora_bloqueo");
+				cliente.setIdPersona(resultSet.getString(1));
+                cliente.setDni(resultSet.getString(2));
+                cliente.setNombres(resultSet.getString(3));
+                cliente.setApellidos(resultSet.getString(4));
+                cliente.setTelefono(resultSet.getString(5));
+                cliente.setDireccion(resultSet.getString(6));
+                cliente.setCorreo(resultSet.getString(7));
+                cliente.setContraseña(resultSet.getString(8));
+                Timestamp fechaHoraBloqueo = resultSet.getTimestamp(9);
                 cliente.setFechaHoraBloqueo(fechaHoraBloqueo == null? null:fechaHoraBloqueo.toLocalDateTime());
 				clientes.add(cliente);
 			}
@@ -109,6 +109,7 @@ public class RepositorioCliente {
 			}
 		}
 	}
+	/*
 	public static void eliminarCliente(String idPersona) {
     	Connection connection = null;
     	CallableStatement callableStatement = null;
@@ -129,6 +130,7 @@ public class RepositorioCliente {
 			}
 		}
     }
+    */
 	public static Cliente consultarIdCliente(String idPersona) {
 		Connection connection = null;
 		CallableStatement callableStatement = null;
@@ -142,15 +144,15 @@ public class RepositorioCliente {
 			resultSet = callableStatement.executeQuery();
 			if (resultSet.next()) {
 				cliente = new Cliente();
-				cliente.setIdPersona(resultSet.getString("id_persona"));
-                cliente.setDni(resultSet.getString("dni"));
-                cliente.setNombres(resultSet.getString("nombres"));
-                cliente.setApellidos(resultSet.getString("apellidos"));
-                cliente.setTelefono(resultSet.getString("telefono"));
-                cliente.setDireccion(resultSet.getString("direccion"));
-                cliente.setCorreo(resultSet.getString("correo"));
-                cliente.setContraseña(resultSet.getString("contraseña"));
-                Timestamp fechaHoraBloqueo = resultSet.getTimestamp("fecha_hora_bloqueo");
+				cliente.setIdPersona(resultSet.getString(1));
+                cliente.setDni(resultSet.getString(2));
+                cliente.setNombres(resultSet.getString(3));
+                cliente.setApellidos(resultSet.getString(4));
+                cliente.setTelefono(resultSet.getString(5));
+                cliente.setDireccion(resultSet.getString(6));
+                cliente.setCorreo(resultSet.getString(7));
+                cliente.setContraseña(resultSet.getString(8));
+                Timestamp fechaHoraBloqueo = resultSet.getTimestamp(9);
                 cliente.setFechaHoraBloqueo(fechaHoraBloqueo == null? null:fechaHoraBloqueo.toLocalDateTime());
 			}
 		} catch (Exception e) {
@@ -172,8 +174,8 @@ public class RepositorioCliente {
 		ResultSet resultSet = null;
 		Cliente cliente = null;
 		try {
-			String consulta = "SELECT * FROM personas p "
-					+ "INNER JOIN clientes c ON p.id_persona = c.id_cliente "
+			String consulta = "SELECT p.* FROM clientes c "
+					+ "INNER JOIN personas p ON c.id_cliente = p.id_persona "
 					+ "WHERE p.dni = ?;";
 			connection = ConexiónMySQL.getconexión();
 			preparedStatement = connection.prepareStatement(consulta);
@@ -181,15 +183,15 @@ public class RepositorioCliente {
 			resultSet = preparedStatement.executeQuery();
 			if (resultSet.next()) {
 				cliente = new Cliente();
-				cliente.setIdPersona(resultSet.getString("id_persona"));
-                cliente.setDni(resultSet.getString("dni"));
-                cliente.setNombres(resultSet.getString("nombres"));
-                cliente.setApellidos(resultSet.getString("apellidos"));
-                cliente.setTelefono(resultSet.getString("telefono"));
-                cliente.setDireccion(resultSet.getString("direccion"));
-                cliente.setCorreo(resultSet.getString("correo"));
-                cliente.setContraseña(resultSet.getString("contraseña"));
-                Timestamp fechaHoraBloqueo = resultSet.getTimestamp("fecha_hora_bloqueo");
+				cliente.setIdPersona(resultSet.getString(1));
+                cliente.setDni(resultSet.getString(2));
+                cliente.setNombres(resultSet.getString(3));
+                cliente.setApellidos(resultSet.getString(4));
+                cliente.setTelefono(resultSet.getString(5));
+                cliente.setDireccion(resultSet.getString(6));
+                cliente.setCorreo(resultSet.getString(7));
+                cliente.setContraseña(resultSet.getString(8));
+                Timestamp fechaHoraBloqueo = resultSet.getTimestamp(9);
                 cliente.setFechaHoraBloqueo(fechaHoraBloqueo == null? null:fechaHoraBloqueo.toLocalDateTime());
 			}
 		} catch (Exception e) {
@@ -211,8 +213,8 @@ public class RepositorioCliente {
 		ResultSet resultSet = null;
 		Cliente cliente = null;
 		try {
-			String consulta = "SELECT * FROM personas p "
-					+ "INNER JOIN clientes c ON p.id_persona = c.id_cliente "
+			String consulta = "SELECT p.* FROM clientes c "
+					+ "INNER JOIN personas p ON c.id_cliente = p.id_persona "
 					+ "WHERE p.correo = ?;";
 			connection = ConexiónMySQL.getconexión();
 			preparedStatement = connection.prepareStatement(consulta);
@@ -220,15 +222,15 @@ public class RepositorioCliente {
 			resultSet = preparedStatement.executeQuery();
 			if (resultSet.next()) {
 				cliente = new Cliente();
-				cliente.setIdPersona(resultSet.getString("id_persona"));
-                cliente.setDni(resultSet.getString("dni"));
-                cliente.setNombres(resultSet.getString("nombres"));
-                cliente.setApellidos(resultSet.getString("apellidos"));
-                cliente.setTelefono(resultSet.getString("telefono"));
-                cliente.setDireccion(resultSet.getString("direccion"));
-                cliente.setCorreo(resultSet.getString("correo"));
-                cliente.setContraseña(resultSet.getString("contraseña"));
-                Timestamp fechaHoraBloqueo = resultSet.getTimestamp("fecha_hora_bloqueo");
+				cliente.setIdPersona(resultSet.getString(1));
+                cliente.setDni(resultSet.getString(2));
+                cliente.setNombres(resultSet.getString(3));
+                cliente.setApellidos(resultSet.getString(4));
+                cliente.setTelefono(resultSet.getString(5));
+                cliente.setDireccion(resultSet.getString(6));
+                cliente.setCorreo(resultSet.getString(7));
+                cliente.setContraseña(resultSet.getString(8));
+                Timestamp fechaHoraBloqueo = resultSet.getTimestamp(9);
                 cliente.setFechaHoraBloqueo(fechaHoraBloqueo == null? null:fechaHoraBloqueo.toLocalDateTime());
 			}
 		} catch (Exception e) {
@@ -250,8 +252,8 @@ public class RepositorioCliente {
 		ResultSet resultSet = null;
 		Cliente cliente = null;
 		try {
-			String consulta = "SELECT * FROM personas p "
-					+ "INNER JOIN clientes c ON p.id_persona = c.id_cliente "
+			String consulta = "SELECT p.* FROM clientes c "
+					+ "INNER JOIN personas p ON c.id_cliente = p.id_persona "
 					+ "WHERE p.correo = ? AND p.contraseña = ?;";
 			connection = ConexiónMySQL.getconexión();
 			preparedStatement = connection.prepareStatement(consulta);
@@ -260,15 +262,15 @@ public class RepositorioCliente {
 			resultSet = preparedStatement.executeQuery();
 			if (resultSet.next()) {
 				cliente = new Cliente();
-				cliente.setIdPersona(resultSet.getString("id_persona"));
-                cliente.setDni(resultSet.getString("dni"));
-                cliente.setNombres(resultSet.getString("nombres"));
-                cliente.setApellidos(resultSet.getString("apellidos"));
-                cliente.setTelefono(resultSet.getString("telefono"));
-                cliente.setDireccion(resultSet.getString("direccion"));
-                cliente.setCorreo(resultSet.getString("correo"));
-                cliente.setContraseña(resultSet.getString("contraseña"));
-                Timestamp fechaHoraBloqueo = resultSet.getTimestamp("fecha_hora_bloqueo");
+				cliente.setIdPersona(resultSet.getString(1));
+                cliente.setDni(resultSet.getString(2));
+                cliente.setNombres(resultSet.getString(3));
+                cliente.setApellidos(resultSet.getString(4));
+                cliente.setTelefono(resultSet.getString(5));
+                cliente.setDireccion(resultSet.getString(6));
+                cliente.setCorreo(resultSet.getString(7));
+                cliente.setContraseña(resultSet.getString(8));
+                Timestamp fechaHoraBloqueo = resultSet.getTimestamp(9);
                 cliente.setFechaHoraBloqueo(fechaHoraBloqueo == null? null:fechaHoraBloqueo.toLocalDateTime());
 			}
 		} catch (Exception e) {
@@ -290,8 +292,8 @@ public class RepositorioCliente {
 		ResultSet resultSet = null;
 		ArrayList<Cliente> clientes = new ArrayList<Cliente>();
 		try {
-			String consulta = "SELECT * FROM clientes c "
-					+ "INNER JOIN personas p ON p.id_persona = c.id_cliente "
+			String consulta = "SELECT p.* FROM clientes c "
+					+ "INNER JOIN personas p ON c.id_cliente = p.id_persona "
 					+ "WHERE p.dni LIKE '%" + dni + "%' AND p.nombres LIKE '%" + nombres + "%' AND p.apellidos LIKE '%" + apellidos + "%';";
 			connection = ConexiónMySQL.getconexión();
 			statement = connection.createStatement();
@@ -299,15 +301,15 @@ public class RepositorioCliente {
 			Cliente cliente;
 			while (resultSet.next()) {
 				cliente = new Cliente();
-				cliente.setIdPersona(resultSet.getString("id_persona"));
-                cliente.setDni(resultSet.getString("dni"));
-                cliente.setNombres(resultSet.getString("nombres"));
-                cliente.setApellidos(resultSet.getString("apellidos"));
-                cliente.setTelefono(resultSet.getString("telefono"));
-                cliente.setDireccion(resultSet.getString("direccion"));
-                cliente.setCorreo(resultSet.getString("correo"));
-                cliente.setContraseña(resultSet.getString("contraseña"));
-                Timestamp fechaHoraBloqueo = resultSet.getTimestamp("fecha_hora_bloqueo");
+				cliente.setIdPersona(resultSet.getString(1));
+                cliente.setDni(resultSet.getString(2));
+                cliente.setNombres(resultSet.getString(3));
+                cliente.setApellidos(resultSet.getString(4));
+                cliente.setTelefono(resultSet.getString(5));
+                cliente.setDireccion(resultSet.getString(6));
+                cliente.setCorreo(resultSet.getString(7));
+                cliente.setContraseña(resultSet.getString(8));
+                Timestamp fechaHoraBloqueo = resultSet.getTimestamp(9);
                 cliente.setFechaHoraBloqueo(fechaHoraBloqueo == null? null:fechaHoraBloqueo.toLocalDateTime());
 				clientes.add(cliente);
 			}

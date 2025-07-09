@@ -221,7 +221,7 @@ public class VentanaVerDetallesCB extends JDialog implements ActionListener {
 		txtMoneda.setText(cuenta.getMoneda());
 	}
 	private void llenarTabla() {
-		ArrayList<Transaccion> transacciones = RepositorioTransaccion.consultarTransaccionNumeroCuenta(cuenta.getNumeroCuenta());
+		ArrayList<Transaccion> transacciones = RepositorioTransaccion.consultarTransaccionDescripcion(cuenta.getNumeroCuenta());
 		cuenta.setTransacciones(transacciones);
 		defaultTableModel.setRowCount(0);
 		for (Transaccion transaccion : transacciones) {

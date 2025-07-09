@@ -4,7 +4,6 @@ import java.sql.*;
 import java.util.ArrayList;
 
 import conexión.ConexiónMySQL;
-import modelo.Cliente;
 import modelo.Tarjeta;
 
 public class RepositorioTarjeta {
@@ -18,21 +17,12 @@ public class RepositorioTarjeta {
             ResultSet resultSet = callableStatement.executeQuery();
             Tarjeta tarjeta;
             while (resultSet.next()) {
-            	Cliente cliente = new Cliente();
-                cliente.setIdPersona(resultSet.getString("id_persona"));
-                cliente.setDni(resultSet.getString("dni"));
-                cliente.setNombres(resultSet.getString("nombres"));
-                cliente.setApellidos(resultSet.getString("apellidos"));
-                cliente.setTelefono(resultSet.getString("telefono"));
-                cliente.setDireccion(resultSet.getString("direccion"));
-                cliente.setCorreo(resultSet.getString("correo"));
-                cliente.setContraseña(resultSet.getString("contraseña"));
                 tarjeta = new Tarjeta();
-                tarjeta.setNumeroTarjeta(resultSet.getString("numero_tarjeta"));
-                tarjeta.setFechaVencimiento(resultSet.getDate("fecha_vencimiento").toLocalDate());
-                tarjeta.setEstado(resultSet.getString("estado"));
-                tarjeta.setTipoTarjeta(resultSet.getString("tipo_tarjeta"));
-                tarjeta.setCliente(cliente);
+                tarjeta.setNumeroTarjeta(resultSet.getString(1));
+                tarjeta.setEstado(resultSet.getString(2));
+                tarjeta.setTipoTarjeta(resultSet.getString(3));
+                tarjeta.setFechaVencimiento(resultSet.getDate(4).toLocalDate());
+                tarjeta.setCliente(RepositorioCliente.consultarIdCliente(resultSet.getString(5)));
                 tarjetas.add(tarjeta);
             }
         } catch (Exception e) {
@@ -92,6 +82,7 @@ public class RepositorioTarjeta {
 			}
 		}
     }
+	/*
 	public static void eliminarTarjeta(String numeroTarjeta) {
     	Connection connection = null;
     	CallableStatement callableStatement = null;
@@ -111,7 +102,7 @@ public class RepositorioTarjeta {
 				System.out.println("Error: " + e);
 			}
 		}
-    }
+    }*/
 	public static Tarjeta consultarNumeroTarjeta(String numeroTarjeta) {
     	Connection connection = null;
     	CallableStatement callableStatement = null;
@@ -124,21 +115,12 @@ public class RepositorioTarjeta {
         	callableStatement.setString(1, numeroTarjeta);
             resultSet = callableStatement.executeQuery();
             if (resultSet.next()) {
-            	Cliente cliente = new Cliente();
-                cliente.setIdPersona(resultSet.getString("id_persona"));
-                cliente.setDni(resultSet.getString("dni"));
-                cliente.setNombres(resultSet.getString("nombres"));
-                cliente.setApellidos(resultSet.getString("apellidos"));
-                cliente.setTelefono(resultSet.getString("telefono"));
-                cliente.setDireccion(resultSet.getString("direccion"));
-                cliente.setCorreo(resultSet.getString("correo"));
-                cliente.setContraseña(resultSet.getString("contraseña"));
-                tarjeta = new Tarjeta();
-                tarjeta.setNumeroTarjeta(resultSet.getString("numero_tarjeta"));
-                tarjeta.setFechaVencimiento(resultSet.getDate("fecha_vencimiento").toLocalDate());
-                tarjeta.setEstado(resultSet.getString("estado"));
-                tarjeta.setTipoTarjeta(resultSet.getString("tipo_tarjeta"));
-                tarjeta.setCliente(cliente);
+            	tarjeta = new Tarjeta();
+            	tarjeta.setNumeroTarjeta(resultSet.getString(1));
+                tarjeta.setEstado(resultSet.getString(2));
+                tarjeta.setTipoTarjeta(resultSet.getString(3));
+                tarjeta.setFechaVencimiento(resultSet.getDate(4).toLocalDate());
+                tarjeta.setCliente(RepositorioCliente.consultarIdCliente(resultSet.getString(5)));
             }
         } catch (Exception e) {
             System.out.println("Error al consultar número de tarjeta: " + e);
@@ -159,31 +141,20 @@ public class RepositorioTarjeta {
     	ResultSet resultSet = null;
     	ArrayList<Tarjeta> tarjetas = new ArrayList<Tarjeta>();
         try {
-        	String consulta = "SELECT * FROM tarjetas t "
-        			+ "INNER JOIN clientes c ON c.id_cliente = t.id_cliente "
-        			+ "INNER JOIN personas p ON p.id_persona = c.id_cliente "
-        			+ "WHERE t.id_cliente = ?;";
+        	String consulta = "SELECT * FROM tarjetas "
+        			+ "WHERE id_cliente = ?;";
         	connection = ConexiónMySQL.getconexión();
         	preparedStatement = connection.prepareCall(consulta);
         	preparedStatement.setString(1, idCliente);
             resultSet = preparedStatement.executeQuery();
             Tarjeta tarjeta;
             while (resultSet.next()) {
-            	Cliente cliente = new Cliente();
-                cliente.setIdPersona(resultSet.getString("id_persona"));
-                cliente.setDni(resultSet.getString("dni"));
-                cliente.setNombres(resultSet.getString("nombres"));
-                cliente.setApellidos(resultSet.getString("apellidos"));
-                cliente.setTelefono(resultSet.getString("telefono"));
-                cliente.setDireccion(resultSet.getString("direccion"));
-                cliente.setCorreo(resultSet.getString("correo"));
-                cliente.setContraseña(resultSet.getString("contraseña"));
-                tarjeta = new Tarjeta();
-                tarjeta.setNumeroTarjeta(resultSet.getString("numero_tarjeta"));
-                tarjeta.setFechaVencimiento(resultSet.getDate("fecha_vencimiento").toLocalDate());
-                tarjeta.setEstado(resultSet.getString("estado"));
-                tarjeta.setTipoTarjeta(resultSet.getString("tipo_tarjeta"));
-                tarjeta.setCliente(cliente);
+            	tarjeta = new Tarjeta();
+            	tarjeta.setNumeroTarjeta(resultSet.getString(1));
+                tarjeta.setEstado(resultSet.getString(2));
+                tarjeta.setTipoTarjeta(resultSet.getString(3));
+                tarjeta.setFechaVencimiento(resultSet.getDate(4).toLocalDate());
+                tarjeta.setCliente(RepositorioCliente.consultarIdCliente(resultSet.getString(5)));
                 tarjetas.add(tarjeta);
             }
         } catch (Exception e) {

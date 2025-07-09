@@ -16,6 +16,8 @@ import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
 import java.awt.event.ActionListener;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
 
@@ -132,8 +134,21 @@ public class VentanaCambiarContraseña extends JDialog implements ActionListener
 	protected void do_btnCancelar_actionPerformed(ActionEvent e) {
 		dispose();
 	}
+	private int intentos = 0;
 	protected void do_btnGuardar_actionPerformed(ActionEvent e) {
 		try {
+			LocalDateTime fechaHoraBloqueo;
+			String correo = persona.getCorreo();
+			if(correo.contains("@empleado.com")) persona = RepositorioEmpleado.consultarEmpleado(correo);
+			else persona = RepositorioCliente.consultarCliente(correo);
+			fechaHoraBloqueo = persona.getFechaHoraBloqueo();
+			if(fechaHoraBloqueo != null) {
+				Duration duration = Duration.between(persona.getFechaHoraBloqueo(), LocalDateTime.now());
+				if(duration.toMinutes() < 30) {
+					JOptionPane.showMessageDialog(this,  "Su cuenta se encuentra bloqueada temporalmente. Vuelva a intentarlo después de " + (30 - duration.toMinutes()) + " minutos.", "Información", JOptionPane.INFORMATION_MESSAGE);
+					return;
+				}
+			}
 			String contraseñaActual = txtContraseñaActual.getText();
 			String nuevaContraseña = txtNuevaContreña.getText();
 			String repetirContraseña = txtRepetirContraseña.getText();
@@ -148,7 +163,22 @@ public class VentanaCambiarContraseña extends JDialog implements ActionListener
 				JOptionPane.showMessageDialog(this, "La contraseña debe tener como mínimo 8 caracteres.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			} else if (!contraseñaActual.equals(persona.getContraseña())) {
-				JOptionPane.showMessageDialog(this, "La contraseña actual es incorrecta, vuelva a intentarlo.", "Información", JOptionPane.INFORMATION_MESSAGE);
+				intentos++;
+				String mensaje = "La contraseña actual es incorrecta, ";
+				if(intentos < 5) {
+					JOptionPane.showMessageDialog(this, mensaje + "vuelva a intentarlo.", "Información", JOptionPane.INFORMATION_MESSAGE);
+				} else {
+					fechaHoraBloqueo = LocalDateTime.now();
+					if(correo.contains("@empleado.com")) {
+						persona.setFechaHoraBloqueo(fechaHoraBloqueo);
+						RepositorioEmpleado.actualizarEmpleado((Empleado) persona);
+					}
+					else {
+						persona.setFechaHoraBloqueo(fechaHoraBloqueo);
+						RepositorioCliente.actualizarCliente(((Cliente) persona));
+					}
+					JOptionPane.showMessageDialog(this,  mensaje + "vuelva a intentarlo después de 30 minutos.", "Información", JOptionPane.INFORMATION_MESSAGE);
+				}
 				return;
 			} else if (!nuevaContraseña.equals(repetirContraseña)) {
 				JOptionPane.showMessageDialog(this, "Las nuevas contraseñas no coinciden.", "Información", JOptionPane.INFORMATION_MESSAGE);
@@ -158,11 +188,10 @@ public class VentanaCambiarContraseña extends JDialog implements ActionListener
 			if(persona.getCorreo().contains("@empleado")) RepositorioEmpleado.actualizarEmpleado((Empleado) persona);
 			else RepositorioCliente.actualizarCliente((Cliente) persona);
 			JOptionPane.showMessageDialog(this, "La contraseña fue cambiada correctamente.", "Información", JOptionPane.INFORMATION_MESSAGE);
+			limpiar();
 			dispose();
 		} catch (Exception error) {
 			JOptionPane.showMessageDialog(this, "Error: "+error.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-		} finally {
-			limpiar();
 		}
 	}
 	private void limpiar() {

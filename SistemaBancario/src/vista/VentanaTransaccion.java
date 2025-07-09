@@ -168,6 +168,10 @@ public class VentanaTransaccion extends JDialog implements ActionListener, KeyLi
 	protected void do_btnCancelar_actionPerformed(ActionEvent e) {
 		dispose();
 	}
+	private String obtenerNumeroCuenta(String numeroCuenta) {
+		if(numeroCuenta.contains("-")) return numeroCuenta.substring(0, 3) + numeroCuenta.substring(4);
+		return numeroCuenta;
+	}
 	protected void do_btnContinuar_actionPerformed(ActionEvent e) {
 		try {
 			Cliente clienteAutenticar = cliente, clienteOrigen = null, clienteDestino = null;
@@ -176,22 +180,16 @@ public class VentanaTransaccion extends JDialog implements ActionListener, KeyLi
 			String numeroOrigen = "";
 			String numeroDestino = "";
 			String motivoPagar = "";
-			if(txtNumeroCuentaOrigen != null) {
-				String numeroOrigenFormateado = txtNumeroCuentaOrigen.getText().trim();
-				if(numeroOrigenFormateado.contains("-")) numeroOrigen = numeroOrigenFormateado.substring(0, 3) + numeroOrigenFormateado.substring(4);
-			}
-			if(txtNumeroCuentaDestino != null) {
-				String numeroDestinoFormateado = txtNumeroCuentaDestino.getText().trim();
-				if(numeroDestinoFormateado.contains("-")) numeroDestino = numeroDestinoFormateado.substring(0, 3) + numeroDestinoFormateado.substring(4);
-			}
+			if(txtNumeroCuentaOrigen != null) numeroOrigen = obtenerNumeroCuenta(txtNumeroCuentaOrigen.getText().trim());
+			if(txtNumeroCuentaDestino != null) numeroDestino = obtenerNumeroCuenta(txtNumeroCuentaDestino.getText().trim());
 			if(txtMotivoPagar != null) motivoPagar = txtMotivoPagar.getText().trim();
 			if(txtMonto.getText().trim().isEmpty()) {
 				JOptionPane.showMessageDialog(this, "El campo monto está vacío.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
 			double montoEnviado = Double.parseDouble(txtMonto.getText().trim()), montoRecibido = 0;
-			if(montoEnviado < 0 || montoEnviado >= 10000000000000.0) {
-				JOptionPane.showMessageDialog(this, "El monto inválido.", "Información", JOptionPane.INFORMATION_MESSAGE);
+			if(montoEnviado < 0 || montoEnviado >= 10000000000.0) {
+				JOptionPane.showMessageDialog(this, "El monto es inválido.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			} else if(montoEnviado == 0) {
 				JOptionPane.showMessageDialog(this, "El monto no puede ser cero.", "Información", JOptionPane.INFORMATION_MESSAGE);
@@ -299,12 +297,17 @@ public class VentanaTransaccion extends JDialog implements ActionListener, KeyLi
 		    	        try {
 		    	        	FileWriter writer = new FileWriter(archivo);
 		    	            writer.write("Comprobante de la transacción\n");
-		    	            writer.write("------------------------------\n");
+		    	            writer.write("---------------------------------------------------------------\n");
 		    	            writer.write("ID: " + transaccion.getIdTransaccion() + "\n");
 		    	            writer.write("Tipo: " + transaccion.getTipoTransaccion() + "\n");
-		            		writer.write("Descripción: " + transaccion.getDescripcion() + "\n");
-	        				writer.write("Fecha y hora: " + transaccion.getFechaHora() + "\n");
+		            		writer.write("Descripción:\n");
+		            		String[] textoSeparado = transaccion.getDescripcion().split(";");
+		            		for (int i = 0; i < textoSeparado.length; i++) {
+		            			writer.write("\t" + textoSeparado[i].trim() + "\n");
+		            		}
+	        				writer.write("Fecha y hora: " + transaccion.getFechaHoraFormateada() + "\n");
 	        				writer.write("Monto: " + transaccion.getMonto() + "\n");
+	        				writer.write("---------------------------------------------------------------\n");
 		    	        	writer.close();
 		    	            JOptionPane.showMessageDialog(this, "Comprobante descargado correctamente.");
 		    	        } catch (IOException ex) {

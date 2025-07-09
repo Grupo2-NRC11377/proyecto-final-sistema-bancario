@@ -18,6 +18,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.Font;
+
 import javax.swing.SwingConstants;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -26,6 +27,7 @@ import javax.swing.ListSelectionModel;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
 
@@ -39,7 +41,6 @@ public class VentanaVerSolicitudes extends JDialog implements ActionListener {
 	private JButton btnCerrar;
 	private JButton btnVerCliente;
 	private JTable tableSolicitudes;
-	private DefaultTableModel defaultTableModel;
 	private JButton btnAceptar;
 	private JButton btnRechazar;
 
@@ -71,14 +72,6 @@ public class VentanaVerSolicitudes extends JDialog implements ActionListener {
 				tableSolicitudes.setBackground(new Color(255, 255, 255));
 				tableSolicitudes.setFont(new Font("Arial", Font.PLAIN, 13));
 				tableSolicitudes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-				String[] columnas = new String[] {"Id", "Asunto", "Estado", "Fecha de creación", "Fecha de resolución"};
-				defaultTableModel = new DefaultTableModel(columnas, 0) {
-					private static final long serialVersionUID = 1L;
-					public boolean isCellEditable(int row, int column) {
-		                return false;
-		            }
-				};
-				tableSolicitudes.setModel(defaultTableModel);
 				scrollPane.setViewportView(tableSolicitudes);
 			}
 		}
@@ -228,6 +221,7 @@ public class VentanaVerSolicitudes extends JDialog implements ActionListener {
 		return solicitud;
 	}
 	private void llenarTabla() {
+		DefaultTableModel defaultTableModel = new DefaultTableModel();
 		ArrayList<Solicitud> solicitudes = new ArrayList<Solicitud>();
 		if(persona.getCorreo().contains("@empleado")) {
 			solicitudes = RepositorioSolicitud.consultarSolicitudEmpleado(persona.getIdPersona());
@@ -236,15 +230,28 @@ public class VentanaVerSolicitudes extends JDialog implements ActionListener {
 			solicitudes = RepositorioSolicitud.consultarSolicitudCliente(persona.getIdPersona());
 			((Cliente) persona).setSolicitudes(solicitudes);
 		}
-		defaultTableModel.setRowCount(0);
-		for (Solicitud solicitud : solicitudes) {
-			Object[] fila = new Object[5];
-			fila[0] = solicitud.getIdSolicitud();
-			fila[1] = solicitud.getAsunto();
-			fila[2] = solicitud.getEstado();
-			fila[3] = solicitud.getFechaCreacionFormateada();
-			fila[4] = solicitud.getFechaResolucionFormateada();
-			defaultTableModel.addRow(fila);
+		defaultTableModel.addColumn("Id");
+		defaultTableModel.addColumn("Asunto");
+		defaultTableModel.addColumn("Estado");
+		defaultTableModel.addColumn("Fecha de creación");
+		defaultTableModel.addColumn("Fecha de resolución");
+		if(!persona.getCorreo().contains("@empleado")) defaultTableModel.addColumn("Empleado");
+		defaultTableModel.setRowCount(solicitudes.size());
+		Iterator<Solicitud> iterator = solicitudes.iterator();
+		int i = 0;
+		while(iterator.hasNext()) {
+			Solicitud solicitud = iterator.next();
+			defaultTableModel.setValueAt(solicitud.getIdSolicitud(), i, 0);
+			defaultTableModel.setValueAt(solicitud.getAsunto(), i, 1);
+			defaultTableModel.setValueAt(solicitud.getEstado(), i, 2);
+			defaultTableModel.setValueAt(solicitud.getFechaCreacionFormateada(), i, 3);
+			defaultTableModel.setValueAt(solicitud.getFechaResolucionFormateada(), i, 4);
+			if(!persona.getCorreo().contains("@empleado")) {
+				Empleado empleado = solicitud.getEmpleado();
+				defaultTableModel.setValueAt(empleado.getNombres() + " " + empleado.getApellidos(), i, 5);
+			}
+			i++;
 		}
+		tableSolicitudes.setModel(defaultTableModel);
 	}
 }

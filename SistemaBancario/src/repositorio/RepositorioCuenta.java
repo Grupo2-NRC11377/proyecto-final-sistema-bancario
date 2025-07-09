@@ -4,7 +4,6 @@ import java.sql.*;
 import java.util.ArrayList;
 
 import conexión.ConexiónMySQL;
-import modelo.Cliente;
 import modelo.Cuenta;
 
 public class RepositorioCuenta {
@@ -18,24 +17,15 @@ public class RepositorioCuenta {
             ResultSet resultSet = callableStatement.executeQuery();
             Cuenta cuenta;
             while (resultSet.next()) {
-            	Cliente cliente = new Cliente();
-                cliente.setIdPersona(resultSet.getString("id_persona"));
-                cliente.setDni(resultSet.getString("dni"));
-                cliente.setNombres(resultSet.getString("nombres"));
-                cliente.setApellidos(resultSet.getString("apellidos"));
-                cliente.setTelefono(resultSet.getString("telefono"));
-                cliente.setDireccion(resultSet.getString("direccion"));
-                cliente.setCorreo(resultSet.getString("correo"));
-                cliente.setContraseña(resultSet.getString("contraseña"));
                 cuenta = new Cuenta();
-                cuenta.setNumeroCuenta(resultSet.getString("numero_cuenta"));
-                cuenta.setSaldoContable(resultSet.getDouble("saldo_contable"));
-                cuenta.setSaldoDisponible(resultSet.getDouble("saldo_disponible"));
-                cuenta.setFechaCreacion(resultSet.getDate("fecha_creacion").toLocalDate());
-                cuenta.setEstado(resultSet.getString("estado"));
-                cuenta.setTipoCuenta(resultSet.getString("tipo_cuenta"));
-                cuenta.setMoneda(resultSet.getString("moneda"));
-                cuenta.setCliente(cliente);
+                cuenta.setNumeroCuenta(resultSet.getString(1));
+                cuenta.setSaldoContable(resultSet.getDouble(2));
+                cuenta.setSaldoDisponible(resultSet.getDouble(3));
+                cuenta.setFechaCreacion(resultSet.getDate(4).toLocalDate());
+                cuenta.setEstado(resultSet.getString(5));
+                cuenta.setTipoCuenta(resultSet.getString(6));
+                cuenta.setMoneda(resultSet.getString(7));
+                cuenta.setCliente(RepositorioCliente.consultarIdCliente(resultSet.getString(8)));
                 cuentas.add(cuenta);
             }
         } catch (Exception e) {
@@ -89,24 +79,15 @@ public class RepositorioCuenta {
         	callableStatement.setString(1, numeroCuenta);
             resultSet = callableStatement.executeQuery();
             if (resultSet.next()) {
-            	Cliente cliente = new Cliente();
-                cliente.setIdPersona(resultSet.getString("id_persona"));
-                cliente.setDni(resultSet.getString("dni"));
-                cliente.setNombres(resultSet.getString("nombres"));
-                cliente.setApellidos(resultSet.getString("apellidos"));
-                cliente.setTelefono(resultSet.getString("telefono"));
-                cliente.setDireccion(resultSet.getString("direccion"));
-                cliente.setCorreo(resultSet.getString("correo"));
-                cliente.setContraseña(resultSet.getString("contraseña"));
                 cuenta = new Cuenta();
-                cuenta.setNumeroCuenta(resultSet.getString("numero_cuenta"));
-                cuenta.setSaldoContable(resultSet.getDouble("saldo_contable"));
-                cuenta.setSaldoDisponible(resultSet.getDouble("saldo_disponible"));
-                cuenta.setFechaCreacion(resultSet.getDate("fecha_creacion").toLocalDate());
-                cuenta.setEstado(resultSet.getString("estado"));
-                cuenta.setTipoCuenta(resultSet.getString("tipo_cuenta"));
-                cuenta.setMoneda(resultSet.getString("moneda"));
-                cuenta.setCliente(cliente);
+                cuenta.setNumeroCuenta(resultSet.getString(1));
+                cuenta.setSaldoContable(resultSet.getDouble(2));
+                cuenta.setSaldoDisponible(resultSet.getDouble(3));
+                cuenta.setFechaCreacion(resultSet.getDate(4).toLocalDate());
+                cuenta.setEstado(resultSet.getString(5));
+                cuenta.setTipoCuenta(resultSet.getString(6));
+                cuenta.setMoneda(resultSet.getString(7));
+                cuenta.setCliente(RepositorioCliente.consultarIdCliente(resultSet.getString(8)));
             }
         } catch (Exception e) {
             System.out.println("Error al consultar número de cuenta: " + e);
@@ -121,6 +102,7 @@ public class RepositorioCuenta {
 		}
         return cuenta;
     }
+    /*
     public static void eliminarCuenta(String numeroCuenta) {
     	Connection connection = null;
     	CallableStatement callableStatement = null;
@@ -140,7 +122,7 @@ public class RepositorioCuenta {
 				System.out.println("Error: " + e);
 			}
 		}
-    }
+    }*/
     public static void actualizarCuenta(Cuenta cuenta) {
     	Connection connection = null;
     	CallableStatement callableStatement = null;
@@ -170,34 +152,23 @@ public class RepositorioCuenta {
     	ResultSet resultSet = null;
     	ArrayList<Cuenta> cuentas = new ArrayList<Cuenta>();
         try {
-        	String consulta = "SELECT * FROM cuentas cu "
-        			+ "INNER JOIN clientes cl ON cl.id_cliente = cu.id_cliente "
-        			+ "INNER JOIN personas p ON p.id_persona = cl.id_cliente "
-        			+ "WHERE cu.id_cliente = ?;";
+        	String consulta = "SELECT * FROM cuentas "
+        			+ "WHERE id_cliente = ?;";
         	connection = ConexiónMySQL.getconexión();
         	preparedStatement = connection.prepareCall(consulta);
         	preparedStatement.setString(1, idCliente);
             resultSet = preparedStatement.executeQuery();
             Cuenta cuenta;
             while (resultSet.next()) {
-            	Cliente cliente = new Cliente();
-                cliente.setIdPersona(resultSet.getString("id_persona"));
-                cliente.setDni(resultSet.getString("dni"));
-                cliente.setNombres(resultSet.getString("nombres"));
-                cliente.setApellidos(resultSet.getString("apellidos"));
-                cliente.setTelefono(resultSet.getString("telefono"));
-                cliente.setDireccion(resultSet.getString("direccion"));
-                cliente.setCorreo(resultSet.getString("correo"));
-                cliente.setContraseña(resultSet.getString("contraseña"));
-                cuenta = new Cuenta();
-                cuenta.setNumeroCuenta(resultSet.getString("numero_cuenta"));
-                cuenta.setSaldoContable(resultSet.getDouble("saldo_contable"));
-                cuenta.setSaldoDisponible(resultSet.getDouble("saldo_disponible"));
-                cuenta.setFechaCreacion(resultSet.getDate("fecha_creacion").toLocalDate());
-                cuenta.setEstado(resultSet.getString("estado"));
-                cuenta.setTipoCuenta(resultSet.getString("tipo_cuenta"));
-                cuenta.setMoneda(resultSet.getString("moneda"));
-                cuenta.setCliente(cliente);
+            	cuenta = new Cuenta();
+                cuenta.setNumeroCuenta(resultSet.getString(1));
+                cuenta.setSaldoContable(resultSet.getDouble(2));
+                cuenta.setSaldoDisponible(resultSet.getDouble(3));
+                cuenta.setFechaCreacion(resultSet.getDate(4).toLocalDate());
+                cuenta.setEstado(resultSet.getString(5));
+                cuenta.setTipoCuenta(resultSet.getString(6));
+                cuenta.setMoneda(resultSet.getString(7));
+                cuenta.setCliente(RepositorioCliente.consultarIdCliente(resultSet.getString(8)));
                 cuentas.add(cuenta);
             }
         } catch (Exception e) {
