@@ -76,7 +76,8 @@ public class VentanaProgramadores extends JDialog implements ActionListener {
 			getContentPane().add(lblFoto3);
 		}
 		{
-			lblFoto4 = new JLabel("Foto 4");
+			lblFoto4 = new JLabel("");
+			lblFoto4.setIcon(new ImageIcon(VentanaProgramadores.class.getResource("/imagen/fotoCarnet_CotrinaSandoval.jpeg")));
 			lblFoto4.setForeground(new Color(0, 0, 0));
 			lblFoto4.setBackground(new Color(255, 255, 255));
 			lblFoto4.setBounds(530, 120, 137, 171);
