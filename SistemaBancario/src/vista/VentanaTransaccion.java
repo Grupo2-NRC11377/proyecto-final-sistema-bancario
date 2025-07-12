@@ -221,7 +221,7 @@ public class VentanaTransaccion extends JDialog implements ActionListener, KeyLi
 					JOptionPane.showMessageDialog(this, "La cuenta de destino no existe.", "Información", JOptionPane.INFORMATION_MESSAGE);
 					return;
 				} else if((tipo.equalsIgnoreCase("transferir") || tipo.equalsIgnoreCase("pagar")) && cuentaOrigen.getNumeroCuenta().equals(cuentaDestino.getNumeroCuenta())) {
-					JOptionPane.showMessageDialog(this, "No se puede " + tipo + " a la misma cuenta", "Información", JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(this, "No se puede " + tipo + " a la misma cuenta.", "Información", JOptionPane.INFORMATION_MESSAGE);
 					return;
 				}
 				clienteDestino = cuentaDestino.getCliente();

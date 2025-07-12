@@ -150,7 +150,9 @@ WHERE e.id_empleado = id_persona;
 
 -- Para Cuentas:
 CREATE PROCEDURE sp_listarCuenta(
-) SELECT * FROM cuentas;
+) SELECT cu.*, p.* FROM cuentas cu 
+INNER JOIN clientes cl ON cl.id_cliente = cu.id_cliente 
+INNER JOIN personas p ON p.id_persona = cl.id_cliente;
 CREATE PROCEDURE sp_insertarCuenta(
 	numero_cuenta CHAR(10),
     saldo_contable DECIMAL(13,2),
@@ -172,12 +174,18 @@ SET c.saldo_contable = saldo_contable, c.saldo_disponible = saldo_disponible, c.
 WHERE c.numero_cuenta = numero_cuenta;
 CREATE PROCEDURE sp_consultarNumeroCuenta(
 	numero_cuenta CHAR(10)
-) SELECT * FROM cuentas c 
-WHERE c.numero_cuenta = numero_cuenta;
+) SELECT cu.*, p.* FROM cuentas cu 
+INNER JOIN clientes cl ON cl.id_cliente = cu.id_cliente 
+INNER JOIN personas p ON p.id_persona = cl.id_cliente 
+WHERE cu.numero_cuenta = numero_cuenta;
 
 -- Para Solicitud:
 CREATE PROCEDURE sp_listarSolicitud(
-) SELECT * FROM solicitudes;
+) SELECT s.*, pc.*, pe.* FROM solicitudes s
+INNER JOIN clientes c ON c.id_cliente = s.id_cliente 
+INNER JOIN personas pc ON pc.id_persona = c.id_cliente
+INNER JOIN empleados e ON e.id_empleado = s.id_empleado 
+INNER JOIN personas pe ON pe.id_persona = e.id_empleado;
 CREATE PROCEDURE sp_insertarSolicitud(
 	id_solicitud CHAR(36),
     asunto VARCHAR(150),
@@ -197,12 +205,16 @@ SET s.estado = estado, s.fecha_resolucion = fecha_resolucion
 WHERE s.id_solicitud = id_solicitud;
 CREATE PROCEDURE sp_consultarIdSolicitud(
 	id_solicitud CHAR(36)
-) SELECT * FROM solicitudes s
+) SELECT s.*, pc.*, pe.* FROM solicitudes s 
+INNER JOIN clientes c ON c.id_cliente = s.id_cliente INNER JOIN personas pc ON pc.id_persona = c.id_cliente
+INNER JOIN empleados e ON e.id_empleado = s.id_empleado INNER JOIN personas pe ON pe.id_persona = e.id_empleado
 WHERE s.id_solicitud = id_solicitud;
 
 -- Para Tarjetas:
 CREATE PROCEDURE sp_listarTarjeta(
-) SELECT * FROM tarjetas;
+) SELECT t.*, p.* FROM tarjetas t 
+INNER JOIN clientes c ON c.id_cliente = t.id_cliente 
+INNER JOIN personas p ON p.id_persona = c.id_cliente;
 CREATE PROCEDURE sp_insertarTarjeta(
 	numero_tarjeta CHAR(16),
     estado ENUM('activa', 'bloqueada', 'vencida'),
@@ -219,12 +231,16 @@ SET t.estado = estado
 WHERE t.numero_tarjeta = numero_tarjeta;
 CREATE PROCEDURE sp_consultarNumeroTarjeta(
 	numero_tarjeta CHAR(16)
-) SELECT * FROM tarjetas t 
+) SELECT t.*, p.* FROM tarjetas t 
+INNER JOIN clientes c ON c.id_cliente = t.id_cliente 
+INNER JOIN personas p ON p.id_persona = c.id_cliente 
 WHERE t.numero_tarjeta = numero_tarjeta;
 
 -- Para Transacciones:
 CREATE PROCEDURE sp_listarTransaccion(
-) SELECT * FROM transacciones;
+) SELECT t.*, p.* FROM transacciones t 
+INNER JOIN clientes c ON c.id_cliente = t.id_cliente 
+INNER JOIN personas p ON p.id_persona = c.id_cliente;
 CREATE PROCEDURE sp_insertarTransaccion(
 	id_transaccion CHAR(36),
     tipo_transaccion ENUM('transferir', 'pagar', 'retirar', 'depositar'),
@@ -240,7 +256,9 @@ CREATE PROCEDURE sp_eliminarTransaccion(
 WHERE t.id_transaccion = id_transaccion;
 CREATE PROCEDURE sp_consultarIdTransaccion(
 	id_transaccion CHAR(36)
-) SELECT * FROM transacciones t 
+) SELECT t.*, p.* FROM transacciones t 
+INNER JOIN clientes c ON c.id_cliente = t.id_cliente 
+INNER JOIN personas p ON p.id_persona = c.id_cliente 
 WHERE t.id_transaccion = id_transaccion;
 
 #INSERCIÓN DE DATOS

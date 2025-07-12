@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 
 import conexión.ConexiónMySQL;
+import modelo.Cliente;
 import modelo.Cuenta;
 
 public class RepositorioCuenta {
@@ -25,7 +26,18 @@ public class RepositorioCuenta {
                 cuenta.setEstado(resultSet.getString(5));
                 cuenta.setTipoCuenta(resultSet.getString(6));
                 cuenta.setMoneda(resultSet.getString(7));
-                cuenta.setCliente(RepositorioCliente.consultarIdCliente(resultSet.getString(8)));
+                Cliente cliente = new Cliente();
+                cliente.setIdPersona(resultSet.getString(9));
+                cliente.setDni(resultSet.getString(10));
+                cliente.setNombres(resultSet.getString(11));
+                cliente.setApellidos(resultSet.getString(12));
+                cliente.setTelefono(resultSet.getString(13));
+                cliente.setDireccion(resultSet.getString(14));
+                cliente.setCorreo(resultSet.getString(15));
+                cliente.setContraseña(resultSet.getString(16));
+                Timestamp fechaHoraBloqueo = resultSet.getTimestamp(17);
+                cliente.setFechaHoraBloqueo(fechaHoraBloqueo == null? null:fechaHoraBloqueo.toLocalDateTime());
+                cuenta.setCliente(cliente);
                 cuentas.add(cuenta);
             }
         } catch (Exception e) {
@@ -87,7 +99,18 @@ public class RepositorioCuenta {
                 cuenta.setEstado(resultSet.getString(5));
                 cuenta.setTipoCuenta(resultSet.getString(6));
                 cuenta.setMoneda(resultSet.getString(7));
-                cuenta.setCliente(RepositorioCliente.consultarIdCliente(resultSet.getString(8)));
+                Cliente cliente = new Cliente();
+                cliente.setIdPersona(resultSet.getString(9));
+                cliente.setDni(resultSet.getString(10));
+                cliente.setNombres(resultSet.getString(11));
+                cliente.setApellidos(resultSet.getString(12));
+                cliente.setTelefono(resultSet.getString(13));
+                cliente.setDireccion(resultSet.getString(14));
+                cliente.setCorreo(resultSet.getString(15));
+                cliente.setContraseña(resultSet.getString(16));
+                Timestamp fechaHoraBloqueo = resultSet.getTimestamp(17);
+                cliente.setFechaHoraBloqueo(fechaHoraBloqueo == null? null:fechaHoraBloqueo.toLocalDateTime());
+                cuenta.setCliente(cliente);
             }
         } catch (Exception e) {
             System.out.println("Error al consultar número de cuenta: " + e);
@@ -131,8 +154,10 @@ public class RepositorioCuenta {
     	ResultSet resultSet = null;
     	ArrayList<Cuenta> cuentas = new ArrayList<Cuenta>();
         try {
-        	String consulta = "SELECT * FROM cuentas "
-        			+ "WHERE id_cliente = ?;";
+        	String consulta = "SELECT cu.*, p.* FROM cuentas cu "
+        			+ "INNER JOIN clientes cl ON cl.id_cliente = cu.id_cliente "
+        			+ "INNER JOIN personas p ON p.id_persona = cl.id_cliente "
+        			+ "WHERE cu.id_cliente = ?;";
         	connection = ConexiónMySQL.getconexión();
         	preparedStatement = connection.prepareCall(consulta);
         	preparedStatement.setString(1, idCliente);
@@ -147,7 +172,18 @@ public class RepositorioCuenta {
                 cuenta.setEstado(resultSet.getString(5));
                 cuenta.setTipoCuenta(resultSet.getString(6));
                 cuenta.setMoneda(resultSet.getString(7));
-                cuenta.setCliente(RepositorioCliente.consultarIdCliente(resultSet.getString(8)));
+                Cliente cliente = new Cliente();
+                cliente.setIdPersona(resultSet.getString(9));
+                cliente.setDni(resultSet.getString(10));
+                cliente.setNombres(resultSet.getString(11));
+                cliente.setApellidos(resultSet.getString(12));
+                cliente.setTelefono(resultSet.getString(13));
+                cliente.setDireccion(resultSet.getString(14));
+                cliente.setCorreo(resultSet.getString(15));
+                cliente.setContraseña(resultSet.getString(16));
+                Timestamp fechaHoraBloqueo = resultSet.getTimestamp(17);
+                cliente.setFechaHoraBloqueo(fechaHoraBloqueo == null? null:fechaHoraBloqueo.toLocalDateTime());
+                cuenta.setCliente(cliente);
                 cuentas.add(cuenta);
             }
         } catch (Exception e) {

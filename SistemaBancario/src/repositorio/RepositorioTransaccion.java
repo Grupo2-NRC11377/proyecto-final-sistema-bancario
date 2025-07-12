@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 
 import conexión.ConexiónMySQL;
+import modelo.Cliente;
 import modelo.Transaccion;
 
 public class RepositorioTransaccion {
@@ -23,7 +24,18 @@ public class RepositorioTransaccion {
                 transaccion.setDescripcion(resultSet.getString(3));
                 transaccion.setFechaHora(resultSet.getTimestamp(4).toLocalDateTime());
                 transaccion.setMonto(resultSet.getDouble(5));
-                transaccion.setCliente(RepositorioCliente.consultarIdCliente(resultSet.getString(6)));
+                Cliente cliente = new Cliente();
+                cliente.setIdPersona(resultSet.getString(7));
+                cliente.setDni(resultSet.getString(8));
+                cliente.setNombres(resultSet.getString(9));
+                cliente.setApellidos(resultSet.getString(10));
+                cliente.setTelefono(resultSet.getString(11));
+                cliente.setDireccion(resultSet.getString(12));
+                cliente.setCorreo(resultSet.getString(13));
+                cliente.setContraseña(resultSet.getString(14));
+                Timestamp fechaHoraBloqueo = resultSet.getTimestamp(15);
+                cliente.setFechaHoraBloqueo(fechaHoraBloqueo == null? null:fechaHoraBloqueo.toLocalDateTime());
+                transaccion.setCliente(cliente);
                 transacciones.add(transaccion);
             }
         } catch (Exception e) {
@@ -81,7 +93,18 @@ public class RepositorioTransaccion {
                 transaccion.setDescripcion(resultSet.getString(3));
                 transaccion.setFechaHora(resultSet.getTimestamp(4).toLocalDateTime());
                 transaccion.setMonto(resultSet.getDouble(5));
-                transaccion.setCliente(RepositorioCliente.consultarIdCliente(resultSet.getString(6)));
+                Cliente cliente = new Cliente();
+                cliente.setIdPersona(resultSet.getString(7));
+                cliente.setDni(resultSet.getString(8));
+                cliente.setNombres(resultSet.getString(9));
+                cliente.setApellidos(resultSet.getString(10));
+                cliente.setTelefono(resultSet.getString(11));
+                cliente.setDireccion(resultSet.getString(12));
+                cliente.setCorreo(resultSet.getString(13));
+                cliente.setContraseña(resultSet.getString(14));
+                Timestamp fechaHoraBloqueo = resultSet.getTimestamp(15);
+                cliente.setFechaHoraBloqueo(fechaHoraBloqueo == null? null:fechaHoraBloqueo.toLocalDateTime());
+                transaccion.setCliente(cliente);
             }
         } catch (Exception e) {
             System.out.println("Error al consultar id de transacción: " + e);
@@ -102,8 +125,10 @@ public class RepositorioTransaccion {
     	ResultSet resultSet = null;
     	ArrayList<Transaccion> transacciones = new ArrayList<Transaccion>();
         try {
-        	String consulta = "SELECT * FROM transacciones "
-        			+ "WHERE descripcion LIKE '%" + descripcion + "%';";
+        	String consulta = "SELECT t.*, p.* FROM transacciones t "
+        			+ "INNER JOIN clientes c ON c.id_cliente = t.id_cliente "
+        			+ "INNER JOIN personas p ON p.id_persona = c.id_cliente "
+        			+ "WHERE t.descripcion LIKE '%" + descripcion + "%';";
         	connection = ConexiónMySQL.getconexión();
         	statement = connection.createStatement();
             resultSet = statement.executeQuery(consulta);
@@ -115,7 +140,18 @@ public class RepositorioTransaccion {
                 transaccion.setDescripcion(resultSet.getString(3));
                 transaccion.setFechaHora(resultSet.getTimestamp(4).toLocalDateTime());
                 transaccion.setMonto(resultSet.getDouble(5));
-                transaccion.setCliente(RepositorioCliente.consultarIdCliente(resultSet.getString(6)));
+                Cliente cliente = new Cliente();
+                cliente.setIdPersona(resultSet.getString(7));
+                cliente.setDni(resultSet.getString(8));
+                cliente.setNombres(resultSet.getString(9));
+                cliente.setApellidos(resultSet.getString(10));
+                cliente.setTelefono(resultSet.getString(11));
+                cliente.setDireccion(resultSet.getString(12));
+                cliente.setCorreo(resultSet.getString(13));
+                cliente.setContraseña(resultSet.getString(14));
+                Timestamp fechaHoraBloqueo = resultSet.getTimestamp(15);
+                cliente.setFechaHoraBloqueo(fechaHoraBloqueo == null? null:fechaHoraBloqueo.toLocalDateTime());
+                transaccion.setCliente(cliente);
                 transacciones.add(transaccion);
             }
         } catch (Exception e) {
@@ -137,8 +173,10 @@ public class RepositorioTransaccion {
     	ResultSet resultSet = null;
     	ArrayList<Transaccion> transacciones = new ArrayList<Transaccion>();
         try {
-        	String consulta = "SELECT * FROM transacciones "
-        			+ "WHERE id_cliente = ?;";
+        	String consulta = "SELECT t.*, p.* FROM transacciones t "
+        			+ "INNER JOIN clientes c ON c.id_cliente = t.id_cliente "
+        			+ "INNER JOIN personas p ON p.id_persona = c.id_cliente "
+        			+ "WHERE t.id_cliente = ?;";
         	connection = ConexiónMySQL.getconexión();
         	preparedStatement = connection.prepareStatement(consulta);
         	preparedStatement.setString(1, idCliente);
@@ -151,7 +189,18 @@ public class RepositorioTransaccion {
                 transaccion.setDescripcion(resultSet.getString(3));
                 transaccion.setFechaHora(resultSet.getTimestamp(4).toLocalDateTime());
                 transaccion.setMonto(resultSet.getDouble(5));
-                transaccion.setCliente(RepositorioCliente.consultarIdCliente(resultSet.getString(6)));
+                Cliente cliente = new Cliente();
+                cliente.setIdPersona(resultSet.getString(7));
+                cliente.setDni(resultSet.getString(8));
+                cliente.setNombres(resultSet.getString(9));
+                cliente.setApellidos(resultSet.getString(10));
+                cliente.setTelefono(resultSet.getString(11));
+                cliente.setDireccion(resultSet.getString(12));
+                cliente.setCorreo(resultSet.getString(13));
+                cliente.setContraseña(resultSet.getString(14));
+                Timestamp fechaHoraBloqueo = resultSet.getTimestamp(15);
+                cliente.setFechaHoraBloqueo(fechaHoraBloqueo == null? null:fechaHoraBloqueo.toLocalDateTime());
+                transaccion.setCliente(cliente);
                 transacciones.add(transaccion);
             }
         } catch (Exception e) {
@@ -173,10 +222,12 @@ public class RepositorioTransaccion {
     	ResultSet resultSet = null;
     	ArrayList<Transaccion> transacciones = new ArrayList<Transaccion>();
         try {
-        	String consulta = "SELECT * FROM transacciones "
-        			+ "WHERE id_cliente = '" + idCliente
-        			+ "' AND tipo_transaccion LIKE '%" + tipoTransaccion
-        			+ "%' AND descripcion LIKE '%" + descripcion + "%'";
+        	String consulta = "SELECT t.*, p.* FROM transacciones t "
+        			+ "INNER JOIN clientes c ON c.id_cliente = t.id_cliente "
+        			+ "INNER JOIN personas p ON p.id_persona = c.id_cliente "
+        			+ "WHERE t.id_cliente = '" + idCliente
+        			+ "' AND t.tipo_transaccion LIKE '%" + tipoTransaccion
+        			+ "%' AND t.descripcion LIKE '%" + descripcion + "%'";
         	connection = ConexiónMySQL.getconexión();
         	statement = connection.createStatement();
             resultSet = statement.executeQuery(consulta);
@@ -188,7 +239,18 @@ public class RepositorioTransaccion {
                 transaccion.setDescripcion(resultSet.getString(3));
                 transaccion.setFechaHora(resultSet.getTimestamp(4).toLocalDateTime());
                 transaccion.setMonto(resultSet.getDouble(5));
-                transaccion.setCliente(RepositorioCliente.consultarIdCliente(resultSet.getString(6)));
+                Cliente cliente = new Cliente();
+                cliente.setIdPersona(resultSet.getString(7));
+                cliente.setDni(resultSet.getString(8));
+                cliente.setNombres(resultSet.getString(9));
+                cliente.setApellidos(resultSet.getString(10));
+                cliente.setTelefono(resultSet.getString(11));
+                cliente.setDireccion(resultSet.getString(12));
+                cliente.setCorreo(resultSet.getString(13));
+                cliente.setContraseña(resultSet.getString(14));
+                Timestamp fechaHoraBloqueo = resultSet.getTimestamp(15);
+                cliente.setFechaHoraBloqueo(fechaHoraBloqueo == null? null:fechaHoraBloqueo.toLocalDateTime());
+                transaccion.setCliente(cliente);
                 transacciones.add(transaccion);
             }
         } catch (Exception e) {

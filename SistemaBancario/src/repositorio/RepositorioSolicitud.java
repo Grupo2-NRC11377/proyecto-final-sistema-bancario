@@ -5,9 +5,12 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import conexión.ConexiónMySQL;
+import modelo.Cliente;
+import modelo.Empleado;
 import modelo.Solicitud;
 
 public class RepositorioSolicitud {
@@ -20,6 +23,7 @@ public class RepositorioSolicitud {
         	connection = ConexiónMySQL.getconexión();
         	callableStatement = connection.prepareCall("{CALL sp_listarSolicitud()}");
             resultSet = callableStatement.executeQuery();
+            Timestamp fechaHoraBloqueo;
             Solicitud solicitud;
             while (resultSet.next()) {
                 solicitud = new Solicitud();
@@ -29,8 +33,30 @@ public class RepositorioSolicitud {
                 solicitud.setFechaCreacion(resultSet.getDate(4).toLocalDate());
                 Date fechaResolucion = resultSet.getDate(5);
                 solicitud.setFechaResolucion(fechaResolucion != null ? fechaResolucion.toLocalDate() : null);
-                solicitud.setCliente(RepositorioCliente.consultarIdCliente(resultSet.getString(6)));
-                solicitud.setEmpleado(RepositorioEmpleado.consultarIdEmpleado(resultSet.getString(7)));
+                Cliente cliente = new Cliente();
+                cliente.setIdPersona(resultSet.getString(8));
+                cliente.setDni(resultSet.getString(9));
+                cliente.setNombres(resultSet.getString(10));
+                cliente.setApellidos(resultSet.getString(11));
+                cliente.setTelefono(resultSet.getString(12));
+                cliente.setDireccion(resultSet.getString(13));
+                cliente.setCorreo(resultSet.getString(14));
+                cliente.setContraseña(resultSet.getString(15));
+                fechaHoraBloqueo = resultSet.getTimestamp(16);
+                cliente.setFechaHoraBloqueo(fechaHoraBloqueo == null? null:fechaHoraBloqueo.toLocalDateTime());
+                solicitud.setCliente(cliente);
+                Empleado empleado = new Empleado();
+                empleado.setIdPersona(resultSet.getString(17));
+				empleado.setDni(resultSet.getString(18));
+				empleado.setNombres(resultSet.getString(19));
+				empleado.setApellidos(resultSet.getString(20));
+				empleado.setTelefono(resultSet.getString(21));
+				empleado.setDireccion(resultSet.getString(22));
+				empleado.setCorreo(resultSet.getString(23));
+				empleado.setContraseña(resultSet.getString(24));
+				fechaHoraBloqueo = resultSet.getTimestamp(25);
+				empleado.setFechaHoraBloqueo(fechaHoraBloqueo == null? null:fechaHoraBloqueo.toLocalDateTime());
+                solicitud.setEmpleado(empleado);
                 solicitudes.add(solicitud);
             }
         } catch (Exception e) {
@@ -105,6 +131,7 @@ public class RepositorioSolicitud {
         	callableStatement = connection.prepareCall(procedimientoAlmacenado);
         	callableStatement.setString(1, idSolicitud);
             resultSet = callableStatement.executeQuery();
+            Timestamp fechaHoraBloqueo;
             if (resultSet.next()) {
             	solicitud = new Solicitud();
                 solicitud.setIdSolicitud(resultSet.getString(1));
@@ -113,8 +140,30 @@ public class RepositorioSolicitud {
                 solicitud.setFechaCreacion(resultSet.getDate(4).toLocalDate());
                 Date fechaResolucion = resultSet.getDate(5);
                 solicitud.setFechaResolucion(fechaResolucion != null ? fechaResolucion.toLocalDate() : null);
-                solicitud.setCliente(RepositorioCliente.consultarIdCliente(resultSet.getString(6)));
-                solicitud.setEmpleado(RepositorioEmpleado.consultarIdEmpleado(resultSet.getString(7)));
+                Cliente cliente = new Cliente();
+                cliente.setIdPersona(resultSet.getString(8));
+                cliente.setDni(resultSet.getString(9));
+                cliente.setNombres(resultSet.getString(10));
+                cliente.setApellidos(resultSet.getString(11));
+                cliente.setTelefono(resultSet.getString(12));
+                cliente.setDireccion(resultSet.getString(13));
+                cliente.setCorreo(resultSet.getString(14));
+                cliente.setContraseña(resultSet.getString(15));
+                fechaHoraBloqueo = resultSet.getTimestamp(16);
+                cliente.setFechaHoraBloqueo(fechaHoraBloqueo == null? null:fechaHoraBloqueo.toLocalDateTime());
+                solicitud.setCliente(cliente);
+                Empleado empleado = new Empleado();
+                empleado.setIdPersona(resultSet.getString(17));
+				empleado.setDni(resultSet.getString(18));
+				empleado.setNombres(resultSet.getString(19));
+				empleado.setApellidos(resultSet.getString(20));
+				empleado.setTelefono(resultSet.getString(21));
+				empleado.setDireccion(resultSet.getString(22));
+				empleado.setCorreo(resultSet.getString(23));
+				empleado.setContraseña(resultSet.getString(24));
+				fechaHoraBloqueo = resultSet.getTimestamp(25);
+				empleado.setFechaHoraBloqueo(fechaHoraBloqueo == null? null:fechaHoraBloqueo.toLocalDateTime());
+                solicitud.setEmpleado(empleado);
             }
         } catch (Exception e) {
             System.out.println("Error al consultar id de solicitud: " + e);
@@ -135,12 +184,17 @@ public class RepositorioSolicitud {
     	ResultSet resultSet = null;
         ArrayList<Solicitud> solicitudes = new ArrayList<Solicitud>();
         try {
-        	String consulta = "SELECT * FROM solicitudes "
-					+ "WHERE id_cliente = ?;";
+        	String consulta = "SELECT s.*, pc.*, pe.* FROM solicitudes s "
+        			+ "INNER JOIN clientes c ON c.id_cliente = s.id_cliente "
+        			+ "INNER JOIN personas pc ON pc.id_persona = c.id_cliente "
+        			+ "INNER JOIN empleados e ON e.id_empleado = s.id_empleado "
+        			+ "INNER JOIN personas pe ON pe.id_persona = e.id_empleado "
+					+ "WHERE s.id_cliente = ?;";
         	connection = ConexiónMySQL.getconexión();
         	preparedStatement = connection.prepareStatement(consulta);
 			preparedStatement.setString(1, idCliente);
             resultSet = preparedStatement.executeQuery();
+            Timestamp fechaHoraBloqueo;
             Solicitud solicitud;
             while (resultSet.next()) {
             	solicitud = new Solicitud();
@@ -150,8 +204,30 @@ public class RepositorioSolicitud {
                 solicitud.setFechaCreacion(resultSet.getDate(4).toLocalDate());
                 Date fechaResolucion = resultSet.getDate(5);
                 solicitud.setFechaResolucion(fechaResolucion != null ? fechaResolucion.toLocalDate() : null);
-                solicitud.setCliente(RepositorioCliente.consultarIdCliente(resultSet.getString(6)));
-                solicitud.setEmpleado(RepositorioEmpleado.consultarIdEmpleado(resultSet.getString(7)));
+                Cliente cliente = new Cliente();
+                cliente.setIdPersona(resultSet.getString(8));
+                cliente.setDni(resultSet.getString(9));
+                cliente.setNombres(resultSet.getString(10));
+                cliente.setApellidos(resultSet.getString(11));
+                cliente.setTelefono(resultSet.getString(12));
+                cliente.setDireccion(resultSet.getString(13));
+                cliente.setCorreo(resultSet.getString(14));
+                cliente.setContraseña(resultSet.getString(15));
+                fechaHoraBloqueo = resultSet.getTimestamp(16);
+                cliente.setFechaHoraBloqueo(fechaHoraBloqueo == null? null:fechaHoraBloqueo.toLocalDateTime());
+                solicitud.setCliente(cliente);
+                Empleado empleado = new Empleado();
+                empleado.setIdPersona(resultSet.getString(17));
+				empleado.setDni(resultSet.getString(18));
+				empleado.setNombres(resultSet.getString(19));
+				empleado.setApellidos(resultSet.getString(20));
+				empleado.setTelefono(resultSet.getString(21));
+				empleado.setDireccion(resultSet.getString(22));
+				empleado.setCorreo(resultSet.getString(23));
+				empleado.setContraseña(resultSet.getString(24));
+				fechaHoraBloqueo = resultSet.getTimestamp(25);
+				empleado.setFechaHoraBloqueo(fechaHoraBloqueo == null? null:fechaHoraBloqueo.toLocalDateTime());
+                solicitud.setEmpleado(empleado);
                 solicitudes.add(solicitud);
             }
         } catch (Exception e) {
@@ -173,12 +249,17 @@ public class RepositorioSolicitud {
     	ResultSet resultSet = null;
         ArrayList<Solicitud> solicitudes = new ArrayList<Solicitud>();
         try {
-        	String consulta = "SELECT * FROM solicitudes "
-					+ "WHERE id_empleado = ?;";
+        	String consulta = "SELECT s.*, pc.*, pe.* FROM solicitudes s "
+        			+ "INNER JOIN clientes c ON c.id_cliente = s.id_cliente "
+        			+ "INNER JOIN personas pc ON pc.id_persona = c.id_cliente "
+        			+ "INNER JOIN empleados e ON e.id_empleado = s.id_empleado "
+        			+ "INNER JOIN personas pe ON pe.id_persona = e.id_empleado "
+					+ "WHERE s.id_empleado = ?;";
         	connection = ConexiónMySQL.getconexión();
         	preparedStatement = connection.prepareStatement(consulta);
 			preparedStatement.setString(1, idEmpleado);
             resultSet = preparedStatement.executeQuery();
+            Timestamp fechaHoraBloqueo;
             Solicitud solicitud;
             while (resultSet.next()) {
             	solicitud = new Solicitud();
@@ -188,8 +269,30 @@ public class RepositorioSolicitud {
                 solicitud.setFechaCreacion(resultSet.getDate(4).toLocalDate());
                 Date fechaResolucion = resultSet.getDate(5);
                 solicitud.setFechaResolucion(fechaResolucion != null ? fechaResolucion.toLocalDate() : null);
-                solicitud.setCliente(RepositorioCliente.consultarIdCliente(resultSet.getString(6)));
-                solicitud.setEmpleado(RepositorioEmpleado.consultarIdEmpleado(resultSet.getString(7)));
+                Cliente cliente = new Cliente();
+                cliente.setIdPersona(resultSet.getString(8));
+                cliente.setDni(resultSet.getString(9));
+                cliente.setNombres(resultSet.getString(10));
+                cliente.setApellidos(resultSet.getString(11));
+                cliente.setTelefono(resultSet.getString(12));
+                cliente.setDireccion(resultSet.getString(13));
+                cliente.setCorreo(resultSet.getString(14));
+                cliente.setContraseña(resultSet.getString(15));
+                fechaHoraBloqueo = resultSet.getTimestamp(16);
+                cliente.setFechaHoraBloqueo(fechaHoraBloqueo == null? null:fechaHoraBloqueo.toLocalDateTime());
+                solicitud.setCliente(cliente);
+                Empleado empleado = new Empleado();
+                empleado.setIdPersona(resultSet.getString(17));
+				empleado.setDni(resultSet.getString(18));
+				empleado.setNombres(resultSet.getString(19));
+				empleado.setApellidos(resultSet.getString(20));
+				empleado.setTelefono(resultSet.getString(21));
+				empleado.setDireccion(resultSet.getString(22));
+				empleado.setCorreo(resultSet.getString(23));
+				empleado.setContraseña(resultSet.getString(24));
+				fechaHoraBloqueo = resultSet.getTimestamp(25);
+				empleado.setFechaHoraBloqueo(fechaHoraBloqueo == null? null:fechaHoraBloqueo.toLocalDateTime());
+                solicitud.setEmpleado(empleado);
                 solicitudes.add(solicitud);
             }
         } catch (Exception e) {
